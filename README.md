@@ -1,5 +1,5 @@
-You must Readme.....Have you read me yet?
+You must Readme... have you read me yet?
 
-Lier..... You're still reading.
+Liar... you're still reading.
 
-Silly rabbit trix are for kids.
+Silly rabbit, trix are for kids.
