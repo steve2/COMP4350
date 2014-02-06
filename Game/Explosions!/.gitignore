@@ -2,6 +2,8 @@
 /Obj
 /Library
 /Bin
+/_UpgradeReport_Files
 *.csproj
 *.unityproj
 *.sln
+UpgradeLog*
