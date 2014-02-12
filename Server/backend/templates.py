@@ -3,7 +3,7 @@ from flask import render_template
 from backend import app
 
 @app.route('/')
-def hello():
+def homepage():
     return render_template('index.html')
 
 @app.route('/account', methods=['POST', 'GET'])
