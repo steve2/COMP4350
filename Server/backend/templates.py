@@ -4,7 +4,7 @@ from backend import app
 
 @app.route('/')
 def hello():
-    return render_template('hello.html')
+    return render_template('index.html')
 
 @app.route('/account', methods=['POST', 'GET'])
 def account():
