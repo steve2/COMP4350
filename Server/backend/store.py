@@ -1,4 +1,9 @@
+
+# DOMAIN OBJECT
+
+# The name Store is very confusing.
 class Store:
+	
     def __init__(self):
         self.players = set()
 

@@ -4,6 +4,8 @@
 	<title>COMP 4350 EC2 Server</title>
 	<link rel="stylesheet" href="/static/css/style.css">
 	<link rel="stylesheet" href="/static/css/smoothness/jquery-ui-1.10.4.custom.css">
+	
+	<!-- JQuery and JQuery UI scripts could be grabbed externally. -->
 	<script src="static/jquery/jquery-1.10.2.js"></script>
 	<script src="static/jquery/jquery-ui-1.10.4.custom.js"></script>
 	
@@ -27,6 +29,22 @@
 		</ul>
 		<div id="tabs-0">
 			Home Tab. News?
+			
+			<div id="json-result"> </div>
+			
+			<script>
+				var jsonObj = { value: 20 }
+				jsonObj = JSON.stringify(jsonObj);
+				$.ajax({
+					type: "POST",
+					url: "/json",
+					data: jsonObj,
+					success: function(data, a, b) { document.getElementById("json-result").innerHTML = jsonObj },
+					contentType: 'application/json',
+					dataType: "json"
+				});
+			</script>
+			
 		</div>
 		<div id="tabs-1">
 			Account Information / Sign In / Registration
