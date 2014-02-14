@@ -33,16 +33,26 @@
 			<div id="json-result"> </div>
 			
 			<script>
-				var jsonObj = { value: 20 }
-				jsonObj = JSON.stringify(jsonObj);
+				data = {};
+				data.value = 20;
+				
 				$.ajax({
 					type: "POST",
 					url: "/json",
-					data: jsonObj,
-					success: function(data, a, b) { document.getElementById("json-result").innerHTML = jsonObj },
-					contentType: 'application/json',
-					dataType: "json"
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					data: '{ "name" : "Steve" }',
+					success: 
+						function(data, status, xmlhttp) { 
+							var output = data;
+							console.log("Result:", output);
+						},
+					error:
+						function(errmsg) {
+							console.log("Error:", errmsg);
+						}
 				});
+				  
 			</script>
 			
 		</div>

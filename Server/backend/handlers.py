@@ -5,47 +5,14 @@ from flask import jsonify
 from flask import request
 
 from backend import app
-from store import Store
-import player
-
-store = Store()
 
 @app.route('/json', methods=['POST', 'GET'])
 def handle_json():
-	print "Json:", request.json
-	print "method:", request.method
-	data = request.json
-	result = {'result': data['value'] + 2}
-	print "Result:", result['result']
+	print "Request:", request, "\n"
+	jsonReq = request.get_json()
+	print "Get JSON:", jsonReq, "\n"
+	print "JSON Elements:", jsonReq['name'], "\n"
+	result = { "name" : jsonReq['name'], "password" : "password" }
+	print "Result:", result, "\n"
 	return jsonify(result)
 
-
-@app.route('/newAccount', methods=['POST', 'GET'])
-def handle_account():
-	data = request.json
-	name = data['name']
-	password_hash = data['password']
-	store.create_player(name, password_hash)
-	session['username'] = name
-	result = {'result': True}
-	return jsonify(result)
-
-@app.route('/login', methods = ['POST', 'GET'])
-def login():
-	data = request.json
-	if (data != None):
-		print '\n====================\n'
-		print request
-		print '\n====================\n'
-		
-		name = data['name']
-		password_hash = data['password_hash']
-		if store.has_player(name, password_hash):
-			session['username'] = name
-			return render_template('___')
-		else:
-			return render_template('login_failed.html')
-
-@app.route('/account_details', methods=['POST', 'GET'])
-def account_details():
-	pass
