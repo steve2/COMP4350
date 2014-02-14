@@ -10,3 +10,4 @@
 *.suo
 UpgradeLog*
 *.userpref
+UnitTestResults.xml

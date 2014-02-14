@@ -9,21 +9,27 @@ namespace Assets.Code.Components
 {
     [AddComponentMenu("Items/Weapon")]
     //TODO: Should create child components MeleeWeapon/RangedWeapon (And make this abstract)
-    class Weapon : MonoBehaviour, IUsableItem
+    public class Weapon : MonoBehaviour, IUsableItem
     {
         #region Editor Fields
         //Standard weapon fields
         [SerializeField]
         private int damage;
-        [SerializeField] //Assigned by Inspector (Ignore warning)
-        private List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector, we need this because the inspector does not support dictionaries
+        //Assigned by Inspector (Ignore warning)
+        public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector, we need this because the inspector does not support dictionaries
         #endregion
 
         #region Fields
         private Item item;
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
-        
+
+        #region Properties
+        public Item Item { get { return item; } } //TODO: Do we need access to the item?
+        #endregion
+
+        public Weapon() { }
+
         #region Public Interface
         public bool Use()
         {
@@ -34,7 +40,7 @@ namespace Assets.Code.Components
 
         #region Unity Methods
         // Use this for initialization
-        void Start()
+        public void Start()
         {
             InitItem();
         }
