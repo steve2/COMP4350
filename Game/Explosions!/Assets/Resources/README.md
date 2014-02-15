@@ -1,0 +1,1 @@
+Resources is for storing 3D models, textures, images, etc
