@@ -18,6 +18,7 @@ namespace Assets.Code.Model
     /// Can be directly mapped from the Database
     /// </summary>
     [System.Serializable]
+    [Obsolete("No longer necessary", true)]
     public class ItemAttrCollection : ICollection<ItemAttribute>
     {
         #region Fields
