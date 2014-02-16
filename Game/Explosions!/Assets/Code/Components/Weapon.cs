@@ -9,16 +9,19 @@ namespace Assets.Code.Components
 {
     [AddComponentMenu("Items/Weapon")]
     //TODO: Should create child components MeleeWeapon/RangedWeapon (And make this abstract)
-    public class Weapon : MonoBehaviour, IUsableItem
+    public class Weapon : Item, IUsableItem
     {
         #region Editor Fields
         [SerializeField]
-        private Weapon.Attributes attributes; //The Editor attributes
+        private Weapon.EditorAttributes attributes; //The Editor attributes
         [Serializable]
-        public class Attributes
+        public class EditorAttributes
         {
             //Standard weapon fields
             public int damage;
+            public int speed;
+            public int range;
+            public int capacity; //TODO: Ranged only? Or can we interpret capacity for a melee weapon?
             public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector
             
             public void Clear()
@@ -29,17 +32,13 @@ namespace Assets.Code.Components
         #endregion
 
         #region Fields
-        private List<ItemAttribute> _attributes; //The "REAL" attribute list
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
 
-        #region Properties
-        public IEnumerable<ItemAttribute> ItemAttributes { get { return _attributes; } } 
-        #endregion
 
         //For testing (TODO: Shouldn't expose a public constructor)
         //This is used to simulate Unity initializing the data from inspector input
-        public Weapon(Weapon.Attributes editorAttributes) 
+        public Weapon(Weapon.EditorAttributes editorAttributes) 
         {
             this.attributes = editorAttributes;
         }
@@ -53,11 +52,6 @@ namespace Assets.Code.Components
         #endregion
 
         #region Unity Methods
-        // Use this for initialization
-        public void Start()
-        {
-            InitItem();
-        }
 
         // Update is called once per frame
         void Update()
@@ -66,15 +60,15 @@ namespace Assets.Code.Components
         } 
         #endregion
 
-        #region Private Methods
-        private void InitItem()
+        #region Overrides
+        protected override void InitAttributes()
         {
-            _attributes = new List<ItemAttribute>();
-            _attributes.Add(new ItemAttribute(AttributeType.ItemType, (int)ItemType.Weapon));
-            _attributes.Add(new ItemAttribute(AttributeType.Damage, attributes.damage));
+            base.InitAttributes();
+            AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
+            AddAttribute(AttributeType.Damage, attributes.damage);
             foreach (ItemAttribute attr in attributes.extraAttributes)
             {
-                _attributes.Add(attr);
+                AddAttribute(attr);
             }
 
             attributes.Clear();

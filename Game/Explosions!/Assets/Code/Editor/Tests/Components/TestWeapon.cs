@@ -16,7 +16,7 @@ public class TestWeapon {
     public void TestDefaultStart()
     {
         //This is normally done automatically, but where peforming a Unit Test
-        Weapon.Attributes a = new Weapon.Attributes();
+        Weapon.EditorAttributes a = new Weapon.EditorAttributes();
         a.damage = 0;
         a.extraAttributes = new List<ItemAttribute>();
 
