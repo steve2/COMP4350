@@ -13,7 +13,10 @@ namespace Assets.Code.Editor.Tests.Components
     {
         private AttributeManager Create()
         {
-            AttributeManager ret = new AttributeManager();
+            GameObject go = new GameObject();
+            go.AddComponent<AttributeManager>();
+            AttributeManager ret = go.GetComponent<AttributeManager>();
+            //TODO: Find a way to get Unity to fully initialize this component
             ret.Start();
             return ret;
         }
