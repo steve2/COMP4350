@@ -31,6 +31,7 @@ namespace Assets.Code.Components
             }
         }
 
+        //This should not be used to create a new attribute with negative values, use AddAttributes for that
         public void SubtractAttributes(IEnumerable<ItemAttribute> attrs)
         {
             int value;
