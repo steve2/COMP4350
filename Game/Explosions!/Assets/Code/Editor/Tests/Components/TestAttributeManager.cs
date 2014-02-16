@@ -34,8 +34,8 @@ namespace Assets.Code.Editor.Tests.Components
             mgr.AddAttributes(attributes);
 
             //We should have the new attributes
-            Assert.That(mgr.GetAttributeValue(AttributeType.Damage) == expectedDamage);
-            Assert.That(mgr.GetAttributeValue(AttributeType.Health) == expectedHealth);
+            Assert.AreEqual(expectedDamage, mgr.GetAttributeValue(AttributeType.Damage));
+            Assert.AreEqual(expectedHealth, mgr.GetAttributeValue(AttributeType.Health));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Assets.Code.Editor.Tests.Components
             mgr.AddAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageB)});
 
             //The attribute should be updated
-            Assert.That(mgr.GetAttributeValue(AttributeType.Damage) == expectedDamage);
+            Assert.AreEqual(expectedDamage, mgr.GetAttributeValue(AttributeType.Damage));
         }
 
         [Test]
@@ -63,9 +63,9 @@ namespace Assets.Code.Editor.Tests.Components
 
             mgr.SubtractAttributes(attributes);
 
-            //We should not have created any attributes
-            Assert.That(mgr.GetAttributeValue(AttributeType.Damage) == 0);
-            Assert.That(mgr.GetAttributeValue(AttributeType.Health) == 0);
+            //We should not have created any attributes 
+            Assert.AreEqual(0, mgr.GetAttributeValue(AttributeType.Damage));
+            Assert.AreEqual(0, mgr.GetAttributeValue(AttributeType.Health));
         }
 
         [Test]
@@ -80,13 +80,14 @@ namespace Assets.Code.Editor.Tests.Components
             mgr.SubtractAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageB) });
 
             //The attribute should be updated
-            Assert.That(mgr.GetAttributeValue(AttributeType.Damage) == expectedDamage);
+            Assert.AreEqual(expectedDamage, mgr.GetAttributeValue(AttributeType.Damage));
         }
 
+        [Test]
         public void TestGetNonExisting()
         {
             AttributeManager mgr = Create();
-            Assert.That(mgr.GetAttributeValue(AttributeType.Damage) == 0);
+            Assert.AreEqual(0, mgr.GetAttributeValue(AttributeType.Damage));
         }
     }
 }
