@@ -9,8 +9,7 @@ namespace Assets.Code.Components
     public abstract class Item : MonoBehaviour
     {
         #region Editor Fields
-        [SerializeField]
-        private string itemName;
+        //Note: Use the built in name
         [SerializeField]
         private string description; 
         #endregion
