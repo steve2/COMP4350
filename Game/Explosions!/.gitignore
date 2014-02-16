@@ -2,6 +2,12 @@
 /Obj
 /Library
 /Bin
+/_UpgradeReport_Files
 *.csproj
 *.unityproj
+*.booproj
 *.sln
+*.suo
+UpgradeLog*
+*.userpref
+UnitTestResults.xml

@@ -1,1 +1,1 @@
-test
+Web code has been relocated under "Server".
