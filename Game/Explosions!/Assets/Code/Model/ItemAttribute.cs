@@ -6,12 +6,15 @@ using System.Text;
 
 namespace Assets.Code.Model
 {
-    //The diferent types of attributes
+    //The different types of attributes
     public enum AttributeType
     {
         ItemType,
         Damage,
-        Health
+        Health,
+        Speed,
+        Range,
+        Capacity
     }
 
     /// <summary>

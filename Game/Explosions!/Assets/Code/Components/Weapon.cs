@@ -34,8 +34,7 @@ namespace Assets.Code.Components
         #region Fields
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
-
-
+        
         //For testing (TODO: Shouldn't expose a public constructor)
         //This is used to simulate Unity initializing the data from inspector input
         public Weapon(Weapon.EditorAttributes editorAttributes) 
@@ -66,6 +65,9 @@ namespace Assets.Code.Components
             base.InitAttributes();
             AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
             AddAttribute(AttributeType.Damage, attributes.damage);
+            AddAttribute(AttributeType.Speed, attributes.speed);
+            AddAttribute(AttributeType.Range, attributes.range);
+            AddAttribute(AttributeType.Capacity, attributes.capacity);
             foreach (ItemAttribute attr in attributes.extraAttributes)
             {
                 AddAttribute(attr);
