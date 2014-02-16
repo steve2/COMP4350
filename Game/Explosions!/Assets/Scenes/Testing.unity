@@ -1611,9 +1611,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3af697577b4d99439ada48e04cbf0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: This is a sample weapon
   attributes:
-    damage: 0
-    extraAttributes: []
+    damage: 20
+    speed: 30
+    range: 40
+    capacity: 50
+    extraAttributes:
+    - type: 2
+      value: 60
 --- !u!4 &1636787609
 Transform:
   m_ObjectHideFlags: 0
