@@ -11,13 +11,13 @@
 
     <script>
         var x = {y: 5};
-        var y = JSON.stringify(x);
-        alert(y);
+        var a = JSON.stringify(x);
+        alert(a);
         $.ajax({
             type: "POST",
             url: "/json",
-            data: y,
-            success: function(data, a, b) { alert("Result: " + data.result) },
+            data: a,
+            success: function(data, _1, _2) { alert("Result: " + data.result) },
             contentType: 'application/json',
             dataType: "json"
         });

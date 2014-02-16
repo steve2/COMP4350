@@ -14,7 +14,7 @@ def handle_json():
     print "Json:", request.json
     print "method:", request.method
     data = request.json
-    result = {'result': data['y'] + 2}
+    result = {'result': data['y'] + 3}
     print "Result:", result['result']
     return jsonify(result)
 
