@@ -16,18 +16,18 @@ public class TestWeapon {
     public void TestDefaultStart()
     {
         //This is normally done automatically, but where peforming a Unit Test
-        Weapon.EditorAttributes a = new Weapon.EditorAttributes();
-        a.damage = 0;
-        a.extraAttributes = new List<ItemAttribute>();
+        Weapon.EditorAttributes eAttributes = new Weapon.EditorAttributes();
+        eAttributes.damage = 0;
+        eAttributes.extraAttributes = new List<ItemAttribute>();
 
-        Weapon w = new Weapon(a); //IGNORE WARNING
+        Item item = new Weapon(eAttributes); //IGNORE WARNING
 
-        w.Start();
+        item.Start();
         //Iterating through the list to find an item is inefficient,
         //but this is a Unit Test and we don't want to give public read/write access to the attributes
-        IEnumerable<ItemAttribute> i = w.ItemAttributes; 
-        Assert.That(i.Single((x) => x.Type == AttributeType.ItemType).Value == (int)ItemType.Weapon);
-        Assert.That(i.Single((x) => x.Type == AttributeType.Damage).Value == 0);
+        IEnumerable<ItemAttribute> attributes = item.ItemAttributes; 
+        Assert.That(attributes.Single((x) => x.Type == AttributeType.ItemType).Value == (int)ItemType.Weapon);
+        Assert.That(attributes.Single((x) => x.Type == AttributeType.Damage).Value == 0);
     }
 }
 #endif
