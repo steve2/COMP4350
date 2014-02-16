@@ -4,7 +4,7 @@ from flask import jsonify
 from flask import request
 
 from backend import app
-from store import Store
+from model import Model
 import player
 
 store = Store()
@@ -14,7 +14,7 @@ def handle_json():
     print "Json:", request.json
     print "method:", request.method
     data = request.json
-    result = {'result': data['y'] + 2}
+    result = {'result': data['y'] + 3}
     print "Result:", result['result']
     return jsonify(result)
 
@@ -26,7 +26,7 @@ def handle_account():
     name = data['name']
     password_hash = data['password']
 
-    store.create_player(name, password_hash)
+    model.create_player(name, password_hash)
 
     session['username'] = name
 
@@ -40,7 +40,7 @@ def login():
     name = data['name']
     password_hash = data['password_hash']
 
-    if store.has_player(name, password_hash):
+    if model.has_player(name, password_hash):
         session['username'] = name
         return render_template('___')
     else:
