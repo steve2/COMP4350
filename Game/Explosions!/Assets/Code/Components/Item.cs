@@ -15,11 +15,11 @@ namespace Assets.Code.Components
         private string description; 
         #endregion
 
-        private List<ItemAttribute> attributes; //The "REAL" attribute list
+        private List<ItemAttribute> itemAttributes; //The "REAL" attribute list
 
         #region Properties
         //All items support attributes
-        public IEnumerable<ItemAttribute> ItemAttributes { get { return attributes; } }
+        public IEnumerable<ItemAttribute> ItemAttributes { get { return itemAttributes; } }
         #endregion
 
         // Use this for initialization
@@ -30,7 +30,7 @@ namespace Assets.Code.Components
 
         protected virtual void InitAttributes()
         {
-            attributes = new List<ItemAttribute>();
+            itemAttributes = new List<ItemAttribute>();
         }
 
         protected void AddAttribute(AttributeType type, int value)
@@ -40,7 +40,7 @@ namespace Assets.Code.Components
 
         protected void AddAttribute(ItemAttribute attr)
         {
-            attributes.Add(attr);
+            itemAttributes.Add(attr);
         }
     }
 }
