@@ -29,8 +29,8 @@ namespace Assets.Code.Editor.Tests.Components
             //Iterating through the list to find an item is inefficient,
             //but this is a Unit Test and we don't want to give public read/write access to the attributes
             IEnumerable<ItemAttribute> attributes = item.ItemAttributes;
-            Assert.That(attributes.Single((x) => x.Type == AttributeType.ItemType).Value == (int)ItemType.Weapon);
-            Assert.That(attributes.Single((x) => x.Type == AttributeType.Damage).Value == 0);
+            Assert.AreEqual((int)ItemType.Weapon, attributes.Single((x) => x.Type == AttributeType.ItemType).Value);
+            Assert.AreEqual(0, attributes.Single((x) => x.Type == AttributeType.Damage).Value);
         }
     }
 }
