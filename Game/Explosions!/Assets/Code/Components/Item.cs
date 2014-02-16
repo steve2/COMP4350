@@ -5,8 +5,16 @@ using UnityEngine;
 
 namespace Assets.Code.Components
 {
+    //TODO: Override Comparison to compare by name?
     public abstract class Item : MonoBehaviour
     {
+        #region Editor Fields
+        [SerializeField]
+        private string itemName;
+        [SerializeField]
+        private string description; 
+        #endregion
+
         private List<ItemAttribute> attributes; //The "REAL" attribute list
 
         #region Properties
