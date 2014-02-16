@@ -12,23 +12,37 @@ namespace Assets.Code.Components
     public class Weapon : MonoBehaviour, IUsableItem
     {
         #region Editor Fields
-        //Standard weapon fields
         [SerializeField]
-        private int damage;
-        //Assigned by Inspector (Ignore warning)
-        public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector, we need this because the inspector does not support dictionaries
+        private Weapon.Attributes attributes; //The Editor attributes
+        [Serializable]
+        public class Attributes
+        {
+            //Standard weapon fields
+            public int damage;
+            public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector
+            
+            public void Clear()
+            {
+                extraAttributes.Clear();
+            }
+        }
         #endregion
 
         #region Fields
-        private Item item;
+        private List<ItemAttribute> _attributes; //The "REAL" attribute list
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
 
         #region Properties
-        public Item Item { get { return item; } } //TODO: Do we need access to the item?
+        public IEnumerable<ItemAttribute> ItemAttributes { get { return _attributes; } } 
         #endregion
 
-        public Weapon() { }
+        //For testing (TODO: Shouldn't expose a public constructor)
+        //This is used to simulate Unity initializing the data from inspector input
+        public Weapon(Weapon.Attributes editorAttributes) 
+        {
+            this.attributes = editorAttributes;
+        }
 
         #region Public Interface
         public bool Use()
@@ -55,16 +69,16 @@ namespace Assets.Code.Components
         #region Private Methods
         private void InitItem()
         {
-            item = new Item();
-            item.AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
-            item.AddAttribute(AttributeType.Damage, damage);
-            foreach (ItemAttribute attr in extraAttributes)
+            _attributes = new List<ItemAttribute>();
+            _attributes.Add(new ItemAttribute(AttributeType.ItemType, (int)ItemType.Weapon));
+            _attributes.Add(new ItemAttribute(AttributeType.Damage, attributes.damage));
+            foreach (ItemAttribute attr in attributes.extraAttributes)
             {
-                item.AddAttribute(attr);
+                _attributes.Add(attr);
             }
 
-            extraAttributes.Clear();
-            extraAttributes = null;
+            attributes.Clear();
+            attributes = null; //"Free"
         }
         #endregion
     }

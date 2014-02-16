@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Assets.Code.Model
 {
-
     //The diferent types of attributes
     public enum AttributeType
     {
@@ -51,11 +50,16 @@ namespace Assets.Code.Model
         #endregion
 
         #region Constructor
+        public ItemAttribute(AttributeType type) :
+            this(type, 0)
+        { }
+
         public ItemAttribute(AttributeType type, int value)
         {
             this.type = type;
             this.value = value;
-        } 
+        }
+       
         #endregion
     }
 }
