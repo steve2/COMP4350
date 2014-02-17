@@ -13,3 +13,15 @@ def account():
 @app.route('/strap')
 def strap():
     return render_template('bootstrap.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+@app.route('/hello')
+def hello():
+    return render_template('hello.html')

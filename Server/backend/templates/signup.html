@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Login to Explosions!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" action="test" id="signin-form" role="form" method="post">
+        <h2 class="form-signin-heading">Create new account</h2>
+        <input type="username" class="form-control" placeholder="Username" name="user" required autofocus>
+        <input type="email" class="form-control" placeholder="Email" name="email" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" name="password" required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember" name="remember"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div>
+
+    <script src="static/jquery/jquery-1.10.2.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+        $("#signin-form").submit(function(event) {
+            event.preventDefault();
+            var objs = $(this).serializeArray();
+
+            var data = {};
+            for(var i = 0; i < objs.length; i++) {
+                var obj = objs[i];
+                data[obj.name] = obj.value;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/newAccount",
+                data: JSON.stringify(data),
+                success: function(data, _1, _2) {
+                    if(data.result) {
+                        window.location.replace("/");
+                    } else {
+                        window.location.replace("/signupFailed");
+                    }
+                },
+                contentType: 'application/json',
+                dataType: "json"
+            });
+        });
+    </script>
+  </body>
+</html>

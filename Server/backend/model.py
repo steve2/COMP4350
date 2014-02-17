@@ -1,3 +1,5 @@
+from player import Player
+
 class Model:
     def __init__(self):
         self.players = set()
@@ -7,6 +9,10 @@ class Model:
         self.players.add( player )
 
     def has_player(self, name, password_hash):
-        return Player(name, password_hash) in self.players
+        player = Player(name, password_hash)
+        for p in self.players:
+            if p == player:
+                return True
+        return False
 
     
