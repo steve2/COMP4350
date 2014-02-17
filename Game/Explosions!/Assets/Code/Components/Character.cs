@@ -16,11 +16,11 @@ public class Character : MonoBehaviour
 
     #region Properties
     #region PercentHealth
-    public int PercentHealth
+    public float PercentHealth
     {
         get
         {
-            return (int)((float)health / (float)maxHealth) * 100;
+            return (float)health / (float)maxHealth;
         }
     } 
     #endregion
