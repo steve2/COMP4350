@@ -6,6 +6,10 @@ from backend import app
 def homepage():
     return render_template('index.html')
 
-@app.route('/account', methods=['POST', 'GET'])
+@app.route('/account')
 def account():
     return render_template('account.html')
+
+@app.route('/strap')
+def strap():
+    return render_template('bootstrap.html')
