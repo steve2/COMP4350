@@ -8,9 +8,9 @@ from flask import request, session
 
 from backend import app
 
-from model import Model
+#from model import Model
 
-model = Model()
+#model = Model()
 
 @app.route('/json', methods=['POST', 'GET'])
 def handle_json():
@@ -33,7 +33,7 @@ def handle_new_account():
     password = data['password']
     password_hash = hash_password(password)
 
-    model.create_player(name, password_hash)
+    database.create_player(name, password_hash)
 
     session['username'] = name
 
@@ -47,12 +47,9 @@ def handle_login_request():
     password = data['password']
     password_hash = hash_password(password)
 
-    print "Have:", name, password_hash
-    print "Players:", model.players
-    for player in model.players:
-        print "  '" + player.name + ":", player.password_hash
+    database.print_players()
 
-    if model.has_player(name, password_hash):
+    if database.get_player(name, password_hash):
         session['username'] = name
         result = {'result': True}
     else:
