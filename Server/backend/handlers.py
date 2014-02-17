@@ -8,16 +8,12 @@ from flask import request, session
 
 from backend import app
 
-#from model import Model
-
-#model = Model()
-
 @app.route('/json', methods=['POST', 'GET'])
 def handle_json():
     print "Json:", request.json
     print "method:", request.method
     data = request.json
-    result = {'result': data['y'] + 3}
+    result = {'result': "Hi, " + data['name']}
     print "Result:", result['result']
     return jsonify(result)
 
