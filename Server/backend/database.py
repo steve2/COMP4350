@@ -10,8 +10,9 @@
 #
 # Dependencies
 #====================
-import MySQLdb as DB
-#import sqlite3 as DB
+import sys
+import MySQLdb
+import sqlite3
 
 #
 # Constants
@@ -26,8 +27,10 @@ TABL_NAME = "COMP4350_GRP5"
 
 def db_connect():
     #TODO: connect just once
-    db = DB.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
-    #db = DB.connect("local.db")
+    if "-local" in sys.argv:
+        db = sqlite3.connect("local.db")
+    else:
+        db = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
     return db
 
 def print_players():
@@ -45,6 +48,7 @@ def print_players():
 def reset_tables():
     db = db_connect()
     c = db.cursor()
+    c.executescript('''DROP TABLE IF EXISTS Player''')
     c.execute('''CREATE TABLE Player (Username text, PasswordHash text)''')
     db.commit()
     db.close()
