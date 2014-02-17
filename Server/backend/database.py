@@ -27,7 +27,7 @@ def print_players():
 	db = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
 	c = db.cursor()
 	c.execute("SELECT * FROM Player")
-	print "\nPython-MySQL Result Object\n============================="
+	print "\nPython-MySQL Results\n============================="
 	result = cursor.fetchone()
 	while (result != None):
 		print "- ", result, "\n"
