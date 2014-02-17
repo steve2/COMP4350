@@ -3,8 +3,10 @@ using System.Collections;
 
 public class Character : MonoBehaviour 
 {
-    #region Fields
+    #region Editor Fields
+    [SerializeField]
     private int health;
+    [SerializeField]
     private int maxHealth;
     [SerializeField]
     private int exp;
@@ -31,11 +33,12 @@ public class Character : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-	
+        health = maxHealth;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () 
+    {
 	
 	}
 }
