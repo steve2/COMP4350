@@ -9,26 +9,38 @@ namespace Assets.Code.Components
 {
     [AddComponentMenu("Items/Weapon")]
     //TODO: Should create child components MeleeWeapon/RangedWeapon (And make this abstract)
-    public class Weapon : MonoBehaviour, IUsableItem
+    public class Weapon : Item, IUsableItem
     {
         #region Editor Fields
-        //Standard weapon fields
         [SerializeField]
-        private int damage;
-        //Assigned by Inspector (Ignore warning)
-        public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector, we need this because the inspector does not support dictionaries
+        private Weapon.EditorAttributes attributes; //The Editor attributes
+        [Serializable]
+        public class EditorAttributes
+        {
+            //Standard weapon fields
+            public int damage;
+            public int speed;
+            public int range;
+            public int capacity; //TODO: Ranged only? Or can we interpret capacity for a melee weapon?
+            public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector
+            
+            public void Clear()
+            {
+                extraAttributes.Clear();
+            }
+        }
         #endregion
 
         #region Fields
-        private Item item;
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
-
-        #region Properties
-        public Item Item { get { return item; } } //TODO: Do we need access to the item?
-        #endregion
-
-        public Weapon() { }
+        
+        //For testing (TODO: Shouldn't expose a public constructor)
+        //This is used to simulate Unity initializing the data from inspector input
+        public Weapon(Weapon.EditorAttributes editorAttributes) 
+        {
+            this.attributes = editorAttributes;
+        }
 
         #region Public Interface
         public bool Use()
@@ -39,11 +51,6 @@ namespace Assets.Code.Components
         #endregion
 
         #region Unity Methods
-        // Use this for initialization
-        public void Start()
-        {
-            InitItem();
-        }
 
         // Update is called once per frame
         void Update()
@@ -52,19 +59,22 @@ namespace Assets.Code.Components
         } 
         #endregion
 
-        #region Private Methods
-        private void InitItem()
+        #region Overrides
+        protected override void InitAttributes()
         {
-            item = new Item();
-            item.AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
-            item.AddAttribute(AttributeType.Damage, damage);
-            foreach (ItemAttribute attr in extraAttributes)
+            base.InitAttributes();
+            AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
+            AddAttribute(AttributeType.Damage, attributes.damage);
+            AddAttribute(AttributeType.Speed, attributes.speed);
+            AddAttribute(AttributeType.Range, attributes.range);
+            AddAttribute(AttributeType.Capacity, attributes.capacity);
+            foreach (ItemAttribute attr in attributes.extraAttributes)
             {
-                item.AddAttribute(attr);
+                AddAttribute(attr);
             }
 
-            extraAttributes.Clear();
-            extraAttributes = null;
+            attributes.Clear();
+            attributes = null; //"Free"
         }
         #endregion
     }

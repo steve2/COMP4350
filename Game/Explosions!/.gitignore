@@ -9,5 +9,5 @@
 *.sln
 *.suo
 UpgradeLog*
-*.userpref
+*.userprefs
 UnitTestResults.xml

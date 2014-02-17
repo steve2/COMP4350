@@ -6,13 +6,15 @@ using System.Text;
 
 namespace Assets.Code.Model
 {
-
-    //The diferent types of attributes
+    //The different types of attributes
     public enum AttributeType
     {
         ItemType,
         Damage,
-        Health
+        Health,
+        Speed,
+        Range,
+        Capacity
     }
 
     /// <summary>
@@ -51,11 +53,16 @@ namespace Assets.Code.Model
         #endregion
 
         #region Constructor
+        public ItemAttribute(AttributeType type) :
+            this(type, 0)
+        { }
+
         public ItemAttribute(AttributeType type, int value)
         {
             this.type = type;
             this.value = value;
-        } 
+        }
+       
         #endregion
     }
 }

@@ -1,11 +1,13 @@
 import hashlib
 import json
 import uuid
+import database
 
 from flask import jsonify, redirect
 from flask import request, session
 
 from backend import app
+
 from model import Model
 
 model = Model()
@@ -60,4 +62,3 @@ def handle_login_request():
 @app.route('/accountDetails', methods=['POST', 'GET'])
 def account_details():
        pass
-
