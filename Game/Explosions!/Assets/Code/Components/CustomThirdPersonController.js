@@ -138,8 +138,8 @@ function UpdateSmoothedMovementDirection ()
 	// Always orthogonal to the forward vector
 	var right = Vector3(forward.z, 0, -forward.x);
 
-	var v = Input.GetAxisRaw("Vertical");
-	var h = Input.GetAxisRaw("Horizontal");
+	var v = InputAdapter.GetAxisRaw("Vertical");
+	var h = InputAdapter.GetAxisRaw("Horizontal");
 
 	// Are we moving backwards or looking backwards
 	if (v < -0.2)
@@ -420,7 +420,7 @@ function GetLockCameraTimer ()
 
 function IsMoving ()  : boolean
 {
-	return Mathf.Abs(Input.GetAxisRaw("Vertical")) + Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.5;
+	return Mathf.Abs(InputAdapter.GetAxisRaw("Vertical")) + Mathf.Abs(InputAdapter.GetAxisRaw("Horizontal")) > 0.5;
 }
 
 function HasJumpReachedApex ()
