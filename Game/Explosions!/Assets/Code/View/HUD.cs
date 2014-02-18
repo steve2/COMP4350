@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Code.Components;
 
 // The HUD(Heads-Up Display)
 [RequireComponent(typeof(Character))]

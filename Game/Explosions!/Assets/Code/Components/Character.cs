@@ -1,44 +1,47 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Character : MonoBehaviour 
+namespace Assets.Code.Components
 {
-    #region Editor Fields
-    [SerializeField]
-    private int health;
-    [SerializeField]
-    private int maxHealth;
-    [SerializeField]
-    private int exp;
-    [SerializeField]
-    private int level; 
-    #endregion
-
-    #region Properties
-    #region PercentHealth
-    public float PercentHealth
+    public class Character : MonoBehaviour
     {
-        get
+        #region Editor Fields
+        [SerializeField]
+        private int health;
+        [SerializeField]
+        private int maxHealth;
+        [SerializeField]
+        private int exp;
+        [SerializeField]
+        private int level;
+        #endregion
+
+        #region Properties
+        #region PercentHealth
+        public float PercentHealth
         {
-            return (float)health / (float)maxHealth;
+            get
+            {
+                return (float)health / (float)maxHealth;
+            }
         }
-    } 
-    #endregion
+        #endregion
 
-    public int Exp { get { return exp; } }
+        public int Exp { get { return exp; } }
 
-    public int Level { get { return level; } } 
-    #endregion
+        public int Level { get { return level; } }
+        #endregion
 
-	// Use this for initialization
-	void Start () 
-    {
-        health = maxHealth;
-	}
-	
-	// Update is called once per frame
-	void Update () 
-    {
-	
-	}
+        // Use this for initialization
+        public void Start()
+        {
+            health = maxHealth;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+    }
 }

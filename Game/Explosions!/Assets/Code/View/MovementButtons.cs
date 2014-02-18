@@ -37,21 +37,21 @@ public class MovementButtons : MonoBehaviour {
 //		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
 //		GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50));
 
-		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
-		GUILayout.Button ("Single Player");
-		GUILayout.Button ("Multiplayer");
-		GUILayout.EndArea();
-	}
+        GUILayout.BeginArea(new Rect(0, (Screen.height) - 100, 100, 100));
+
+        if (GUILayout.RepeatButton("W"))
+        {
+            InputAdapter.SetAxisRaw("Vertical", 1);
+        }
+        else
+        {
+            InputAdapter.SetAxisRaw("Vertical", 0);
+        }
+
+        GUILayout.EndArea();
+    }
 }
 
-//		GUILayout.BeginArea (new Rect (0, (Screen.height) - 100, 100, 100));
-//		GUILayout.RepeatButton ("W");
-//
-//		if (GUILayout.RepeatButton ("W")) {
-//			Event.KeyboardEvent("" + KeyCode.W);
-//		}
-//
-//		GUILayout.EndArea();
 
 		//		if ( GUI.RepeatButton( new Rect( 10, 10, 100, 35 ), "W" ) )
 		//		{
