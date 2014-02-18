@@ -37,7 +37,6 @@ def print_players():
     db = db_connect()
     c = db.cursor()
     c.execute("SELECT * FROM Player")
-    print "\nPython-DB Result Object\n============================="
     result = c.fetchone()
     while (result != None):
         print "- ", result, "\n"
@@ -54,20 +53,22 @@ def reset_tables():
     db.close()
 
 def create_player(username, password_hash):
-    db = db_connect()
-    c = db.cursor()
-    c.execute("INSERT INTO Player (Username, PasswordHash) values (?, ?)", (username, password_hash))
-    db.commit()
-    db.close()
-    return True
+	db = db_connect()
+	c = db.cursor()
+	qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
+	c.execute(qry, (username, password_hash))
+	db.commit()
+	db.close()
+	return True
 
 def get_player(username, password_hash):
-    db = db_connect()
-    c = db.cursor()
-    c.execute("SELECT * FROM Player WHERE Username=? AND PasswordHash=?", (username, password_hash))
-    result = c.fetchone()
-    db.close()
-    return result
+	db = db_connect()
+	c = db.cursor()
+	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
+	c.execute(qry, (username, password_hash))
+	result = c.fetchone()
+	db.close()
+	return result
 
 if __name__ == '__main__':
     reset_tables()
