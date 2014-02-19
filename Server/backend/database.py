@@ -3,7 +3,6 @@
 # 
 # Notes:
 #	- Code interacts with MySQL database.
-#	- Returns objects in JSON format for sending to client.
 #
 #===========================================================================
 
@@ -44,14 +43,6 @@ def print_players():
     print "----\n"
     db.close()
 
-def reset_tables():
-    db = db_connect()
-    c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Player''')
-    c.execute('''CREATE TABLE Player (Username text, PasswordHash text)''')
-    db.commit()
-    db.close()
-
 def create_player(username, password_hash):
 	db = db_connect()
 	c = db.cursor()
@@ -69,6 +60,50 @@ def get_player(username, password_hash):
 	result = c.fetchone()
 	db.close()
 	return result
-
+	
+def get_player_id(username, password_hash):
+	db=db_connect()
+	c=db.cursor()
+	qry="SELECT ID FROM Player WHERE Username=%s AND Password=%s"
+	c.execute(qry, (username, password_hash))
+	result = c.fetchone()
+	db.close()
+	return result
+	
+def create_character(username, password_hash, charname):
+	player = get_player(username, password_hash)
+	if (player != None):
+		id = get_player_id(username, password_hash)
+		db = db_connect()
+		c = db.cursor()
+		qry = "INSERT INTO Character (Player_ID, Name) VALUES (%s, %s)"
+		c.execute(qry, (id, "Char Name"))
+		c.commit()
+		db.close()
+		return True
+	return False
+	
+def get_characters(username, password_hash):
+	player = get_player(username, password_hash)
+	if (player != None):
+		id = get_player_id(username, password_hash)
+		db = db_connect()
+		c = db.cursor()
+		qry = "SELECT * FROM Character WHERE ID=%s"
+		c.execute(qry, (id))
+		for (row in c): #iterate through query results
+			result += (row[0])
+		c.close()
+		db.close()
+	return result
+	
+def reset_tables():
+    db = db_connect()
+    c = db.cursor()
+    c.executescript('''DROP TABLE IF EXISTS Player''')
+    c.execute('''CREATE TABLE Player (Username text, PasswordHash text)''')
+    db.commit()
+    db.close()
+	
 if __name__ == '__main__':
     reset_tables()
