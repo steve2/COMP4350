@@ -133,7 +133,7 @@ def reset_players():
     db = db_connect()
     c = db.cursor()
     c.executescript('''DROP TABLE IF EXISTS Player''')
-    c.execute('''CREATE TABLE Player (Username text, PasswordHash text)''')
+    c.execute('''CREATE TABLE Player (Username text, Password text)''')
     db.commit()
     db.close()
 	
