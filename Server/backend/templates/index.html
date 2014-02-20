@@ -1,120 +1,109 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>COMP 4350 EC2 Server</title>
-	<link rel="stylesheet" href="/static/css/style.css">
-	<link rel="stylesheet" href="/static/css/smoothness/jquery-ui-1.10.4.custom.css">
-	
-	<!-- JQuery and JQuery UI scripts could be grabbed externally. -->
-	<script src="static/jquery/jquery-1.10.2.js"></script>
-	<script src="static/jquery/jquery-ui-1.10.4.custom.js"></script>
-	
-	<script>
-		$(function() { $("#tabs").tabs(); });
-	</script>
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="shortcut icon" href="../../assets/ico/favicon.ico"> -->
 
-<body>
-	
-	<div class="titlebar">
-		<h1>EC2 Web Page</h1> 
-	</div>
-	
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-0">Home</a></li>
-			<li><a href="#tabs-1">Account</a></li>
-			<li><a href="#tabs-2">Items</a></li>
-			<li><a href="#tabs-3">Marketplace</a></li>
-		</ul>
-		<div id="tabs-0">
-			Home Tab. News?
-			
-			<div id="json-result"> </div>
-			
-			<script>
-				data = {};
-				data.value = 20;
-				
-				$.ajax({
-					type: "POST",
-					url: "/json",
-					contentType: "application/json; charset=utf-8",
-					dataType: "json",
-					data: '{ "name" : "Steve" }',
-					success: 
-						function(data, status, xmlhttp) { 
-							var output = data;
-							console.log("Result:", output);
-						},
-					error:
-						function(errmsg) {
-							console.log("Error:", errmsg);
-						}
-				});
-				  
-			</script>
-			
-		</div>
-		<div id="tabs-1">
-			Account Information / Sign In / Registration
-		</div>
-		<div id="tabs-2">
-			Item Information <br>
-			
-			
-			<!--
-				$conn = mysqli_connect("localhost", "COMP4350_admin", "admin", "COMP4350_GRP5");
-				if (mysqli_connect_errno())
-					print 'Failed to connect to local DB \"COMP4350_admin\".';
-					
-				$query = "SELECT Item.ID AS itemID, Item.Name AS itemName, Item.Description AS itemDescr, Item_Attributes.Item_ID AS itemID, Item_Attributes.Attribute_ID AS attrID, Item_Attributes.Value AS attrValue, Attribute.ID AS attrID, Attribute.Text AS attrText FROM Item JOIN Item_Attributes ON Item.ID=Item_Attributes.Item_ID JOIN Attribute ON Attribute.ID=Item_Attributes.Attribute_ID";
-				$result = mysqli_query($conn, $query);
-				
-				$previd = NULL;
-				while ($row = mysqli_fetch_array($result)) {				
-					if ($previd == NULL) {
-						echo "<p>";
-						echo "<strong>".$row['itemName']."</strong><br>";
-						echo $row['itemDescr']."<br>";
-						echo "ID: #".$row['itemID']."<br>";
-					}
-					if ($previd != NULL && $previd != $row['itemID']) {
-						echo "</p><p>";
-						echo "<strong>".$row['itemName']."</strong><br>";
-						echo $row['itemDescr']."<br>";
-						echo "ID: #".$row['itemID']."<br>";
-					}
-					echo $row['attrText']." (".$row['attrValue'].")<br>";
-					$previd = $row['itemID'];
-				} 
-				echo "</p>";
-				mysqli_close($conn);
-			-->
-			
-		</div>
-		<div id="tabs-3" class="tab-content">
-			Marketplace - Trade/Craft/Buy Items
-		</div>
-	</div>
-	
-	<div id="toolbar-container">
-		<div id="toolbar" class="ui-widget-header ui-corner-all"/>
-	</div>
+    <title>Theme Template for Bootstrap</title>
 
-	<script>
-		
-		function updateClock() {				
-			var splt = Date().split(" ");
-			document.getElementById('toolbar').innerHTML 
-					= splt[4] + ' ' + splt[1] + ' ' + splt[2];
-			setTimeout(updateClock, 1000);
-		}
-		updateClock();
-		
-	</script>
-	
-</body>
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="/static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 
+  </head>
+
+  <body role="document">
+
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Explosions!</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a id="Home" href="#"">Home</a></li>
+            <li><a id="Leaderboard" href="#Leaderboard">Leaderboard</a></li>
+            <li><a id="Items" href="#Items">Items</a></li>
+            <li><a id="Marketplace" href="#Marketplace">Marketplace</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">My Characters</a></li>
+                <li><a href="#">Report problem</a></li>
+                <li class="divider"></li>
+                <li><a href="#">Log out</a></li>
+              </ul>
+            </li>
+            <li><form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Go</button>
+              </form></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <div id="contents"></div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/docs.min.js"></script> -->
+
+    <script src="static/jquery/jquery-1.10.2.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+    /*$(function(){
+        alert("Test");
+        $('#Leaderboard').load('hello.html', function() {
+            alert("Leaderboard");
+            $('.nav a:contains("Home")').parent().addClass('active');
+        })
+    });*/
+
+    $(function() {
+        // TODO: switch all this to ajax
+        var homehtml = "Home page. News?";
+
+        $('#contents').ready(function() {
+            $("#contents").html(homehtml);
+        });
+
+        $('#Home').on('click', function() {
+            $('#contents').html(homehtml);
+        });
+        $('#Leaderboard').on('click', function() {
+            $('#contents').html("Stats");
+        });
+        $('#Items').on('click', function() {
+            $('#contents').html("Item Information");
+        });
+        $('#Marketplace').on('click', function() {
+            $('#contents').html("Marketplace - Trade/Craft/Buy Items ");
+        });
+    });
+</script>
+  </body>
 </html>
+
 
