@@ -1,9 +1,8 @@
 #===========================================================================
-# database.py
+# character.py
 # 
 # Notes:
-#	- This script has been broken up into more specific scripts
-#	- We are no longer using this.
+#	- Code interacts with MySQL database to get Character information.
 #
 #===========================================================================
 
@@ -33,35 +32,6 @@ def db_connect():
     else:
         db = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
     return db
-	
-def print_players():
-    db = db_connect()
-    c = db.cursor()
-    c.execute("SELECT * FROM Player")
-    result = c.fetchone()
-    while (result != None):
-        print "- ", result, "\n"
-        result = c.fetchone()
-    print "----\n"
-    db.close()
-
-def get_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
-	c.execute(qry, (username, password_hash))
-	result = c.fetchone()
-	db.close()
-	return result
-
-def create_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
-	c.execute(qry, (username, password_hash))
-	db.commit()
-	db.close()
-	return True
 
 #===================================================================================
 # Character Queries
@@ -126,16 +96,7 @@ def create_character(username, charname):
 	return True
 
 def reset_tables():
-	reset_players()
 	reset_characters()
-	
-def reset_players():
-    db = db_connect()
-    c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Player''')
-    c.execute('''CREATE TABLE Player (Username text, Password text)''')
-    db.commit()
-    db.close()
 	
 def reset_characters():
 	db = db_connect()
