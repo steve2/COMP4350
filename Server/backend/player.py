@@ -1,5 +1,6 @@
 class Player:
-    def __init__(self, name, password_hash):
+    def __init__(self, id, name, password_hash):
+		self.id = id
         self.name = name
         self.password_hash = password_hash
         self.statistics = {}

@@ -3,6 +3,7 @@
 # 
 # Notes:
 #	- Code interacts with MySQL database.
+#	- Returns objects in JSON format for sending to client.
 #
 #===========================================================================
 
@@ -12,6 +13,8 @@
 import sys
 import MySQLdb
 import sqlite3
+
+from itertools import chain
 
 #
 # Constants
@@ -25,7 +28,6 @@ TABL_NAME = "COMP4350_GRP5"
 #***************************************************************************
 
 def db_connect():
-    #TODO: connect just once
     if "-local" in sys.argv:
         db = sqlite3.connect("local.db")
     else:
@@ -43,6 +45,15 @@ def print_players():
     print "----\n"
     db.close()
 
+def get_player(username, password_hash):
+	db = db_connect()
+	c = db.cursor()
+	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
+	c.execute(qry, (username, password_hash))
+	result = c.fetchone()
+	db.close()
+	return result
+
 def create_player(username, password_hash):
 	db = db_connect()
 	c = db.cursor()
@@ -52,51 +63,68 @@ def create_player(username, password_hash):
 	db.close()
 	return True
 
-def get_player(username, password_hash):
+#===================================================================================
+# Character Queries
+#
+# When querying characters all we've got is the User/Player's name that is
+# currently logged into the system. Because of this, we need to query the Player's
+# ID and then cross-reference that ID with the other tables.
+#
+#===================================================================================
+def get_player_id(username):
 	db = db_connect()
 	c = db.cursor()
-	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
-	c.execute(qry, (username, password_hash))
+	qry = "SELECT Player.ID FROM Player WHERE Username=%s"
+	c.execute(qry, (username,))
+	result = c.fetchone()[0]
+	db.close()
+	return result
+
+	
+#
+# get_character ()
+#	@id:		ID of the character to be retrieved.
+#	@return:	Returns an object if the character with that ID exists.
+#
+# This could be used to check if the Character is in the database when we want
+# to delete characters from Player accounts. 
+#
+def get_character(id):
+	db = db_connect()
+	c = db.cursor()
+	qry = "SELECT * FROM `Character` WHERE ID=%s"
+	c.execute(qry, (id,))
 	result = c.fetchone()
 	db.close()
 	return result
 	
-def get_player_id(username, password_hash):
-	db=db_connect()
-	c=db.cursor()
-	qry="SELECT ID FROM Player WHERE Username=%s AND Password=%s"
-	c.execute(qry, (username, password_hash))
-	result = c.fetchone()
+#
+# get_characters ()       
+#	@username:	user-name/account-name to retrieve characters for.
+# 	@return:	returns list of characters currently owned by specified player.
+#
+def get_characters(username):
+	db = db_connect()
+	c = db.cursor()
+	id = get_player_id(username)
+	qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
+	c.execute(qry, (id,))
+	result = []
+	for row in c:
+		result.append(row)
 	db.close()
 	return result
 	
-def create_character(username, password_hash, charname):
-	player = get_player(username, password_hash)
-	if (player != None):
-		id = get_player_id(username, password_hash)
-		db = db_connect()
-		c = db.cursor()
-		qry = "INSERT INTO Character (Player_ID, Name) VALUES (%s, %s)"
-		c.execute(qry, (id, "Char Name"))
-		c.commit()
-		db.close()
-		return True
-	return False
-	
-def get_characters(username, password_hash):
-	player = get_player(username, password_hash)
-	if (player != None):
-		id = get_player_id(username, password_hash)
-		db = db_connect()
-		c = db.cursor()
-		qry = "SELECT * FROM Character WHERE ID=%s"
-		c.execute(qry, (id))
-		for (row in c): #iterate through query results
-			result += (row[0])
-		c.close()
-		db.close()
-	return result
-	
+def create_character(username, charname):
+	db = db_connect()
+	c = db.cursor()
+	id = get_player_id(username)
+	qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
+	c.execute(qry, (id, charname))
+	db.commit()
+	db.close()
+	return True
+
 def reset_tables():
     db = db_connect()
     c = db.cursor()
@@ -105,5 +133,22 @@ def reset_tables():
     db.commit()
     db.close()
 	
+def reset_characters():
+	db = db_connect()
+	c = db.cursor()
+	c.execute("DELETE FROM `Character`")
+	db.commit()
+	db.close()
+	
 if __name__ == '__main__':
-    reset_tables()
+	print "Resetting Character Table..."
+	reset_characters()
+	print "Adding Characters to Player ('Steve'):"
+	create_character("Steve", "CharName00")
+	create_character("Steve", "CharName01")
+	create_character("Steve", "CharName02")
+	create_character("Steve", "CharName03")
+	
+	charList = get_characters("Steve")
+	for char in charList:
+		print char
