@@ -5,14 +5,12 @@
 #	- Code interacts with MySQL database.
 #
 #===========================================================================
-
 #
 # Dependencies
 #====================
 import sys
 import MySQLdb
 import sqlite3
-
 #
 # Constants
 #============================
@@ -21,9 +19,11 @@ USER_NAME = "COMP4350_admin"
 USER_PASS = "admin"
 TABL_NAME = "COMP4350_GRP5"
 
+	
 #***************************************************************************
+# Database Functions	
 #***************************************************************************
-
+	
 def db_connect():
     if "-local" in sys.argv:
         db = sqlite3.connect("local.db")
@@ -60,14 +60,15 @@ def create_player(username, password_hash):
 	db.close()
 	return True
 
-#===================================================================================
+#
 # Character Queries
 #
 # When querying characters all we've got is the User/Player's name that is
 # currently logged into the system. Because of this, we need to query the Player's
 # ID and then cross-reference that ID with the other tables.
 #
-#===================================================================================
+#
+
 def get_player_id(username):
 	db = db_connect()
 	c = db.cursor()
@@ -77,7 +78,6 @@ def get_player_id(username):
 	db.close()
 	return result
 
-	
 #
 # get_character ()
 #	@id:		ID of the character to be retrieved.
@@ -123,16 +123,21 @@ def create_character(username, charname):
 	return True
 
 def reset_tables():
+	print "Resetting Database Tables.."
+	print "> Reset Player Table:"
 	reset_players()
+	print "> Reset Character Table:"
 	reset_characters()
 	
 def reset_players():
-    db = db_connect()
-    c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Player''')
-    c.execute('''CREATE TABLE Player (Username text, Password text)''')
-    db.commit()
-    db.close()
+	db = db_connect()
+	c = db.cursor()
+	c.execute("DELETE FROM Player")
+# ! -- DELETE FROM Player will preserve the schema (primary key, auto_increment, etc.)
+#	c.execute('''DROP TABLE IF EXISTS Player''')
+#	c.execute('''CREATE TABLE Player (Username text, Password text)''')
+	db.commit()
+	db.close()
 	
 def reset_characters():
 	db = db_connect()
@@ -141,5 +146,12 @@ def reset_characters():
 	db.commit()
 	db.close()
 	
+
+#***************************************************************************
+# Main Program ("python database.py")
+#***************************************************************************
 if __name__ == '__main__':
 	reset_tables()
+
+	
+
