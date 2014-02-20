@@ -27,6 +27,7 @@ TABL_NAME = "COMP4350_GRP5"
 
 def db_connect():
     #TODO: connect just once
+    #TODO: -p should imply MySQL, otherwise sqlite for local stuff
     if "-local" in sys.argv:
         db = sqlite3.connect("local.db")
     else:
