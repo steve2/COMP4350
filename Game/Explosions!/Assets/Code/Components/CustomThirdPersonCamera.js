@@ -28,7 +28,7 @@ private var centerOffset = Vector3.zero;
 private var heightVelocity = 0.0;
 private var angleVelocity = 0.0;
 private var snap = false;
-private var controller : ThirdPersonController;
+private var controller : CustomThirdPersonController;
 private var targetHeight = 100000.0; 
 
 function Awake ()
@@ -44,7 +44,7 @@ function Awake ()
 	_target = transform;
 	if (_target)
 	{
-		controller = _target.GetComponent(ThirdPersonController);
+		controller = _target.GetComponent(CustomThirdPersonController);
 	}
 	
 	if (controller)
@@ -55,7 +55,7 @@ function Awake ()
 		headOffset.y = characterController.bounds.max.y - _target.position.y;
 	}
 	else
-		Debug.Log("Please assign a target to the camera that has a ThirdPersonController script attached.");
+		Debug.Log("Please assign a target to the camera that has a CustomThirdPersonController script attached.");
 
 	
 	Cut(_target, centerOffset);
