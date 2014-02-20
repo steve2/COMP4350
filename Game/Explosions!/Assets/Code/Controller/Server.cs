@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization.JavaScriptSerializer;
 
+using SimpleJSON;
+
 class Server {
     private String url;
     private JavaScriptSerializer serializer;
@@ -12,19 +14,17 @@ class Server {
         this.serializer = new JavaScriptSerializer();
     }
 
-    public async Task<Dictionary<String, Object>> Send(Object table) {
-        var json = serializer.serialize(table);
-         
+    public async Task<JSON> Send(String json) {
         var utf8 = new System.Text.UTF8Encoding();
-        var postHeader = new Hashtable();
+        var header = new Hashtable();
            
-        postHeader.Add("Content-Type", "text/json");
-        postHeader.Add("Content-Length", json.Length);
+        header.Add("Content-Type", "text/json");
+        header.Add("Content-Length", json.Length);
          
-        var www = WWW(this.url, utf8.GetBytes(json), postHeader);
+        var www = WWW(this.url, utf8.GetBytes(json), header);
          
         yield www;
            
-        return serializer.Deserialize(www.text);
+        return JSON.Parse(www.text);
     }
 }
