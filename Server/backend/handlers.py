@@ -1,7 +1,11 @@
 import hashlib
 import json
 import uuid
-import database
+import database.database
+import database.mission
+import database.rewards
+import database.characters
+import database.players
 
 from flask import jsonify, redirect
 from flask import request, session

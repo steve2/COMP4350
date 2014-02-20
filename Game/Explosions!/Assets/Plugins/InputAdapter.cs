@@ -33,4 +33,20 @@ public static class InputAdapter
 
 		return Input.GetAxisRaw(axisName);
     }
+
+	public static void ResetInputAxis()
+	{
+		InputAdapter.SetAxisRaw ("Vertical", 0);
+		InputAdapter.SetAxisRaw ("Horizontal", 0);
+	}
+
+	public static bool GetButtonDown(string buttonName)
+	{
+		return false;
+	}
+
+	public static bool GetKey(string name)
+	{
+		return false;
+	}
 }
