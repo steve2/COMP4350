@@ -126,6 +126,10 @@ def create_character(username, charname):
 	return True
 
 def reset_tables():
+	reset_players()
+	reset_characters()
+	
+def reset_players():
     db = db_connect()
     c = db.cursor()
     c.executescript('''DROP TABLE IF EXISTS Player''')
@@ -141,14 +145,4 @@ def reset_characters():
 	db.close()
 	
 if __name__ == '__main__':
-	print "Resetting Character Table..."
-	reset_characters()
-	print "Adding Characters to Player ('Steve'):"
-	create_character("Steve", "CharName00")
-	create_character("Steve", "CharName01")
-	create_character("Steve", "CharName02")
-	create_character("Steve", "CharName03")
-	
-	charList = get_characters("Steve")
-	for char in charList:
-		print char
+	reset_tables()
