@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Script.Serialization.JavaScriptSerializer;
+using System.Threading.Tasks;
 
 using SimpleJSON;
 
@@ -23,7 +24,7 @@ class Server {
          
         var www = WWW(this.url, utf8.GetBytes(json), header);
          
-        yield www;
+        yield return www;
            
         return JSON.Parse(www.text);
     }
