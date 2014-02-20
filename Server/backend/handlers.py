@@ -1,7 +1,8 @@
 import hashlib
 import json
 import uuid
-import database
+import database.database
+import database.mission
 
 from flask import jsonify, redirect
 from flask import request, session
