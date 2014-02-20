@@ -14,8 +14,6 @@ import sys
 import MySQLdb
 import sqlite3
 
-from itertools import chain
-
 #
 # Constants
 #============================
