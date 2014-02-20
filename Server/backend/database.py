@@ -3,7 +3,6 @@
 # 
 # Notes:
 #	- Code interacts with MySQL database.
-#	- Returns objects in JSON format for sending to client.
 #
 #===========================================================================
 
