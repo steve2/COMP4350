@@ -24,7 +24,9 @@ def print_rewards():
     db.close()
 
 def reset_tables():
+	print "> Reset Reward Item Table"
 	reset_reward_item()
+	print "> Reset Reward Table"
 	reset_reward()
 	
 def reset_reward():

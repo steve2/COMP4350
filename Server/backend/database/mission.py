@@ -33,8 +33,11 @@ def get_missions():
 	return result
 
 def reset_tables():
+	print "> Reset Mission Completed Table"
 	reset_mission_completed()
+	print "> Reset Mission Type Table"
 	reset_mission_type()
+	print "> Reset Mission Table"
 	reset_mission()
 	
 def reset_mission_completed():
@@ -62,4 +65,6 @@ def reset_mission():
     db.close()
 	
 if __name__ == '__main__':
-	reset_tables()
+    if ("-reset" in database.sys.argv):
+        reset_tables()
+
