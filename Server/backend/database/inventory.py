@@ -53,8 +53,4 @@ def reset_tables():
 if __name__ == '__main__':
     if "-reset" in sys.argv:
         reset_tables()
-    else:
-        data = get_inventory(1)
-        for entry in data:
-            print entry
 

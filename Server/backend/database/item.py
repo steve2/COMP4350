@@ -66,7 +66,3 @@ def reset_tables():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-    else:
-        data = get_item("Blunt Object")
-        for entry in data:
-            print entry
