@@ -1,8 +1,8 @@
 #===========================================================================
-# character.py
+# item.py
 # 
 # Notes:
-#	- Code interacts with MySQL database to get Character information.
+#	- Code interacts with MySQL database to get Item information.
 #
 #===========================================================================
 
@@ -11,6 +11,11 @@
 #====================
 from database import *
   
+
+def get_items():
+    db = db_connect();
+    
+    db.close()
     
 def get_item(itemname):
     db = db_connect()
@@ -62,6 +67,6 @@ if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
     else:
-        data = get_item("Future Legs")
+        data = get_item("Blunt Object")
         for entry in data:
             print entry
