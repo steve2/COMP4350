@@ -9,32 +9,11 @@
 #
 # Dependencies
 #====================
-import sys
-import MySQLdb
-import sqlite3
+import database
 
-#
-# Constants
-#============================
-HOST_NAME = "localhost"
-USER_NAME = "COMP4350_admin"
-USER_PASS = "admin"
-TABL_NAME = "COMP4350_GRP5"
-
-#***************************************************************************
-#***************************************************************************
-
-def db_connect():
-    #TODO: connect just once
-    #TODO: -p should imply MySQL, otherwise sqlite for local stuff
-    if "-local" in sys.argv:
-        db = sqlite3.connect("local.db")
-    else:
-        db = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
-    return db
 	
 def print_players():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("SELECT * FROM Player")
     result = c.fetchone()
@@ -45,7 +24,7 @@ def print_players():
     db.close()
 
 def get_player(username, password_hash):
-	db = db_connect()
+	db = database.db_connect()
 	c = db.cursor()
 	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
 	c.execute(qry, (username, password_hash))
@@ -54,7 +33,7 @@ def get_player(username, password_hash):
 	return result
 
 def create_player(username, password_hash):
-	db = db_connect()
+	db = database.db_connect()
 	c = db.cursor()
 	qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
 	c.execute(qry, (username, password_hash))
@@ -63,15 +42,17 @@ def create_player(username, password_hash):
 	return True
 
 def reset_tables():
+	print "> Reset Player Table"
 	reset_players()
 	
 def reset_players():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Player''')
-    c.execute('''CREATE TABLE Player (Username text, Password text)''')
+    c.execute("DROP TABLE IF EXISTS Player")
+    c.execute("CREATE TABLE Player (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
     db.commit()
     db.close()
 	
 if __name__ == '__main__':
-	reset_tables()
+	if ("-reset" in database.sys.argv):
+		reset_tables()

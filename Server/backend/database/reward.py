@@ -10,9 +10,10 @@
 # Dependencies
 #====================
 import database
+
 	
 def print_rewards():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("SELECT * FROM Reward")
     result = c.fetchone()
@@ -23,24 +24,25 @@ def print_rewards():
     db.close()
 
 def reset_tables():
-	reset_rewardItem()
+	reset_reward_item()
 	reset_reward()
 	
 def reset_reward():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Reward''')
-    c.execute('''CREATE TABLE Reward (ID INT NOT NULL PRIMARY KEY, Exp INT)''')
+    c.execute("DROP TABLE IF EXISTS Reward")
+    c.execute("CREATE TABLE Reward (ID INT NOT NULL PRIMARY KEY, Exp INT)")
     db.commit()
     db.close()
 	
 def reset_reward_item():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    c.executescript('''DROP TABLE IF EXISTS Reward_Item''')
-    c.execute('''CREATE TABLE Reward_Item (Reward_ID INT NOT NULL, Item_ID INT NOT NULL, Quantity INT)''')
+    c.execute("DROP TABLE IF EXISTS Reward_Item")
+    c.execute("CREATE TABLE Reward_Item (Reward_ID INT NOT NULL, Item_ID INT NOT NULL, Quantity INT)")
     db.commit()
     db.close()
 	
 if __name__ == '__main__':
-	reset_tables()
+	if ("-reset" in database.sys.argv):
+		reset_tables()

@@ -9,29 +9,8 @@
 #
 # Dependencies
 #====================
-import sys
-import MySQLdb
-import sqlite3
+import database
 
-#
-# Constants
-#============================
-HOST_NAME = "localhost"
-USER_NAME = "COMP4350_admin"
-USER_PASS = "admin"
-TABL_NAME = "COMP4350_GRP5"
-
-#***************************************************************************
-#***************************************************************************
-
-def db_connect():
-    #TODO: connect just once
-    #TODO: -p should imply MySQL, otherwise sqlite for local stuff
-    if "-local" in sys.argv:
-        db = sqlite3.connect("local.db")
-    else:
-        db = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)
-    return db
 
 #===================================================================================
 # Character Queries
@@ -106,4 +85,5 @@ def reset_characters():
 	db.close()
 	
 if __name__ == '__main__':
-	reset_tables()
+	if ("-reset" in database.sys.argv):
+		reset_tables()
