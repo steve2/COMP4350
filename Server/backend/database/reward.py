@@ -21,8 +21,6 @@ USER_NAME = "COMP4350_admin"
 USER_PASS = "admin"
 TABL_NAME = "COMP4350_GRP5"
 
-#***************************************************************************
-#***************************************************************************
 
 def db_connect():
     if "-local" in sys.argv:
@@ -54,7 +52,7 @@ def reset_reward():
     db.commit()
     db.close()
 	
-def reset_rewardItem():
+def reset_reward_item():
     db = db_connect()
     c = db.cursor()
     c.executescript('''DROP TABLE IF EXISTS Reward_Item''')
