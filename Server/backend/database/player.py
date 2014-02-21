@@ -9,11 +9,11 @@
 #
 # Dependencies
 #====================
-import database
+from database import *
 
 	
 def print_players():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("SELECT * FROM Player")
     result = c.fetchone()
@@ -24,7 +24,7 @@ def print_players():
     db.close()
 
 def get_player(username, password_hash):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
 	c.execute(qry, (username, password_hash))
@@ -33,7 +33,7 @@ def get_player(username, password_hash):
 	return result
 
 def create_player(username, password_hash):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
 	c.execute(qry, (username, password_hash))
@@ -46,7 +46,7 @@ def reset_tables():
 	reset_players()
 	
 def reset_players():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Player")
     c.execute("CREATE TABLE Player (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
@@ -54,5 +54,5 @@ def reset_players():
     db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in database.sys.argv):
+	if ("-reset" in sys.argv):
 		reset_tables()

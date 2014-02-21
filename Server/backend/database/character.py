@@ -9,7 +9,7 @@
 #
 # Dependencies
 #====================
-import database
+from database import *
 
 
 
@@ -23,7 +23,7 @@ import database
 #
 
 def get_player_id(username):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	qry = "SELECT Player.ID FROM Player WHERE Username=%s"
 	c.execute(qry, (username,))
@@ -40,7 +40,7 @@ def get_player_id(username):
 # to delete characters from Player accounts. 
 #
 def get_character(id):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	qry = "SELECT * FROM `Character` WHERE ID=%s"
 	c.execute(qry, (id,))
@@ -54,7 +54,7 @@ def get_character(id):
 # 	@return:	returns list of characters currently owned by specified player.
 #
 def get_characters(username):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	id = get_player_id(username)
 	qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
@@ -67,7 +67,7 @@ def get_characters(username):
 	
 
 def create_character(username, charname):
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	id = get_player_id(username)
 	qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
@@ -82,7 +82,7 @@ def reset_tables():
 	reset_characters()
 	
 def reset_characters():
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	c.execute("DROP TABLE IF EXISTS `Character`")
 	c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
@@ -90,5 +90,5 @@ def reset_characters():
 	db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in database.sys.argv):
+	if ("-reset" in sys.argv):
 		reset_tables()

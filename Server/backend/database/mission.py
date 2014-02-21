@@ -9,11 +9,11 @@
 #
 # Dependencies
 #====================
-import database
+from database import *
 
 
 def print_missions():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("SELECT * FROM Mission")
     result = c.fetchone()
@@ -24,7 +24,7 @@ def print_missions():
     db.close()
 
 def get_missions():
-	db = database.db_connect()
+	db = db_connect()
 	c = db.cursor()
 	c.execute("SELECT ID, MT.Name As MissionType" +
 			"FROM Mission M INNER JOIN Mission_Type MT on M.Mission_Type_ID = MT.ID ")
@@ -41,7 +41,7 @@ def reset_tables():
 	reset_mission()
 	
 def reset_mission_completed():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Mission_Completed")
     c.execute("CREATE TABLE Mission_Completed (Character_ID INT NOT NULL, Mission_ID INT NOT NULL)")
@@ -49,7 +49,7 @@ def reset_mission_completed():
     db.close()
 	
 def reset_mission_type():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Mission_Type")
     c.execute("CREATE TABLE Mission_Type (ID INT NOT NULL PRIMARY KEY, Name CHAR)")
@@ -57,7 +57,7 @@ def reset_mission_type():
     db.close()
 	
 def reset_mission():
-    db = database.db_connect()
+    db = db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Mission")
     c.execute("CREATE TABLE Mission (ID INT PRIMARY KEY NOT NULL, Mission_Type_ID INT NOT NULL)")
@@ -65,6 +65,6 @@ def reset_mission():
     db.close()
 	
 if __name__ == '__main__':
-    if ("-reset" in database.sys.argv):
+    if ("-reset" in sys.argv):
         reset_tables()
 
