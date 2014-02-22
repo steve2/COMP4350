@@ -6,14 +6,43 @@ using SimpleJSON;
 using System.Collections;
 using UnityEngine;
 
-class Server {
+public class Server 
+{
+    private static Server instance;
+    private const string PRODUCTION_URL = "http://54.200.201.50";
     private String url;
 
-    public Server(String url) {
+    /// <summary>
+    /// This is a service that provides communication with a "server" (Whether it's a real server or not)
+    /// It can be changed during run-time
+    /// Options: ProductionServer, TestServer, DemoServer, ServerStub
+    /// </summary>
+    //public static Server Instance { get; set; }
+    //TODO: Maybe instead of instantiating a default server here, we could handle that in a setup elsewhere and use the cleaner property above
+    //TODO: This instance can be stored inside Server class, or inside a different global class
+    public static Server Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new Server(PRODUCTION_URL);
+            }
+            return instance;
+        }
+        set
+        {
+            instance = value;
+        }
+    }
+
+    public Server(String url) 
+    {
         this.url = url;
     }
 
-    private JSONNode Send(String path, String json) {
+    protected virtual JSONNode Send(String path, String json) 
+    {
         var utf8 = new System.Text.UTF8Encoding();
         var header = new Hashtable();
            
