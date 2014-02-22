@@ -6,14 +6,18 @@ using SimpleJSON;
 using System.Collections;
 using UnityEngine;
 
-class Server {
+public class Server 
+{
     private String url;
 
-    public Server(String url) {
+
+    public Server(String url) 
+    {
         this.url = url;
     }
 
-    private JSONNode Send(String path, String json) {
+    protected virtual JSONNode Send(String path, String json) 
+    {
         var utf8 = new System.Text.UTF8Encoding();
         var header = new Hashtable();
            
