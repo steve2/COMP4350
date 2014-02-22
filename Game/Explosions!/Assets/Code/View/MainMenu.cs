@@ -16,11 +16,13 @@ public class MainMenu : MonoBehaviour {
 	// Called when the GUI is rendered
 	void OnGUI() {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
-		GUILayout.Button ("Single Player");
+		if (GUILayout.Button ("Single Player")) {
+			Application.LoadLevel("MissionMenu"); // Load the Mission List
+		}
 		GUILayout.Button ("Multiplayer");
 		if (GUILayout.Button ("Play Demo")) {
 			Application.LoadLevel("Demo"); // Play the Demo 
-				}
+		}
 		GUILayout.Button ("View website");
 		GUILayout.Button ("Settings");
 		GUILayout.EndArea();
