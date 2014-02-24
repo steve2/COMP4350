@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Code.Components;
 
-public class MainMenu : MonoBehaviour {
+public class MainMenu : GameComponent {
+
+    //Called before Start
+    void Awake()
+    {
+        Game.Init();
+    }
 
 	// Use this for initialization
-	void Start () {
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public override void Start () 
+    {
+        base.Start();
 	}
 
 	// Called when the GUI is rendered
