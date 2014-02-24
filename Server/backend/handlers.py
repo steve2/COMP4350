@@ -13,11 +13,11 @@ def hash_password(password):
 
 @app.route('/json', methods=['POST', 'GET'])
 def handle_json():
-    print "Json:", request.json
-    print "method:", request.method
+    print ("Json:", request.json)
+    print ("method:", request.method)
     data = request.json
     result = {'result': "Hi, " + data['name']}
-    print "Result:", result['result']
+    print ("Result:", result['result'])
     return jsonify(result)
 
 @app.route('/newAccount', methods=['POST', 'GET'])
@@ -41,8 +41,8 @@ def handle_login_request():
 	password_hash = hash_password(password)
 	
 	loginPlayer = database.get_player(name, password_hash)
-	print name, " ", password_hash
-	print loginPlayer
+	print (name, " ", password_hash)
+	print (loginPlayer)
     
 	if (loginPlayer != None):
 		session['username'] = name
@@ -54,3 +54,28 @@ def handle_login_request():
 @app.route('/accountDetails', methods=['POST', 'GET'])
 def account_details():
        pass
+
+SHOP = -1 #Character ID for SHOP
+@app.route('/useRecipe', methods = ['POST', 'GET'])
+def handle_use_recipe():
+    data = request.json
+    recipe = ['recipe']
+    inChar = ['inChar']
+    outChar = ['outChar']
+    inItems = recipe.get_recipe_in(recipe)
+    outItems = recipe.get_recipe_out(recipe)
+    success = false
+    #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
+    #success = ...
+    #if(success):
+        #TODO: Remove inItems from inChar (Make a common function)
+        #if(inChar != SHOP):
+            #loop through all items?
+            #inventory.remove(inChar, item)
+        #TODO: Remove outItems from outChar
+        #if(inChar != SHOP):
+            #loop through all items?
+            #inventory.remove(outChar, item)
+  
+    result = { 'result' : success }
+    return jsonify(result)
