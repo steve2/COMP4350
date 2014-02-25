@@ -1,9 +1,9 @@
 #===========================================================================
-# inventory.py
+# equipment.py
 # 
 # Notes:
 #	- Code interacts with MySQL database to get Character 
-#     inventory information.
+#     equipment information.
 #
 #===========================================================================
 
