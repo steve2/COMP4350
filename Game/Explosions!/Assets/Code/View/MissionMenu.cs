@@ -2,12 +2,13 @@
 using System.Collections;
 using Assets.Code.Components;
 
-public class MissionMenu : MonoBehaviour {
+public class MissionMenu : GameComponent {
 
 	private Character character;
 
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
+        base.Start();
 		character = GetComponent<Character> (); 
 	}
 	
