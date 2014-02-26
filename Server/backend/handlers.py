@@ -92,3 +92,16 @@ def handle_create_character():
     result = database.create_character(username, charname)
     return jsonify(result)
 
+@app.route('/character/inventory', methods = ['POST', 'GET'])
+def handle_get_character_inventory():
+    data = request.json
+
+    #if 'username' not in session:
+    #    return redirect('/login')
+
+    #username = session['username']
+    charid = data['charid'] # TODO: Make this character name?
+
+    result = database.get_inventory(charId)
+    return jsonify(result)
+
