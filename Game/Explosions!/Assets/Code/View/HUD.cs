@@ -3,10 +3,10 @@ using System.Collections;
 using Assets.Code.Components;
 
 // The HUD(Heads-Up Display)
-[RequireComponent(typeof(Character))]
+//[RequireComponent(typeof(CharacterComponent))]
 public class HUD : MonoBehaviour {
 
-	private Character character;// Character associated with this HUD
+	private CharacterComponent character;// Character associated with this HUD
 	private Rect healthBarRect;	// Health Bar
 	private Rect expBarRect;	// EXP Bar
 
@@ -16,7 +16,7 @@ public class HUD : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		character = GetComponent<Character> ();
+        //character = GetComponent<CharacterComponent>();
 		healthBarRect = new Rect (0, 0, 200, 15);
 		expBarRect = new Rect (0, 15, 200, 15);
 
@@ -38,7 +38,8 @@ public class HUD : MonoBehaviour {
 
 	private void LoadHealthBar(Rect rect)
 	{
-		float percent = character.PercentHealth;
+        //TODO: Use HealtComponent
+        float percent = 1; // character.PercentHealth;
 		float x = rect.x;
 		float y = rect.y;
 		float width = rect.width;

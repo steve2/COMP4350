@@ -28,7 +28,7 @@ namespace Assets.Code.Editor.Tests.Components
             eAttributes.damage = damage;
             eAttributes.speed = speed;
             eAttributes.range = range;
-            eAttributes.extraAttributes = new List<ItemAttribute>();
+            eAttributes.extraAttributes = new List<GameAttribute>();
 
             Weapon ret = new Weapon(eAttributes);
             ret.Start();

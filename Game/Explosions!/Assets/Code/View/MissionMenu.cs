@@ -4,12 +4,9 @@ using Assets.Code.Components;
 
 public class MissionMenu : GameComponent {
 
-	private Character character;
-
 	// Use this for initialization
 	public override void Start () {
         base.Start();
-		character = GetComponent<Character> (); 
 	}
 	
 	// Update is called once per frame
