@@ -10,20 +10,6 @@
 # Dependencies
 #====================
 from database import *
-<<<<<<< HEAD
-from random import random
-	
-def print_players():
-=======
-
-def get_player(username, password_hash):
-    db = db_connect()
-    c = db.cursor()
-    qry = "SELECT * FROM Player WHERE Username="+INSERT_SYM+" AND Password="+INSERT_SYM
-    c.execute(qry, (username, password_hash))
-    result = c.fetchone()
-    db.close()
-    return result
 
 def get_player(username, password_hash):
 	db = db_connect()
