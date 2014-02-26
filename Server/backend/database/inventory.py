@@ -53,4 +53,11 @@ def reset_tables():
 if __name__ == '__main__':
     if "-reset" in sys.argv:
         reset_tables()
+        
+    if "-test" in sys.argv:
+        print "Test get_inventory(charid).."
+        get_inventory(0)
+        print "\t...Success."
+        
+        print "Testing 'inventory.py' Complete"
 
