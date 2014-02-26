@@ -48,7 +48,7 @@ def handle_login_request():
         except Exception, e:
             loginPlayer = None
 
-        if (loginPlayer != None):
+        if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
         else:
@@ -62,9 +62,9 @@ def use_recipe(recipe, inChar, outChar):
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
-    recipe = ['recipe']
-    inChar = ['inChar']
-    outChar = ['outChar']
+    recipe = data['recipe']
+    inChar = data['inChar']
+    outChar = data['outChar']
     success = use_recipe(recipe, inChar, outChar)
     result = { 'result' : success }
     return jsonify(result)
