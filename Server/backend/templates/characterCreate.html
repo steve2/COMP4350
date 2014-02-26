@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Login to Explosions!</title>
+    <title>Create an Explosions! Character</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -15,15 +15,10 @@
 
     <div class="container">
 
-      <form class="form-signin" action="test" id="signin-form" role="form" method="post">
-        <h2 class="form-signin-heading">Create new account</h2>
-        <input type="username" class="form-control" placeholder="Username" name="user" required autofocus>
-        <input type="email" class="form-control" placeholder="Email" name="email" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" name="password" required>
-        <label class="checkbox">
-          <input type="checkbox" value="remember" name="remember"> Remember me
-        </label>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <form class="form-signin" id="char-form" role="form" method="post">
+        <h2 class="form-signin-heading">Create a new character</h2>
+        <input type="username" class="form-control" placeholder="Charname" name="charname" required autofocus>
+        <button class="btn btn-primary btn-block" type="submit">Create</button>
       </form>
 
     </div>
@@ -32,7 +27,9 @@
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-        $("#signin-form").submit(function(event) {
+        $("#char-form").submit(function(event) {
+            alert("TEST");
+
             event.preventDefault();
             var objs = $(this).serializeArray();
 
@@ -42,15 +39,18 @@
                 data[obj.name] = obj.value;
             }
 
+            alert("Script");
+
             $.ajax({
                 type: "POST",
-                url: "/newAccount",
+                url: "/character/create",
                 data: JSON.stringify(data),
                 success: function(data, _1, _2) {
+                    alert("success");
                     if(data.result) {
                         window.location.replace("/");
                     } else {
-                        window.location.replace("/signupFailed");
+                        window.location.replace("/characterFailed");
                     }
                 },
                 contentType: 'application/json',

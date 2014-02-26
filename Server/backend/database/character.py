@@ -25,9 +25,9 @@ from database import *
 def get_player_id(username):
 	db = db_connect()
 	c = db.cursor()
-	qry = "SELECT Player.ID FROM Player WHERE Username=%s"
+	qry = "SELECT Player.ID FROM Player WHERE Username=" + INSERT_SYM
 	c.execute(qry, (username,))
-	result = c.fetchone()[0]
+	result = c.fetchone()
 	db.close()
 	return result
 
@@ -42,7 +42,7 @@ def get_player_id(username):
 def get_character(id):
 	db = db_connect()
 	c = db.cursor()
-	qry = "SELECT * FROM `Character` WHERE ID=%s"
+	qry = "SELECT * FROM `Character` WHERE ID=" + INSERT_SYM
 	c.execute(qry, (id,))
 	result = c.fetchone()
 	db.close()
@@ -56,8 +56,8 @@ def get_character(id):
 def get_characters(username):
 	db = db_connect()
 	c = db.cursor()
-	id = get_player_id(username)
-	qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
+	id = get_player_id(username)[0]
+	qry = "SELECT * FROM `Character` WHERE Player_ID=" + INSERT_SYM
 	c.execute(qry, (id,))
 	result = []
 	for row in c:
@@ -67,14 +67,15 @@ def get_characters(username):
 	
 
 def create_character(username, charname):
-	db = db_connect()
-	c = db.cursor()
-	id = get_player_id(username)
-	qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
-	c.execute(qry, (id, charname))
-	db.commit()
-	db.close()
-	return True
+    db = db_connect()
+    c = db.cursor()
+    id = get_player_id(username)[0]
+    print "ID:", id
+    qry = "INSERT INTO `Character` (ID, Player_ID, Name) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
+    c.execute(qry, (17, id, charname))
+    db.commit()
+    db.close()
+    return True
 
 
 def reset_tables():

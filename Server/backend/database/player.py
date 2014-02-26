@@ -35,8 +35,8 @@ def get_player(username, password_hash):
 def create_player(username, password_hash):
 	db = db_connect()
 	c = db.cursor()
-	qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
-	c.execute(qry, (username, password_hash))
+	qry = "INSERT INTO Player (ID, Username, Password) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
+	c.execute(qry, (15, username, password_hash))
 	db.commit()
 	db.close()
 	return True
