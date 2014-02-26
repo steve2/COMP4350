@@ -15,6 +15,8 @@ using System.Threading;
 /// </summary>
 public class Server 
 {
+    private const string IS_ALIVE_PATH = "/isAlive";
+
     //TODO: Thread pool?
     //private ThreadPool threads;
     private String url;
@@ -63,6 +65,14 @@ public class Server
         var www = new WWW(location, utf8.GetBytes(json), header);
          
 		return JSON.Parse(www.text);
+    }
+
+    public void IsAlive(Action<bool> asyncReturn)
+    {
+        AsyncSend(IS_ALIVE_PATH, "", (j) =>
+            {
+                asyncReturn(j["result"] == "1");
+            });
     }
 
     /// <summary>
