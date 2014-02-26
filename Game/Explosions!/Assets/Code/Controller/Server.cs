@@ -94,6 +94,13 @@ public class Server
         throw new NotImplementedException();
     }
 
+	public void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
+	{
+		//TODO: Query server for this data
+		//throw new NotImplementedException();
+		
+		AsyncSend ("test", "test", null);
+	}
+
     //TODO: Get Characters
-    //TODO: Get Missions
 }

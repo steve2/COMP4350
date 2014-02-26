@@ -22,7 +22,7 @@ public class Game
     private Character character; //TODO: Keep track of selected character 
     //Cache
     //TODO: We are using threading, we should probably include locks
-    //private IEnumerable<Mission> missions;
+    private IEnumerable<Mission> missions;
     private IEnumerable<Recipe> purchaseItems;
     private IEnumerable<Recipe> craftItems;
 
@@ -52,19 +52,19 @@ public class Game
         }
     }
 
-    //TODO: Create Mission class
-    //public IEnumerable<Mission> Missions
-    //{
-    //    get
-    //    {
-    //        if (missions == null)
-    //        {
-    //            Missions = Enumerable.Empty<Mission>();
-    //            server.GetMissions(character, (x) => { missions = x; });
-    //        }
-    //        return missions;
-    //    }
-    //} 
+    public IEnumerable<Mission> Missions
+    {
+        get
+        {
+            if (missions == null)
+            {
+                missions = Enumerable.Empty<Mission>();
+                server.GetMissions(character, (x) => { missions = x; });
+            }
+            return missions;
+        }
+    } 
+
     #endregion
 
     public Game(Server server)
