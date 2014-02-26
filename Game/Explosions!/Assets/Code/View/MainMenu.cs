@@ -15,9 +15,7 @@ public class MainMenu : GameComponent {
 	public override void Start () 
     {
         base.Start();
-        //TODO: Find a good location for this
-        Server s = new Server(Server.PRODUCTION_URL);
-        s.IsAlive((x) =>
+        Game.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });

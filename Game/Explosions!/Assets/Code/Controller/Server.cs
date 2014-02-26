@@ -38,7 +38,7 @@ public class Server
     /// <param name="path"></param>
     /// <param name="json"></param>
     /// <param name="asyncReturn"></param>
-    protected virtual void AsyncSend(string path, string json, Action<JSONNode> asyncReturn)
+	protected virtual void AsyncSend(string path, JSONClass json, Action<JSONNode> asyncReturn)
     {
         //TODO: Use a threadpool instead of creating a new thread every time
         //TODO: Terminate all pending threads on application exit!
@@ -54,7 +54,7 @@ public class Server
     /// <param name="path"></param>
     /// <param name="json"></param>
     /// <returns></returns>
-    protected virtual JSONNode Send(String path, String json) 
+	protected virtual JSONNode Send(String path, JSONClass json) 
     {
         var location = this.url + "/" + path;
         var client = new WebClient();
@@ -65,7 +65,8 @@ public class Server
 
     public void IsAlive(Action<bool> asyncReturn)
     {
-		AsyncSend(IS_ALIVE_PATH, "", (j) =>
+		//Empty JSON Request
+		AsyncSend(IS_ALIVE_PATH, new JSONClass(), (j) =>
             {
                 asyncReturn(j["result"].Value == "1");
             });
@@ -105,7 +106,7 @@ public class Server
 		//TODO: Query server for this data
 		//throw new NotImplementedException();
 		
-		AsyncSend ("test", "test", null);
+		//AsyncSend ("test", "test", null);
 	}
 
     //TODO: Get Characters

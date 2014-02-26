@@ -44,7 +44,7 @@ public class Game
             {
                 purchaseItems = Enumerable.Empty<Recipe>(); //Empty
                 //TODO: lock?
-                server.GetPurchasableItems((x) => { purchaseItems = x; });
+                server.GetPurchasableItems((x) => purchaseItems = x);
             }
             return purchaseItems;
         }
@@ -57,7 +57,7 @@ public class Game
             if (missions == null)
             {
                 missions = Enumerable.Empty<Mission>();
-                server.GetMissions(character, (x) => { missions = x; });
+                server.GetMissions(character, (x) => missions = x);
             }
             return missions;
         }
@@ -71,6 +71,12 @@ public class Game
         this.character = null;
         this.purchaseItems = null;
         this.craftItems = null;
+    }
+
+    //Only game should speak to server directly
+    public void IsServerOnline(Action<bool> asyncReturn)
+    {
+        server.IsAlive((alive) => asyncReturn(alive));
     }
 
     /// <summary>
