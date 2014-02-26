@@ -1,15 +1,9 @@
 using System;
 using System.Collections.Generic;
-//using System.Threading.Tasks;
-
-using SimpleJSON;
-using System.Collections;
-using UnityEngine;
-using Assets.Code.Components;
-using Assets.Code.Model;
 using System.Threading;
 using System.Net;
-using System.IO;
+using SimpleJSON;
+using Assets.Code.Model;
 
 /// <summary>
 /// Only this service should know how to communicate with the server
