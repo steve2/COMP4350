@@ -11,15 +11,6 @@ def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
     return hashlib.sha512(password + salt).hexdigest()
 
-@app.route('/json', methods=['POST', 'GET'])
-def handle_json():
-    print ("Json:", request.json)
-    print ("method:", request.method)
-    data = request.json
-    result = {'result': "Hi, " + data['name']}
-    print ("Result:", result['result'])
-    return jsonify(result)
-
 @app.route('/newAccount', methods=['POST', 'GET'])
 def handle_new_account():
     data = request.json
@@ -51,10 +42,6 @@ def handle_login_request():
 		result = {'result': False}
 	return jsonify(result)
 
-@app.route('/accountDetails', methods=['POST', 'GET'])
-def account_details():
-       pass
-
 SHOP = -1 #Character ID for SHOP
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
@@ -79,3 +66,29 @@ def handle_use_recipe():
   
     result = { 'result' : success }
     return jsonify(result)
+
+@app.route('/character/getAll', methods = ['POST', 'GET'])
+def handle_get_characters():
+    data = request.json
+
+    if 'username' not in session:
+        return redirect('/login')
+
+    username = session['username']
+
+    result = {'characters': database.get_characters(username)}
+    return jsonify(result)
+
+@app.route('/character/create', methods = ['POST', 'GET'])
+def handle_create_character():
+    data = request.json
+
+    if 'username' not in session:
+        return redirect('/login')
+
+    username = session['username']
+    charname = data['charname']
+
+    result = database.create_character(username, charname)
+    return jsonify(result)
+
