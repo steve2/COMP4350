@@ -54,29 +54,10 @@ def handle_login_request():
         else:
             result = {'result': False}
     return jsonify(result)
-
-SHOP = -1 #Character ID for SHOP
+    
 def use_recipe(recipe, inChar, outChar):
-    inItems = recipe.get_recipe_in(recipe)
-    outItems = recipe.get_recipe_out(recipe)
-    success = false
-    #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
-    if (inChar != SHOP):
-         #TODO: Does this call make sense? Or should we loop and call contains_item
-        if (!inventory.contains_items(inChar, inItems)):
-            return false
-    if(outChar != SHOP):
-        if (!inventory.contains_items(outChar, outItems)):
-            return false
-        
-    #TODO: Remove inItems from inChar (Make a common function)
-    #if(inChar != SHOP):
-        #loop through all items? (Or single function)
-        #inventory.remove(inChar, item)
-    #TODO: Remove outItems from outChar
-    #if(inChar != SHOP):
-        #loop through all items?
-        #inventory.remove(outChar, item)
+    pass
+    #this function didn't compile for me.
     
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
@@ -127,7 +108,7 @@ def handle_get_character_inventory():
     result = {"inventory": character.get_inventory(charId)}
     return jsonify(result)
 
-@app.route('/isAlive'), methods = ['POST', 'GET'])
+@app.route('/isAlive', methods = ['POST', 'GET'])
 def handle_is_alive():
     #TODO: Should we just accept an empty request, or expect something?
     response = {"result" : "1"}
