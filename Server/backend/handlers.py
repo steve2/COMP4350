@@ -15,34 +15,50 @@ def hash_password(password):
 
 @app.route('/newAccount', methods=['POST', 'GET'])
 def handle_new_account():
+    print "New account!"
     data = request.json
-    name = data['user']
-    password = data['password']
-    password_hash = hash_password(password)
+    print "New account:", data
+    if data == None or 'user' not in data or 'password' not in data:
+        print "TEST2"
+        result = {'result': False}
+    else:
+        name = data['user']
+        password = data['password']
+        password_hash = hash_password(password)
 	
-    player.create_player(name, password_hash)
-	
-    session['username'] = name
-    result = {'result': True}
+        try:
+            player.create_player(name, password_hash)
+        except Exception, e:
+            print e
+
+        session['username'] = name
+        result = {'result': True}
+
     return jsonify(result)
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
 def handle_login_request():
-	data = request.json
-	name = data['user']
-	password = data['password']
-	password_hash = hash_password(password)
-	
-	loginPlayer = database.get_player(name, password_hash)
-	print (name, " ", password_hash)
-	print (loginPlayer)
+    data = request.json
     
-	if (loginPlayer != None):
-		session['username'] = name
-		result = {'result': True}
-	else:
-		result = {'result': False}
-	return jsonify(result)
+    if data == None or 'user' not in data or 'password' not in data:
+        result = {'result': False}
+    else:
+        name = data['user']
+        password = data['password']
+        password_hash = hash_password(password)
+
+        try:
+            loginPlayer = player.get_player(name, password_hash)
+        except Exception, e:
+            print e
+            loginPlayer = None
+
+        if (loginPlayer != None):
+            session['username'] = name
+            result = {'result': True}
+        else:
+            result = {'result': False}
+    return jsonify(result)
 
 SHOP = -1 #Character ID for SHOP
 @app.route('/useRecipe', methods = ['POST', 'GET'])

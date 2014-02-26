@@ -10,7 +10,7 @@
 # Dependencies
 #====================
 from database import *
-
+from random import random
 	
 def print_players():
     db = db_connect()
@@ -26,7 +26,7 @@ def print_players():
 def get_player(username, password_hash):
 	db = db_connect()
 	c = db.cursor()
-	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
+	qry = "SELECT * FROM Player WHERE Username=" + INSERT_SYM + " AND Password=" + INSERT_SYM
 	c.execute(qry, (username, password_hash))
 	result = c.fetchone()
 	db.close()
@@ -36,7 +36,7 @@ def create_player(username, password_hash):
 	db = db_connect()
 	c = db.cursor()
 	qry = "INSERT INTO Player (ID, Username, Password) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
-	c.execute(qry, (15, username, password_hash))
+	c.execute(qry, (username, password_hash))
 	db.commit()
 	db.close()
 	return True
@@ -49,7 +49,8 @@ def reset_players():
     db = db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Player")
-    c.execute("CREATE TABLE Player (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
+    autoincrement = "AUTOINCREMENT" if INSERT_SYM == '?' else "AUTO_INCREMENT"
+    c.execute("CREATE TABLE Player (ID INTEGER NOT NULL PRIMARY KEY "+autoincrement+", Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
     db.commit()
     db.close()
 	
