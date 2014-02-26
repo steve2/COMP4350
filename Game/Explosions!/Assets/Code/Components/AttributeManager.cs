@@ -15,10 +15,10 @@ namespace Assets.Code.Components
             attributes = new Dictionary<AttributeType, int>();
         }
 
-        public void AddAttributes(IEnumerable<ItemAttribute> attrs)
+        public void AddAttributes(IEnumerable<GameAttribute> attrs)
         {
             int value;
-            foreach (ItemAttribute attr in attrs)
+            foreach (GameAttribute attr in attrs)
             {
                 if (attributes.TryGetValue(attr.Type, out value))
                 {
@@ -32,10 +32,10 @@ namespace Assets.Code.Components
         }
 
         //This should not be used to create a new attribute with negative values, use AddAttributes for that
-        public void SubtractAttributes(IEnumerable<ItemAttribute> attrs)
+        public void SubtractAttributes(IEnumerable<GameAttribute> attrs)
         {
             int value;
-            foreach (ItemAttribute attr in attrs)
+            foreach (GameAttribute attr in attrs)
             {
                 if (attributes.TryGetValue(attr.Type, out value))
                 {

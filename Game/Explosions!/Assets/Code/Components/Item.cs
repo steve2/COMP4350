@@ -14,13 +14,14 @@ namespace Assets.Code.Components
         private string description; 
         #endregion
 
-        private List<ItemAttribute> itemAttributes; //The "REAL" attribute list
+        private List<GameAttribute> itemAttributes; //The "REAL" attribute list
 
         #region Properties
         //All items support attributes
-        public IEnumerable<ItemAttribute> ItemAttributes { get { return itemAttributes; } }
+        public IEnumerable<GameAttribute> ItemAttributes { get { return itemAttributes; } }
         #endregion
 
+        Attribute bla;
         // Use this for initialization
         public virtual void Start()
         {
@@ -29,15 +30,15 @@ namespace Assets.Code.Components
 
         protected virtual void InitAttributes()
         {
-            itemAttributes = new List<ItemAttribute>();
+            itemAttributes = new List<GameAttribute>();
         }
 
         protected void AddAttribute(AttributeType type, int value)
         {
-            AddAttribute(new ItemAttribute(type, value));
+            AddAttribute(new GameAttribute(type, value));
         }
 
-        protected void AddAttribute(ItemAttribute attr)
+        protected void AddAttribute(GameAttribute attr)
         {
             itemAttributes.Add(attr);
         }
