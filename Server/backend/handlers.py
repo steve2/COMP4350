@@ -48,7 +48,7 @@ def handle_login_request():
         except Exception, e:
             loginPlayer = None
 
-        if (loginPlayer != None):
+        if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
         else:
@@ -61,12 +61,12 @@ def use_recipe(recipe, inChar, outChar):
     outItems = recipe.get_recipe_out(recipe)
     success = false
     #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
-    if (inChar != SHOP):
+    if inChar != SHOP:
          #TODO: Does this call make sense? Or should we loop and call contains_item
-        if (!inventory.contains_items(inChar, inItems)):
+        if not inventory.contains_items(inChar, inItems):
             return false
-    if(outChar != SHOP):
-        if (!inventory.contains_items(outChar, outItems)):
+    if outChar != SHOP:
+        if not inventory.contains_items(outChar, outItems):
             return false
         
     #TODO: Remove inItems from inChar (Make a common function)
@@ -81,9 +81,9 @@ def use_recipe(recipe, inChar, outChar):
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
-    recipe = ['recipe']
-    inChar = ['inChar']
-    outChar = ['outChar']
+    recipe = data['recipe']
+    inChar = data['inChar']
+    outChar = data['outChar']
     success = use_recipe(recipe, inChar, outChar)
     result = { 'result' : success }
     return jsonify(result)
@@ -127,7 +127,7 @@ def handle_get_character_inventory():
     result = {"inventory": character.get_inventory(charId)}
     return jsonify(result)
 
-@app.route('/isAlive'), methods = ['POST', 'GET'])
+@app.route('/isAlive', methods = ['POST', 'GET'])
 def handle_is_alive():
     #TODO: Should we just accept an empty request, or expect something?
     response = {"result" : "1"}
