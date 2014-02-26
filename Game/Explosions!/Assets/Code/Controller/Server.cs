@@ -28,7 +28,7 @@ public class Server
     {
         this.url = url;
         characterIDs = new Dictionary<Character, int>();
-        characterIDs.Add(Character.SHOP, -1);
+        //characterIDs.Add(Character.SHOP, -1);
         recipeIDs = new Dictionary<Recipe, int>();
     }
 

@@ -23,13 +23,17 @@ from database import *
 #
 
 def get_player_id(username):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT Player.ID FROM Player WHERE Username=" + INSERT_SYM
-	c.execute(qry, (username,))
-	result = c.fetchone()
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT Player.ID FROM Player WHERE Username=%s"
+    c.execute(qry, (username,))
+    result = c.fetchone()
+    if (result != None):
+        result = result[0]
+    else:
+        result = None
+    db.close()
+    return result
 
 #
 # get_character ()
@@ -40,13 +44,13 @@ def get_player_id(username):
 # to delete characters from Player accounts. 
 #
 def get_character(id):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT * FROM `Character` WHERE ID=" + INSERT_SYM
-	c.execute(qry, (id,))
-	result = c.fetchone()
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT * FROM `Character` WHERE ID=%s"
+    c.execute(qry, (id,))
+    result = c.fetchone()
+    db.close()
+    return result
 	
 #
 # get_characters ()       
@@ -54,42 +58,69 @@ def get_character(id):
 # 	@return:	returns list of characters currently owned by specified player.
 #
 def get_characters(username):
-	db = db_connect()
-	c = db.cursor()
-	id = get_player_id(username)[0]
-	qry = "SELECT * FROM `Character` WHERE Player_ID=" + INSERT_SYM
-	c.execute(qry, (id,))
-	result = []
-	for row in c:
-		result.append(row)
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    id = get_player_id(username)
+    if (id != None):
+        qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
+        c.execute(qry, (id,))
+        result = []
+        for row in c:
+            result.append(row)
+    else:
+        result = None
+    db.close()
+    return result
 	
 
 def create_character(username, charname):
     db = db_connect()
     c = db.cursor()
-    id = get_player_id(username)[0]
-    print "ID:", id
-    qry = "INSERT INTO `Character` (ID, Player_ID, Name) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
-    c.execute(qry, (17, id, charname))
-    db.commit()
+    id = get_player_id(username)
+    if (id != None):
+        qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
+        c.execute(qry, (id, charname))
+        db.commit()
+        success = True
+    else:
+        success = False
     db.close()
-    return True
-
+    return success
 
 def reset_tables():
-	print "> Reset Character Table"
-	reset_characters()
+    print "> Reset Character Table"
+    reset_characters()
 	
 def reset_characters():
-	db = db_connect()
-	c = db.cursor()
-	c.execute("DROP TABLE IF EXISTS `Character`")
-	c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
-	db.commit()
-	db.close()
+    db = db_connect()
+    c = db.cursor()
+    c.execute("DELETE FROM `Character`")
+#   c.execute("DROP TABLE IF EXISTS `Character`")
+#   c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
+    db.commit()
+    db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in sys.argv):
-		reset_tables()
+    if ("-reset" in sys.argv):
+        reset_tables()
+        
+    if ("-test" in sys.argv):
+    
+        print "Test get_player_id(username).."
+        get_player_id("Test\Username")
+        print "\t...Success."
+        
+        print "Test get_player_id(username).."
+        get_character(0)
+        print "\t...Success."
+        
+        print "Test get_character(id).."
+        get_characters("Test\Username")
+        print "\t...Success."
+        
+        print "Test get_characters(username).."
+        create_character("Test\Username", "Test\CharacterName")
+        print "\t...Success."
+        
+        print "Testing 'character.py' Complete."
+        

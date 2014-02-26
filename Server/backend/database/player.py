@@ -11,39 +11,27 @@
 #====================
 from database import *
 
-	
-def print_players():
+def get_player(username, password_hash):
     db = db_connect()
     c = db.cursor()
-    c.execute("SELECT * FROM Player")
+    qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
+    c.execute(qry, (username, password_hash))
     result = c.fetchone()
-    while (result != None):
-        print "- ", result, "\n"
-        result = c.fetchone()
-    print "----\n"
     db.close()
-
-def get_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT * FROM Player WHERE Username=%s AND Password=%s"
-	c.execute(qry, (username, password_hash))
-	result = c.fetchone()
-	db.close()
-	return result
+    return result
 
 def create_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "INSERT INTO Player (ID, Username, Password) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
-	c.execute(qry, (15, username, password_hash))
-	db.commit()
-	db.close()
-	return True
+    db = db_connect()
+    c = db.cursor()
+    qry = "INSERT INTO Player (Username, Password) VALUES (%s, %s)"
+    c.execute(qry, (username, password_hash))
+    db.commit()
+    db.close()
+    return True
 
 def reset_tables():
-	print "> Reset Player Table"
-	reset_players()
+    print "> Reset Player Table"
+    reset_players()
 	
 def reset_players():
     db = db_connect()
@@ -54,5 +42,17 @@ def reset_players():
     db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in sys.argv):
-		reset_tables()
+    if ("-reset" in sys.argv):
+        reset_tables()
+        
+    if ("-test" in sys.argv):
+        print "Test get_player(username, password).."
+        get_player("Test\Username", "Test\Password")
+        print "\t...Success."
+        
+        print "Test create_player(username, password).."
+        create_player("Test\Username", "Test\Password")
+        print "\t...Success."
+        
+        print "Testing 'player.py' Complete"
+        
