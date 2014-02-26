@@ -26,7 +26,7 @@ from database import *
 def get_inventory(charid):
     db = db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID=%s"
+    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+INSERT_SYM
     c.execute(qry, (charid,)) #result should contain Name of items and their quantity.
     result = []
     for row in c:
@@ -53,4 +53,11 @@ def reset_tables():
 if __name__ == '__main__':
     if "-reset" in sys.argv:
         reset_tables()
+        
+    if "-test" in sys.argv:
+        print "Test get_inventory(charid).."
+        get_inventory(0)
+        print "\t...Success."
+        
+        print "Testing 'inventory.py' Complete"
 

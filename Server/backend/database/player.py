@@ -10,18 +10,20 @@
 # Dependencies
 #====================
 from database import *
+<<<<<<< HEAD
 from random import random
 	
 def print_players():
+=======
+
+def get_player(username, password_hash):
     db = db_connect()
     c = db.cursor()
-    c.execute("SELECT * FROM Player")
+    qry = "SELECT * FROM Player WHERE Username="+INSERT_SYM+" AND Password="+INSERT_SYM
+    c.execute(qry, (username, password_hash))
     result = c.fetchone()
-    while (result != None):
-        print "- ", result, "\n"
-        result = c.fetchone()
-    print "----\n"
     db.close()
+    return result
 
 def get_player(username, password_hash):
 	db = db_connect()
@@ -33,27 +35,39 @@ def get_player(username, password_hash):
 	return result
 
 def create_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "INSERT INTO Player (ID, Username, Password) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
-	c.execute(qry, (username, password_hash))
-	db.commit()
-	db.close()
-	return True
+    db = db_connect()
+    c = db.cursor()
+    qry = "INSERT INTO Player (Username, Password) VALUES ("+INSERT_SYM+", "+INSERT_SYM+")"
+    c.execute(qry, (username, password_hash))
+    db.commit()
+    db.close()
+    return True
 
 def reset_tables():
-	print "> Reset Player Table"
-	reset_players()
+    print "> Reset Player Table"
+    reset_players()
 	
 def reset_players():
     db = db_connect()
     c = db.cursor()
-    c.execute("DROP TABLE IF EXISTS Player")
-    autoincrement = "AUTOINCREMENT" if INSERT_SYM == '?' else "AUTO_INCREMENT"
-    c.execute("CREATE TABLE Player (ID INTEGER NOT NULL PRIMARY KEY "+autoincrement+", Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
+    c.execute("DELETE FROM Player")
+#   c.execute("DROP TABLE IF EXISTS Player")
+#   c.execute("CREATE TABLE Player (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
     db.commit()
     db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in sys.argv):
-		reset_tables()
+    if ("-reset" in sys.argv):
+        reset_tables()
+        
+    if ("-test" in sys.argv):
+        print "Test get_player(username, password).."
+        get_player("Test\Username", "Test\Password")
+        print "\t...Success."
+        
+        print "Test create_player(username, password).."
+        create_player("Test\Username", "Test\Password")
+        print "\t...Success."
+        
+        print "Testing 'player.py' Complete"
+        

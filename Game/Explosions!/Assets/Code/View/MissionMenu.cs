@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Assets.Code.Components;
+using Assets.Code.Model;
+
 
 public class MissionMenu : GameComponent {
-
-	private Character character;
 
 	// Use this for initialization
 	public override void Start () {
         base.Start();
-		character = GetComponent<Character> (); 
 	}
 	
 	// Update is called once per frame
@@ -21,8 +20,17 @@ public class MissionMenu : GameComponent {
 	void OnGUI() {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
 
-		// TODO: Load Mission list for the character
-		// TODO: Populate Mission Description
+		// Load Mission list for the character
+		foreach (Mission mission in Game.Missions) 
+		{
+			if (GUILayout.Button ("Mission" + mission.ID)) 
+			{
+					Application.LoadLevel ("Demo"); 
+			}
+		}
+
+		// TODO: Populate Mission Description	
+
 
 		// Temporary (Testing)
 		// Just load the Demo for each Mission

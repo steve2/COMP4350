@@ -24,7 +24,7 @@ from database import *
 def get_equipment(charid):
     db = db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Slot.Name FROM Equipped_Item JOIN Slot ON Slot_ID=Slot.ID JOIN Item ON Item_ID=Item.ID WHERE Character_ID=%s"
+    qry = "SELECT Item.Name, Slot.Name FROM Equipped_Item JOIN Slot ON Slot_ID=Slot.ID JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+INSERT_SYM
     c.execute(qry, (charid,)) #result should contain name and slot of items equipped by this character.
     result = []
     for row in c:
@@ -51,4 +51,11 @@ def reset_tables():
 if __name__ == '__main__':
     if "-reset" in sys.argv:
         reset_tables()
+        
+    if "-test" in sys.argv:
+        print "Test get_equipment(charid).."
+        get_equipment(0)
+        print "\t...Success."
+        
+        print "Testing 'equipment.py' Complete."
 

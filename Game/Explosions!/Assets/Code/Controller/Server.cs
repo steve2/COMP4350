@@ -15,6 +15,8 @@ using System.Threading;
 /// </summary>
 public class Server 
 {
+    private const string IS_ALIVE_PATH = "/isAlive";
+
     //TODO: Thread pool?
     //private ThreadPool threads;
     private String url;
@@ -26,7 +28,7 @@ public class Server
     {
         this.url = url;
         characterIDs = new Dictionary<Character, int>();
-        characterIDs.Add(Character.SHOP, -1);
+        //characterIDs.Add(Character.SHOP, -1);
         recipeIDs = new Dictionary<Recipe, int>();
     }
 
@@ -65,6 +67,14 @@ public class Server
 		return JSON.Parse(www.text);
     }
 
+    public void IsAlive(Action<bool> asyncReturn)
+    {
+        AsyncSend(IS_ALIVE_PATH, "", (j) =>
+            {
+                asyncReturn(j["result"] == "1");
+            });
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -94,6 +104,13 @@ public class Server
         throw new NotImplementedException();
     }
 
+	public void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
+	{
+		//TODO: Query server for this data
+		//throw new NotImplementedException();
+		
+		AsyncSend ("test", "test", null);
+	}
+
     //TODO: Get Characters
-    //TODO: Get Missions
 }

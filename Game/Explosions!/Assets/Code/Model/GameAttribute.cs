@@ -9,7 +9,6 @@ namespace Assets.Code.Model
     //The different types of attributes
     public enum AttributeType
     {
-        ItemType,
         Damage,
         Health,
         Speed,
@@ -22,7 +21,7 @@ namespace Assets.Code.Model
     /// Can be directly mapped from the Database
     /// </summary>
     [System.Serializable]
-    public class ItemAttribute
+    public class GameAttribute
     {
         #region Fields
         [SerializeField]
@@ -53,11 +52,11 @@ namespace Assets.Code.Model
         #endregion
 
         #region Constructor
-        public ItemAttribute(AttributeType type) :
+        public GameAttribute(AttributeType type) :
             this(type, 0)
         { }
 
-        public ItemAttribute(AttributeType type, int value)
+        public GameAttribute(AttributeType type, int value)
         {
             this.type = type;
             this.value = value;
