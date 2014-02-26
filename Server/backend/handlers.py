@@ -15,11 +15,8 @@ def hash_password(password):
 
 @app.route('/newAccount', methods=['POST', 'GET'])
 def handle_new_account():
-    print "New account!"
     data = request.json
-    print "New account:", data
     if data == None or 'user' not in data or 'password' not in data:
-        print "TEST2"
         result = {'result': False}
     else:
         name = data['user']
@@ -28,11 +25,10 @@ def handle_new_account():
 	
         try:
             player.create_player(name, password_hash)
+            session['username'] = name
+            result = {'result': True}
         except Exception, e:
-            print e
-
-        session['username'] = name
-        result = {'result': True}
+            result = {'result': False}
 
     return jsonify(result)
 
@@ -50,7 +46,6 @@ def handle_login_request():
         try:
             loginPlayer = player.get_player(name, password_hash)
         except Exception, e:
-            print e
             loginPlayer = None
 
         if (loginPlayer != None):
@@ -100,7 +95,6 @@ def handle_get_characters():
 @app.route('/character/create', methods = ['POST', 'GET'])
 def handle_create_character():
     data = request.json
-    print data
 
     if 'username' not in session:
         result = False 
@@ -122,6 +116,6 @@ def handle_get_character_inventory():
     #username = session['username']
     charid = data['charid'] # TODO: Make this character name?
 
-    result = character.get_inventory(charId)
+    result = {"inventory": character.get_inventory(charId)}
     return jsonify(result)
 
