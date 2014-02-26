@@ -21,11 +21,11 @@ USER_NAME = "COMP4350_admin"
 USER_PASS = "admin"
 TABL_NAME = "COMP4350_GRP5"
 
+INSERT_SYM = '%s' if '-local' not in sys.argv else '?'
 	
 #***************************************************************************
 # Database Functions	
 #***************************************************************************
-	
 def db_connect():
     if "-local" in sys.argv:
         db = sqlite3.connect("local.db")

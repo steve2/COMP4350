@@ -6,6 +6,8 @@ from flask import jsonify, redirect
 from flask import request, session
 
 from backend import app
+import database.character as character
+import database.player as player
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -18,7 +20,7 @@ def handle_new_account():
     password = data['password']
     password_hash = hash_password(password)
 	
-    database.create_player(name, password_hash)
+    player.create_player(name, password_hash)
 	
     session['username'] = name
     result = {'result': True}
@@ -76,21 +78,23 @@ def handle_get_characters():
 
     username = session['username']
 
-    result = {'characters': database.get_characters(username)}
+    result = {'characters': character.get_characters(username)}
     return jsonify(result)
 
 @app.route('/character/create', methods = ['POST', 'GET'])
 def handle_create_character():
     data = request.json
+    print data
 
     if 'username' not in session:
-        return redirect('/login')
+        result = False 
+    else:
+        username = session['username']
+        charname = data['charname']
 
-    username = session['username']
-    charname = data['charname']
-
-    result = database.create_character(username, charname)
-    return jsonify(result)
+        result = character.create_character(username, charname)
+    response = {"result": result}
+    return jsonify(response)
 
 @app.route('/character/inventory', methods = ['POST', 'GET'])
 def handle_get_character_inventory():
@@ -102,6 +106,6 @@ def handle_get_character_inventory():
     #username = session['username']
     charid = data['charid'] # TODO: Make this character name?
 
-    result = database.get_inventory(charId)
+    result = character.get_inventory(charId)
     return jsonify(result)
 
