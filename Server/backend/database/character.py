@@ -93,12 +93,13 @@ def reset_tables():
 	reset_characters()
 	
 def reset_characters():
-	db = db_connect()
-	c = db.cursor()
-	c.execute("DROP TABLE IF EXISTS `Character`")
-	c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
-	db.commit()
-	db.close()
+    db = db_connect()
+    c = db.cursor()
+    c.execute("DELETE FROM `Character`")
+#   c.execute("DROP TABLE IF EXISTS `Character`")
+#   c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
+    db.commit()
+    db.close()
 	
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
