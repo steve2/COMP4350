@@ -23,13 +23,17 @@ from database import *
 #
 
 def get_player_id(username):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT Player.ID FROM Player WHERE Username=%s"
-	c.execute(qry, (username,))
-	result = c.fetchone()[0]
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT Player.ID FROM Player WHERE Username=%s"
+    c.execute(qry, (username,))
+    result = c.fetchone()
+    if (result != None):
+        result = result[0]
+    else:
+        result = None
+    db.close()
+    return result
 
 #
 # get_character ()
@@ -54,28 +58,35 @@ def get_character(id):
 # 	@return:	returns list of characters currently owned by specified player.
 #
 def get_characters(username):
-	db = db_connect()
-	c = db.cursor()
-	id = get_player_id(username)
-	qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
-	c.execute(qry, (id,))
-	result = []
-	for row in c:
-		result.append(row)
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    id = get_player_id(username)
+    if (id != None):
+        qry = "SELECT * FROM `Character` WHERE Player_ID=%s"
+        c.execute(qry, (id,))
+        result = []
+        for row in c:
+            result.append(row)
+    else:
+        result = None
+    db.close()
+    return result
 	
 
 def create_character(username, charname):
-	db = db_connect()
-	c = db.cursor()
-	id = get_player_id(username)
-	qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
-	c.execute(qry, (id, charname))
-	db.commit()
-	db.close()
-	return True
-
+    db = db_connect()
+    c = db.cursor()
+    id = get_player_id(username)
+    if (id != None):
+        qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
+        c.execute(qry, (id, charname))
+        db.commit()
+        success = True
+    else:
+        success = False
+    db.close()
+    return success
+    
 
 def reset_tables():
 	print "> Reset Character Table"
@@ -90,5 +101,26 @@ def reset_characters():
 	db.close()
 	
 if __name__ == '__main__':
-	if ("-reset" in sys.argv):
-		reset_tables()
+    if ("-reset" in sys.argv):
+        reset_tables()
+        
+    if ("-test" in sys.argv):
+    
+        print "Test get_player_id(username).."
+        get_player_id("Test\Username")
+        print "\t...Success."
+        
+        print "Test get_player_id(username).."
+        get_character(0)
+        print "\t...Success."
+        
+        print "Test get_character(id).."
+        get_characters("Test\Username")
+        print "\t...Success."
+        
+        print "Test get_characters(username).."
+        create_character("Test\Username", "Test\CharacterName")
+        print "\t...Success."
+        
+        print "Testing 'character.py' Complete."
+        

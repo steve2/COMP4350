@@ -5,6 +5,14 @@ using UnityEngine;
 
 namespace Assets.Code.Components
 {
+    /*
+    // Different types of Items
+    public enum ItemType
+    {
+        Weapon
+    }
+     */
+
     //TODO: Override Comparison to compare by name?
     public abstract class Item : MonoBehaviour
     {
