@@ -6,19 +6,12 @@ from flask import jsonify, redirect
 from flask import request, session
 
 from backend import app
+import database.character as character
+import database.player as player
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
     return hashlib.sha512(password + salt).hexdigest()
-
-@app.route('/json', methods=['POST', 'GET'])
-def handle_json():
-    print ("Json:", request.json)
-    print ("method:", request.method)
-    data = request.json
-    result = {'result': "Hi, " + data['name']}
-    print ("Result:", result['result'])
-    return jsonify(result)
 
 @app.route('/newAccount', methods=['POST', 'GET'])
 def handle_new_account():
@@ -27,7 +20,7 @@ def handle_new_account():
     password = data['password']
     password_hash = hash_password(password)
 	
-    database.create_player(name, password_hash)
+    player.create_player(name, password_hash)
 	
     session['username'] = name
     result = {'result': True}
@@ -51,31 +44,76 @@ def handle_login_request():
 		result = {'result': False}
 	return jsonify(result)
 
-@app.route('/accountDetails', methods=['POST', 'GET'])
-def account_details():
-       pass
-
 SHOP = -1 #Character ID for SHOP
+def use_recipe(recipe, inChar, outChar):
+    inItems = recipe.get_recipe_in(recipe)
+    outItems = recipe.get_recipe_out(recipe)
+    success = false
+    #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
+    if (inChar != SHOP):
+         #TODO: Does this call make sense? Or should we loop and call contains_item
+        if (!inventory.contains_items(inChar, inItems)):
+            return false
+    if(outChar != SHOP):
+        if (!inventory.contains_items(outChar, outItems)):
+            return false
+        
+    #TODO: Remove inItems from inChar (Make a common function)
+    #if(inChar != SHOP):
+        #loop through all items? (Or single function)
+        #inventory.remove(inChar, item)
+    #TODO: Remove outItems from outChar
+    #if(inChar != SHOP):
+        #loop through all items?
+        #inventory.remove(outChar, item)
+    
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
     recipe = ['recipe']
     inChar = ['inChar']
     outChar = ['outChar']
-    inItems = recipe.get_recipe_in(recipe)
-    outItems = recipe.get_recipe_out(recipe)
-    success = false
-    #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
-    #success = ...
-    #if(success):
-        #TODO: Remove inItems from inChar (Make a common function)
-        #if(inChar != SHOP):
-            #loop through all items?
-            #inventory.remove(inChar, item)
-        #TODO: Remove outItems from outChar
-        #if(inChar != SHOP):
-            #loop through all items?
-            #inventory.remove(outChar, item)
-  
+    success = use_recipe(recipe, inChar, outChar)
     result = { 'result' : success }
     return jsonify(result)
+
+@app.route('/character/getAll', methods = ['POST', 'GET'])
+def handle_get_characters():
+    data = request.json
+
+    if 'username' not in session:
+        return redirect('/login')
+
+    username = session['username']
+
+    result = {'characters': character.get_characters(username)}
+    return jsonify(result)
+
+@app.route('/character/create', methods = ['POST', 'GET'])
+def handle_create_character():
+    data = request.json
+    print data
+
+    if 'username' not in session:
+        result = False 
+    else:
+        username = session['username']
+        charname = data['charname']
+
+        result = character.create_character(username, charname)
+    response = {"result": result}
+    return jsonify(response)
+
+@app.route('/character/inventory', methods = ['POST', 'GET'])
+def handle_get_character_inventory():
+    data = request.json
+
+    #if 'username' not in session:
+    #    return redirect('/login')
+
+    #username = session['username']
+    charid = data['charid'] # TODO: Make this character name?
+
+    result = character.get_inventory(charId)
+    return jsonify(result)
+

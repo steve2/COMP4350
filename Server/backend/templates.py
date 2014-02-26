@@ -16,3 +16,9 @@ def login():
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
+
+@app.route('/character/new')
+def character_create():
+    return render_template('characterCreate.html')
+
+

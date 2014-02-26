@@ -44,6 +44,7 @@ def get_player_id(username):
 # to delete characters from Player accounts. 
 #
 def get_character(id):
+<<<<<<< HEAD
     db = db_connect()
     c = db.cursor()
     qry = "SELECT * FROM `Character` WHERE ID=%s"
@@ -51,6 +52,15 @@ def get_character(id):
     result = c.fetchone()
     db.close()
     return result
+=======
+	db = db_connect()
+	c = db.cursor()
+	qry = "SELECT * FROM `Character` WHERE ID=" + INSERT_SYM
+	c.execute(qry, (id,))
+	result = c.fetchone()
+	db.close()
+	return result
+>>>>>>> f4caf5c557e8e31bf7f4afa0c2fb6ddce9108a99
 	
 #
 # get_characters ()       
@@ -58,6 +68,7 @@ def get_character(id):
 # 	@return:	returns list of characters currently owned by specified player.
 #
 def get_characters(username):
+<<<<<<< HEAD
     db = db_connect()
     c = db.cursor()
     id = get_player_id(username)
@@ -71,11 +82,24 @@ def get_characters(username):
         result = None
     db.close()
     return result
+=======
+	db = db_connect()
+	c = db.cursor()
+	id = get_player_id(username)[0]
+	qry = "SELECT * FROM `Character` WHERE Player_ID=" + INSERT_SYM
+	c.execute(qry, (id,))
+	result = []
+	for row in c:
+		result.append(row)
+	db.close()
+	return result
+>>>>>>> f4caf5c557e8e31bf7f4afa0c2fb6ddce9108a99
 	
 
 def create_character(username, charname):
     db = db_connect()
     c = db.cursor()
+<<<<<<< HEAD
     id = get_player_id(username)
     if (id != None):
         qry = "INSERT INTO `Character` (Player_ID, Name) VALUES (%s, %s)"
@@ -87,6 +111,16 @@ def create_character(username, charname):
     db.close()
     return success
     
+=======
+    id = get_player_id(username)[0]
+    print "ID:", id
+    qry = "INSERT INTO `Character` (ID, Player_ID, Name) VALUES (" + INSERT_SYM + ", " + INSERT_SYM + ", " + INSERT_SYM + ")"
+    c.execute(qry, (17, id, charname))
+    db.commit()
+    db.close()
+    return True
+
+>>>>>>> f4caf5c557e8e31bf7f4afa0c2fb6ddce9108a99
 
 def reset_tables():
     print "> Reset Character Table"

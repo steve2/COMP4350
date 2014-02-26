@@ -22,7 +22,7 @@ namespace Assets.Code.Components
             public int speed;
             public int range;
             public int capacity; //TODO: Ranged only? Or can we interpret capacity for a melee weapon?
-            public List<ItemAttribute> extraAttributes; //Extra attributes managed by the inspector
+            public List<GameAttribute> extraAttributes; //Extra attributes managed by the inspector
             
             public void Clear()
             {
@@ -63,12 +63,13 @@ namespace Assets.Code.Components
         protected override void InitAttributes()
         {
             base.InitAttributes();
-            AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
+            //TODO: Change how ItemType is stored (It's one of the top level Item properties)
+            //AddAttribute(AttributeType.ItemType, (int)ItemType.Weapon);
             AddAttribute(AttributeType.Damage, attributes.damage);
             AddAttribute(AttributeType.Speed, attributes.speed);
             AddAttribute(AttributeType.Range, attributes.range);
             AddAttribute(AttributeType.Capacity, attributes.capacity);
-            foreach (ItemAttribute attr in attributes.extraAttributes)
+            foreach (GameAttribute attr in attributes.extraAttributes)
             {
                 AddAttribute(attr);
             }

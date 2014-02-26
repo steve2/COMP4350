@@ -27,9 +27,9 @@ namespace Assets.Code.Editor.Tests.Components
             const int expectedDamage = 50;
             const int expectedHealth = 100;
             AttributeManager mgr = Create();
-            List<ItemAttribute> attributes = new List<ItemAttribute>();
-            attributes.Add(new ItemAttribute(AttributeType.Damage, expectedDamage));
-            attributes.Add(new ItemAttribute(AttributeType.Health, expectedHealth));
+            List<GameAttribute> attributes = new List<GameAttribute>();
+            attributes.Add(new GameAttribute(AttributeType.Damage, expectedDamage));
+            attributes.Add(new GameAttribute(AttributeType.Health, expectedHealth));
 
             mgr.AddAttributes(attributes);
 
@@ -46,8 +46,8 @@ namespace Assets.Code.Editor.Tests.Components
             const int expectedDamage = damageA + damageB;
             AttributeManager mgr = Create();
 
-            mgr.AddAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageA)});
-            mgr.AddAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageB)});
+            mgr.AddAttributes(new GameAttribute[] { new GameAttribute(AttributeType.Damage, damageA)});
+            mgr.AddAttributes(new GameAttribute[] { new GameAttribute(AttributeType.Damage, damageB)});
 
             //The attribute should be updated
             Assert.AreEqual(expectedDamage, mgr.GetAttributeValue(AttributeType.Damage));
@@ -57,9 +57,9 @@ namespace Assets.Code.Editor.Tests.Components
         public void TestSubtractNewAttributes()
         {
             AttributeManager mgr = Create();
-            List<ItemAttribute> attributes = new List<ItemAttribute>();
-            attributes.Add(new ItemAttribute(AttributeType.Damage,  100));
-            attributes.Add(new ItemAttribute(AttributeType.Health, 50));
+            List<GameAttribute> attributes = new List<GameAttribute>();
+            attributes.Add(new GameAttribute(AttributeType.Damage,  100));
+            attributes.Add(new GameAttribute(AttributeType.Health, 50));
 
             mgr.SubtractAttributes(attributes);
 
@@ -76,8 +76,8 @@ namespace Assets.Code.Editor.Tests.Components
             const int expectedDamage = damageA - damageB;
             AttributeManager mgr = Create();
 
-            mgr.AddAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageA) }); //Need to call Add first to create it
-            mgr.SubtractAttributes(new ItemAttribute[] { new ItemAttribute(AttributeType.Damage, damageB) });
+            mgr.AddAttributes(new GameAttribute[] { new GameAttribute(AttributeType.Damage, damageA) }); //Need to call Add first to create it
+            mgr.SubtractAttributes(new GameAttribute[] { new GameAttribute(AttributeType.Damage, damageB) });
 
             //The attribute should be updated
             Assert.AreEqual(expectedDamage, mgr.GetAttributeValue(AttributeType.Damage));
