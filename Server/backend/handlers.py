@@ -117,3 +117,10 @@ def handle_get_character_inventory():
     result = character.get_inventory(charId)
     return jsonify(result)
 
+@app.route('/isAlive'), methods = ['POST', 'GET'])
+def handle_is_alive():
+    #TODO: Should we just accept an empty request, or expect something?
+    response = {"result" : "1"}
+    return jsonify(response)
+    
+
