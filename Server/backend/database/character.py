@@ -44,13 +44,13 @@ def get_player_id(username):
 # to delete characters from Player accounts. 
 #
 def get_character(id):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT * FROM `Character` WHERE ID=%s"
-	c.execute(qry, (id,))
-	result = c.fetchone()
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT * FROM `Character` WHERE ID=%s"
+    c.execute(qry, (id,))
+    result = c.fetchone()
+    db.close()
+    return result
 	
 #
 # get_characters ()       
@@ -89,8 +89,8 @@ def create_character(username, charname):
     
 
 def reset_tables():
-	print "> Reset Character Table"
-	reset_characters()
+    print "> Reset Character Table"
+    reset_characters()
 	
 def reset_characters():
     db = db_connect()
