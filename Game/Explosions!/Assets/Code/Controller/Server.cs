@@ -8,6 +8,8 @@ using UnityEngine;
 using Assets.Code.Components;
 using Assets.Code.Model;
 using System.Threading;
+using System.Net;
+using System.IO;
 
 /// <summary>
 /// Only this service should know how to communicate with the server
@@ -15,7 +17,11 @@ using System.Threading;
 /// </summary>
 public class Server 
 {
-    private const string IS_ALIVE_PATH = "/isAlive";
+    public const string PRODUCTION_URL = "http://54.200.201.50";
+    public const string XEFIER_URL = "http://54.213.248.49/";
+    public const string LOCAL_HOST = "localhost";
+    private const string IS_ALIVE_PATH = "isAlive";
+    public const int DEFAULT_TIMEOUT = 10000;
 
     //TODO: Thread pool?
     //private ThreadPool threads;
@@ -41,10 +47,11 @@ public class Server
     protected virtual void AsyncSend(string path, string json, Action<JSONNode> asyncReturn)
     {
         //TODO: Use a threadpool instead of creating a new thread every time
+        //TODO: Terminate all pending threads on application exit!
         new Thread(() =>
         {
             asyncReturn(Send(path, json));
-        });
+        }).Start();
     }
 
     /// <summary>
@@ -55,23 +62,18 @@ public class Server
     /// <returns></returns>
     protected virtual JSONNode Send(String path, String json) 
     {
-        var utf8 = new System.Text.UTF8Encoding();
-        var header = new Hashtable();
-           
-        header.Add("Content-Type", "text/json");
-        header.Add("Content-Length", json.Length);
-         
         var location = this.url + "/" + path;
-        var www = new WWW(location, utf8.GetBytes(json), header);
-         
-		return JSON.Parse(www.text);
+        var client = new WebClient();
+        client.Headers["Content-Type"] = "text/json";
+        string response = client.UploadString(location, json);
+		return JSON.Parse(response);
     }
 
     public void IsAlive(Action<bool> asyncReturn)
     {
-        AsyncSend(IS_ALIVE_PATH, "", (j) =>
+		AsyncSend(IS_ALIVE_PATH, "", (j) =>
             {
-                asyncReturn(j["result"] == "1");
+                asyncReturn(j["result"].Value == "1");
             });
     }
 

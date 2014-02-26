@@ -10,9 +10,6 @@ using Assets.Code.Model;
 /// </summary>
 public class Game
 {
-    private const string PRODUCTION_URL = "http://54.200.201.50";
-    private const string XEFIER_URL = "http://54.213.248.49/";
-
     /// <summary>
     /// This is a service that provides communication with a "server" (Whether it's a real server or not)
     /// It can be changed during run-time
@@ -109,7 +106,7 @@ public class Game
     /// </summary>
     public static void Init()
     {
-        Instance = new Game(new Server(PRODUCTION_URL));
+        Instance = new Game(new Server(Server.PRODUCTION_URL));
     }
 
     /// <summary>
