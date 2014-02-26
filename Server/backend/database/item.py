@@ -14,8 +14,14 @@ from database import *
 
 def get_items():
     db = db_connect();
-    
+    c = db.cursor()
+    qry = "SELECT Item.Name, Description, Attribute.Text, Value, Item_Type.Name FROM Item JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) JOIN Attribute ON (Attribute.ID=Attribute_ID)";
+    c.execute(qry)
+    result = []
+    for row in c:
+        result.append(row)
     db.close()
+    return result
     
 def get_item(itemname):
     db = db_connect()
@@ -66,3 +72,5 @@ def reset_tables():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
+    else:
+        print get_items()
