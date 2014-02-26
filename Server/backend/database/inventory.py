@@ -26,7 +26,7 @@ from database import *
 def get_inventory(charid):
     db = db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID=%s"
+    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+INSERT_SYM
     c.execute(qry, (charid,)) #result should contain Name of items and their quantity.
     result = []
     for row in c:
