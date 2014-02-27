@@ -24,10 +24,14 @@ def create_player(username, password_hash):
     db = db_connect()
     c = db.cursor()
     qry = "INSERT INTO Player (Username, Password) VALUES ("+INSERT_SYM+", "+INSERT_SYM+")"
-    c.execute(qry, (username, password_hash))
-    db.commit()
+    try:
+        c.execute(qry, (username, password_hash))
+        db.commit()
+        result = True
+    except:
+        result = False
     db.close()
-    return True
+    return result
 
 def reset_tables():
     print "> Reset Player Table"
@@ -45,15 +49,4 @@ def reset_players():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-        
-    if ("-test" in sys.argv):
-        print "Test get_player(username, password).."
-        get_player("Test\Username", "Test\Password")
-        print "\t...Success."
-        
-        print "Test create_player(username, password).."
-        create_player("Test\Username", "Test\Password")
-        print "\t...Success."
-        
-        print "Testing 'player.py' Complete"
         

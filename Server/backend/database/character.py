@@ -103,24 +103,4 @@ def reset_characters():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-        
-    if ("-test" in sys.argv):
-    
-        print "Test get_player_id(username).."
-        get_player_id("Test\Username")
-        print "\t...Success."
-        
-        print "Test get_player_id(username).."
-        get_character(0)
-        print "\t...Success."
-        
-        print "Test get_character(id).."
-        get_characters("Test\Username")
-        print "\t...Success."
-        
-        print "Test get_characters(username).."
-        create_character("Test\Username", "Test\CharacterName")
-        print "\t...Success."
-        
-        print "Testing 'character.py' Complete."
-        
+      

@@ -72,14 +72,3 @@ def reset_tables():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-    
-    if ("-test" in sys.argv):
-        print "Test get_items().."
-        get_items()
-        print "\t...Success."
-        
-        print "Test get_item(itemname).."
-        get_item("Test\ItemName")
-        print "\t...Success."
-        
-        print "Testing 'item.py' Complete."

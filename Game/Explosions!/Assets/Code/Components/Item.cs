@@ -21,7 +21,6 @@ namespace Assets.Code.Components
         public IEnumerable<GameAttribute> ItemAttributes { get { return itemAttributes; } }
         #endregion
 
-        Attribute bla;
         // Use this for initialization
         public virtual void Start()
         {

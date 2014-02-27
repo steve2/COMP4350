@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using SimpleJSON;
 using System.Collections;
-using UnityEngine;
 using Assets.Code.Components;
 using Assets.Code.Model;
 using System.Threading;
@@ -109,9 +108,9 @@ public class Server
 	public void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
 	{
 		//TODO: Query server for this data
-		//throw new NotImplementedException();
+		throw new NotImplementedException();
 		
-		AsyncSend ("test", "test", null);
+		//AsyncSend ("test", "test", null);
 	}
 
     //TODO: Get Characters

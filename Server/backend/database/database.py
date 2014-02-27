@@ -11,8 +11,8 @@
 # Dependencies
 #====================
 import sys
-import MySQLdb
 import sqlite3
+import MySQLdb
 #
 # Constants
 #============================
