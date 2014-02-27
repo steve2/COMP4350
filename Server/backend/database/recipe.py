@@ -9,7 +9,8 @@
 # 
 # Dependencies
 #==================
-from database import *
+import database
+import sys
 
 #Returns a list of recipe ID's that can be purchased through gold alone 
 #(Not sure what Item_ID Gold would be so at the moment hard coded it as 0)
@@ -21,58 +22,53 @@ def get_purchasable_items():
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result    
+   
     
 #Given a recipe_id returns a list of the required items and quantity
 def get_recipe_in(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.ID, Item.name, Quantity FROM Recipe_In JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID=%s"
+    qry = "SELECT Item.name, Quantity FROM Recipe_In JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
 
 #Given a recipe_id returns a list of the resulting items and quantity
 def get_recipe_out(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.ID, Item.name, Quantity FROM Recipe_Out JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID=%s"
+    qry = "SELECT Item.name, Quantity FROM Recipe_Out JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
 
 def create_recipe(recipe_id, recipe_name):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe' (Recipe_ID, Recipe_Name) VALUES (%s, %s)"
+    qry = "INSERT INTO 'Recipe' (Recipe_ID, Recipe_Name) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, recipe_name))
     db.commit()
-    db.close()
     return True
 
 def create_recipe_in(recipe_id, item_id, quantity):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe_In' (Recipe_ID, Item_ID, Quantity) VALUES (%s, %s, %s)"
+    qry = "INSERT INTO 'Recipe_In' (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, item_id, quantity))
     db.commit()
-    db.close()
     return True
 
 def create_recipe_out(recipe_id, item_id, quantity):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe_Out' (Recipe_ID, Item_ID, Quantity) VALUES (%s, %s, %s)"
+    qry = "INSERT INTO 'Recipe_Out' (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, item_id, quantity))
     db.commit()
-    db.close()
     return True
 
 def reset_recipe_in():

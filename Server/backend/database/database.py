@@ -21,7 +21,10 @@ USER_NAME = "COMP4350_admin"
 USER_PASS = "admin"
 TABL_NAME = "COMP4350_GRP5"
 
+global INSERT_SYM
 INSERT_SYM = '?'
+
+global Database
 Database = None
     
 #***************************************************************************
@@ -29,23 +32,29 @@ Database = None
 #***************************************************************************
 def db_connect():
     global Database
-    global INSERT_SYM
-    
     if Database == None:
         if "-local" in sys.argv:
-            INSERT_SYM = '?'
+            symbol = '?'
             Database = sqlite3.connect("local.db")
         else:
-            INSERT_SYM = '%s'
+            symbol = '%s'
             Database = MySQLdb.connect(HOST_NAME, USER_NAME, USER_PASS, TABL_NAME)        
-    
+        global INSERT_SYM
+        INSERT_SYM = symbol
     return Database
+    
+def db_close():
+    global Database
+    if Database != None:
+        Database.close()
+        Database = None
 
 def db_connect_test():
     global Database
     global INSERT_SYM
-    
     INSERT_SYM = '?'
+    if Database != None:
+        Database.close()
     Database = sqlite3.connect("test.db")
     return Database
 
