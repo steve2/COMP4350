@@ -33,7 +33,28 @@ def get_inventory(charid):
         result.append(row)
     db.close()
     return result
-    
+
+#TODO: Should we use this? Or loop through the result of get_inventory?
+def contains(charid, itemid, quantity):
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT EXISTS (SELECT 1 FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Characer_ID="+INSERT_SYM+" AND Quantity>="+INSERT_SYM+")"
+    c.execute(qry, (charid,itemid,quantity,))
+    result = (c == 1)
+    return result
+
+def remove(charid, itemid, quantity):
+    db = db_connect()
+    c = db.cursor()
+    #TODO: Find the item,
+    #TODO: Decrement quantity
+    #TODO: if quantity <= 0. Then remove the row
+
+def add(charid, item, quantity):
+    db = db_connect()
+    c = db.cursor()
+    #TODO: Find the item, insert row if it doesn't exist
+    #TODO: Increment quantity
 
 def reset_inventory():
     db = db_connect()

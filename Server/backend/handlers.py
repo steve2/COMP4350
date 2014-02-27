@@ -55,28 +55,46 @@ def handle_login_request():
             result = {'result': False}
     return jsonify(result)
 
+####USE_RECIPE####
+#TODO: Could maybe move these functions elsewhere?
+def contains_items(charID, rows):
+    for row in rows:
+        if not inventory.contains(charID, row['Item.ID'], row['Quantity']):
+            return false
+    return true
+    
+def remove_items(charID, rows):
+    for row in rows:
+       inventory.remove(charID, row['Item.ID'], row['Quantity'])
+
+def add_items(charID, rows):
+    for row in rows:
+        inventory.add(charID, row['Item.ID'], row['Quantity'])
+
 SHOP = -1 #Character ID for SHOP
 def use_recipe(recipe, inChar, outChar):
     inItems = recipe.get_recipe_in(recipe)
     outItems = recipe.get_recipe_out(recipe)
-    success = false
-    #TODO: Verify the recipe is valid (Character has sufficient items in inventory)
-    if inChar != SHOP:
-         #TODO: Does this call make sense? Or should we loop and call contains_item
-        if not inventory.contains_items(inChar, inItems):
-            return false
-    if outChar != SHOP:
-        if not inventory.contains_items(outChar, outItems):
-            return false
+    
+    #Verify the recipe is valid (Character has sufficient items in inventory)
+    #We don't want to remove/add anything until we know that the transaction is valid
+    if inChar != SHOP and not contains_items(inChar, inItems):
+       return false
+    if outChar != SHOP and not contains_items(outChar, outItems):
+        return false
         
-    #TODO: Remove inItems from inChar (Make a common function)
-    #if(inChar != SHOP):
-        #loop through all items? (Or single function)
-        #inventory.remove(inChar, item)
-    #TODO: Remove outItems from outChar
-    #if(inChar != SHOP):
-        #loop through all items?
-        #inventory.remove(outChar, item)
+    #Remove items from inventories
+    if(inChar != SHOP):
+        remove_items(inChar, inItems)
+    if(outChar != SHOP):
+        remove_items(outChar, outItems)
+
+    #Add items to inventories
+    if(inChar != SHOP):
+        add_items(outChar, outItems)
+    if(outChar != SHOP):
+        add_items(inChar, inItems)
+    return true
     
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
@@ -87,6 +105,7 @@ def handle_use_recipe():
     success = use_recipe(recipe, inChar, outChar)
     result = { 'result' : success }
     return jsonify(result)
+####################
 
 @app.route('/character/getAll', methods = ['POST', 'GET'])
 def handle_get_characters():
