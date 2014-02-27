@@ -55,24 +55,10 @@ def handle_login_request():
             result = {'result': False}
     return jsonify(result)
 
-####USE_RECIPE####
-#TODO: Could maybe move these functions elsewhere?
-def contains_items(charID, rows):
-    for row in rows:
-        if not inventory.contains(charID, row['Item.ID'], row['Quantity']):
-            return false
-    return true
-    
-def remove_items(charID, rows):
-    for row in rows:
-       inventory.remove(charID, row['Item.ID'], row['Quantity'])
-
-def add_items(charID, rows):
-    for row in rows:
-        inventory.add(charID, row['Item.ID'], row['Quantity'])
-
+######RECIPE######
 SHOP = -1 #Character ID for SHOP
-def use_recipe(recipe, inChar, outChar):
+#Provides support for use/undo_recipe and trading
+def exec_recipe(recipe, inChar, outChar):
     inItems = recipe.get_recipe_in(recipe)
     outItems = recipe.get_recipe_out(recipe)
     
@@ -95,14 +81,24 @@ def use_recipe(recipe, inChar, outChar):
     if(outChar != SHOP):
         add_items(inChar, inItems)
     return true
-    
+
+#Buy/Craft
 @app.route('/useRecipe', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
     recipe = data['recipe']
-    inChar = data['inChar']
-    outChar = data['outChar']
-    success = use_recipe(recipe, inChar, outChar)
+    charid = data['character']
+    success = exec_recipe(recipe, charid, SHOP)
+    result = { 'result' : success }
+    return jsonify(result)
+
+#Sell/Disassemble
+@app.route('/undoRecipe', methods = ['POST', 'GET'])
+def handle_undo_recipe():
+    data = request.json
+    recipe = data['recipe']
+    charid = data['character']
+    success = exec_recipe(recipe, SHOP, charid)
     result = { 'result' : success }
     return jsonify(result)
 ####################

@@ -18,6 +18,11 @@ from database import *
 #   @ charid:   ID of Character to retrieve the inventory for.
 #   @ return:   Returns LIST of paired values for item NAME and QUANTITY.
 #
+# contains_items()
+#   @ charid:   ID of Character
+#   @ row:      A list of Item.ID and Quantity pairs
+#   @ return:   true or false (Whether or not the Inventory contains all of the items)
+#
 # -The result of this function can be used in the "item.py" function
 #  to search the details of these items by name.
 #
@@ -33,6 +38,12 @@ def get_inventory(charid):
         result.append(row)
     return result
 
+def contains_items(charid, rows):
+    for row in rows:
+        if not inventory.contains(charid, row['Item.ID'], row['Quantity']):
+            return false
+    return true
+
 #TODO: Should we use this? Or loop through the result of get_inventory?
 def contains(charid, itemid, quantity):
     db = db_connect()
@@ -42,6 +53,10 @@ def contains(charid, itemid, quantity):
     result = (c == 1)
     return result
 
+def remove_items(charID, rows):
+    for row in rows:
+        remove(charID, row['Item.ID'], row['Quantity'])
+       
 def remove(charid, itemid, quantity):
     db = db_connect()
     c = db.cursor()
@@ -49,6 +64,10 @@ def remove(charid, itemid, quantity):
     #TODO: Decrement quantity
     #TODO: if quantity <= 0. Then remove the row
 
+def add_items(charID, rows):
+    for row in rows:
+        add(charID, row['Item.ID'], row['Quantity'])
+        
 def add(charid, item, quantity):
     db = db_connect()
     c = db.cursor()
