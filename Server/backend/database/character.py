@@ -32,7 +32,6 @@ def get_player_id(username):
         result = result[0]
     else:
         result = None
-    db.close()
     return result
 
 #
@@ -49,7 +48,6 @@ def get_character(id):
     qry = "SELECT * FROM `Character` WHERE ID=" + INSERT_SYM
     c.execute(qry, (id,))
     result = c.fetchone()
-    db.close()
     return result
 	
 #
@@ -69,7 +67,6 @@ def get_characters(username):
             result.append(row)
     else:
         result = None
-    db.close()
     return result
 	
 
@@ -84,7 +81,6 @@ def create_character(username, charname):
         success = True
     else:
         success = False
-    db.close()
     return success
 
 def reset_tables():
@@ -98,29 +94,8 @@ def reset_characters():
 #   c.execute("DROP TABLE IF EXISTS `Character`")
 #   c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
     db.commit()
-    db.close()
 	
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-        
-    if ("-test" in sys.argv):
-    
-        print "Test get_player_id(username).."
-        get_player_id("Test\Username")
-        print "\t...Success."
-        
-        print "Test get_player_id(username).."
-        get_character(0)
-        print "\t...Success."
-        
-        print "Test get_character(id).."
-        get_characters("Test\Username")
-        print "\t...Success."
-        
-        print "Test get_characters(username).."
-        create_character("Test\Username", "Test\CharacterName")
-        print "\t...Success."
-        
-        print "Testing 'character.py' Complete."
-        
+      
