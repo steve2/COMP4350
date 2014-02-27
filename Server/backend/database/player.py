@@ -12,13 +12,12 @@
 from database import *
 
 def get_player(username, password_hash):
-	db = db_connect()
-	c = db.cursor()
-	qry = "SELECT * FROM Player WHERE Username=" + INSERT_SYM + " AND Password=" + INSERT_SYM
-	c.execute(qry, (username, password_hash))
-	result = c.fetchone()
-	db.close()
-	return result
+    db = db_connect()
+    c = db.cursor()
+    qry = "SELECT * FROM Player WHERE Username=" + INSERT_SYM + " AND Password=" + INSERT_SYM
+    c.execute(qry, (username, password_hash))
+    result = c.fetchone()
+    return result
 
 def create_player(username, password_hash):
     db = db_connect()
@@ -30,7 +29,6 @@ def create_player(username, password_hash):
         result = True
     except:
         result = False
-    db.close()
     return result
 
 def reset_tables():
@@ -44,7 +42,6 @@ def reset_players():
 #   c.execute("DROP TABLE IF EXISTS Player")
 #   c.execute("CREATE TABLE Player (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
     db.commit()
-    db.close()
 	
 if __name__ == '__main__':
     if ("-reset" in sys.argv):

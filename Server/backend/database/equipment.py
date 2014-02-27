@@ -29,7 +29,6 @@ def get_equipment(charid):
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
     
 
@@ -40,7 +39,6 @@ def reset_equipment():
 #   c.execute("DROP TABLE IF EXISTS Equipped_Item")
 #   c.execute("CREATE TABLE Equipped_Item (Character_ID INT NOT NULL, Slot_ID INT NOT NULL, Item_ID INT NOT NULL, PRIMARY KEY (Character_ID, Slot_ID), FOREIGN KEY (Character_ID) REFERENCES `Character` (ID), FOREIGN KEY (Slot_ID) REFERENCES Slot (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID))")
     db.commit()
-    db.close()
 
     
 def reset_tables():
