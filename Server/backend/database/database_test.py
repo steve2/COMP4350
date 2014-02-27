@@ -34,6 +34,23 @@ class DatabaseTestCase (unittest.TestCase):
         self.curs.execute("INSERT INTO Player (Username, Password) VALUES ('Username', 'Password')")
         self.curs.execute("INSERT INTO Player (Username, Password) VALUES ('Username2', 'Password')")
         self.curs.execute("INSERT INTO `Character` (Player_ID, Name) VALUES (1, 'Character')")
+        self.curs.execute("INSERT INTO `Character` (Player_ID, Name) VALUES (1, 'Other Character')")
+        
+        self.curs.execute("INSERT INTO Attribute VALUES (1, '+Damage')")
+        self.curs.execute("INSERT INTO Attribute VALUES (2, '+Health')")
+        
+        self.curs.execute("INSERT INTO Item_Type VALUES (1, 'Weapon')")
+        self.curs.execute("INSERT INTO Item VALUES (1, 1, 'Axe', 'Axe Description')")
+        self.curs.execute("INSERT INTO Item_Attributes VALUES (1, 1, 5)")
+        self.curs.execute("INSERT INTO Item_Attributes VALUES (1, 2, 5)")
+        
+        self.curs.execute("INSERT INTO Slot VALUES (1, 'Right Hand')")
+        self.curs.execute("INSERT INTO Slot VALUES (2, 'Left Hand')")
+        self.curs.execute("INSERT INTO Item_Slot VALUES (1, 1)")
+        
+        self.curs.execute("INSERT INTO Inventory_Item VALUES (1, 1, 2)")
+        self.curs.execute("INSERT INTO Inventory_Item VALUES (2, 1, 2)")
+        self.curs.execute("INSERT INTO Equipped_Item VALUES (1, 1, 1)")
         
     def tearDown (self):
         self.curs.execute("DROP TABLE IF EXISTS Achievement")
@@ -79,18 +96,34 @@ class DatabaseTestCase (unittest.TestCase):
         assert get_player("Username2", None) == None
         
     def test_get_player_id (self):
+        #Valid Player IDs:
+        assert get_player_id("Username") != None
+        assert get_player_id("Username2") != None
+        #Invalid Player IDs:
         assert get_player_id(None) == None
         assert get_player_id("TestUsername") == None
         
     def test_get_character (self):
+        #Valid Character:
+        assert get_character(1) != None
+        assert get_character(2) != None
+        #Invalid Character:
         assert get_character(None) == None
         assert get_character(0) == None
+        assert get_character(-1) == None
         
     def test_get_characters (self):
+        #Valid characters:
+        assert get_characters("Username") != None
+        assert get_characters("Username2") != None
+        #Correct responses:
+        assert len(get_characters("Username")) == 2
+        assert len(get_characters("Username2")) == 0
+        #Invalid characters:
+        assert get_characters("username") == None
         assert get_characters(None) == None
         assert get_characters("") == None
         assert get_characters("TestUsername") == None
-        assert get_characters("Username")
         
     def test_create_character  (self):
         #invalid input
@@ -101,21 +134,47 @@ class DatabaseTestCase (unittest.TestCase):
         assert not create_character("TestUsername", "TestCharname")
         #"Username" should work.
         assert create_character("Username", "TestCharName")
+        assert create_character("Username2", "TestCharName")
         
     def test_get_items (self):
+        #not a whole lot of variance here, just looking for a list and no MySQL errors.
         assert get_items() != None
+        assert len(get_items()) >= 0
         
     def test_get_item (self):
+        #Valid Items:
+        assert get_item("Axe") != None
+        #Invalid Items:
         assert not get_item(None)
         assert not get_item("")
         assert not get_item("Fake Item")
         
     def test_get_inventory (self):
+        #Valid characters (remember they take an ID to identify):
+        assert get_inventory(1)
+        assert get_inventory(2)
+        assert len(get_inventory(1)) == 1
+        assert len(get_inventory(2)) == 1
+        #Invalid characters:
+        assert not get_inventory("Username")
+        assert not get_inventory("Username2")
         assert not get_inventory(None)
+        assert not get_inventory(-1)
+        assert not get_inventory(0)
         assert not get_inventory("")
         assert not get_inventory("Fake Char")
         
     def test_get_equipment (self):
+        #Valid character:
+        assert get_equipment(1) != None
+        assert get_equipment(2) != None
+        assert len(get_equipment(1)) == 1
+        assert len(get_equipment(2)) == 0
+        #Invalid character:
+        assert not get_equipment("Username")
+        assert not get_equipment("Username2")
+        assert not get_equipment(-1)
+        assert not get_equipment(0)
         assert not get_equipment(None)
         assert not get_equipment("")
         assert not get_equipment("Fake Char")
