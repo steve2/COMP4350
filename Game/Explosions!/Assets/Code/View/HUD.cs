@@ -47,7 +47,7 @@ public class HUD : MonoBehaviour {
 
 	private void LoadHealthBar(Rect rect)
 	{
-		float percent = health.PercentHealth; 
+		float percent = 1;// health.PercentHealth; 
 		float x = rect.x;
 		float y = rect.y;
 		float width = rect.width;
