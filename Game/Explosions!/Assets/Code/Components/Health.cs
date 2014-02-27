@@ -8,7 +8,7 @@ public class Health : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		percentHealth = 100;
+		percentHealth = 1; // Start with full health
 	}
 	
 	// Update is called once per frame
@@ -25,9 +25,9 @@ public class Health : MonoBehaviour {
 	}
 
 	// Take some damage
-	public void reduceHealth(float reduction) 
+	public void decreaseHealth(float decrease) 
 	{
-		percentHealth -= reduction;
+		percentHealth -= decrease;
 		if (percentHealth < 0) 
 		{
 			percentHealth = 0;
