@@ -38,46 +38,53 @@ def get_inventory(charid):
     for row in c:
         result.append(row)
     return result
-<<<<<<< HEAD
 
 def contains_items(charid, rows):
-    for row in rows:
-        if not inventory.contains(charid, row['Item.ID'], row['Quantity']):
-            return false
-    return true
+    #for row in rows:
+        #TODO: Search thrhough get_invenotry?
+        #if not inventory.contains(charid, row['Item.ID'], row['Quantity']):
+            #return false
+    #return true
+    return false
 
-#TODO: Should we use this? Or loop through the result of get_inventory?
-def contains(charid, itemid, quantity):
-    db = db_connect()
+def get_item_quantity(charid, itemid):
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT EXISTS (SELECT 1 FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Characer_ID="+INSERT_SYM+" AND Quantity>="+INSERT_SYM+")"
-    c.execute(qry, (charid,itemid,quantity,))
-    result = (c == 1)
-    return result
+    qry = "SELECT 1 Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Characer_ID="+database.INSERT_SYM+" AND Item_ID="+database.INSERT_SYM
+    c.execute(qry, (charid,itemid,))
+    if c.rowcount == 1:
+        result = c.fetchone()["Quantity"]
+    else:
+        result = 0
+    return 0
 
-def remove_items(charID, rows):
+def remove_items(charid, rows):
     for row in rows:
-        remove(charID, row['Item.ID'], row['Quantity'])
+        remove(charid, row['Item.ID'], row['Quantity'])
        
 def remove(charid, itemid, quantity):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     #TODO: Find the item,
     #TODO: Decrement quantity
     #TODO: if quantity <= 0. Then remove the row
 
-def add_items(charID, rows):
+def add_items(charid, rows):
     for row in rows:
-        add(charID, row['Item.ID'], row['Quantity'])
+        add(charid, row['Item.ID'], row['Quantity'])
         
-def add(charid, item, quantity):
-    db = db_connect()
+def add(charid, itemid, quantity):
+    db = database.db_connect()
     c = db.cursor()
+    if get_item_quantity(charid, itemid) > 0:
+        qry = "UPDATE Inventory_Item SET Quantity="+database.INSERT_SYM+" WHERE Item_ID="+database.INSERT_SYM
+        c.execute(qry, (quantity, itemid,))
+    else:
+        qry = "INSERT INTO Inventory_ITEM VALUES("+database.INSERT_SYM+","+database.INSERT_SYM+","+database.INSERT_SYM+")"
+        c.execute(qry, (charid, itemid, quantity))
+        
     #TODO: Find the item, insert row if it doesn't exist
     #TODO: Increment quantity
-=======
-    
->>>>>>> 254571f375720ea6722515522885ec4b267be10f
 
 def reset_inventory():
     db = database.db_connect()
