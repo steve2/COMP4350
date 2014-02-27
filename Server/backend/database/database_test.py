@@ -22,8 +22,8 @@ class DatabaseTestCase (unittest.TestCase):
         self.curs.execute("CREATE TABLE IF NOT EXISTS Achievement (ID INT NOT NULL PRIMARY KEY, Name CHAR (64), Descr CHAR (255))")
         self.curs.execute("CREATE TABLE IF NOT EXISTS Attribute (ID INT NOT NULL PRIMARY KEY, Text CHAR (64))")
         self.curs.execute("CREATE TABLE IF NOT EXISTS Slot (ID INT NOT NULL PRIMARY KEY, Name CHAR(64))")
-        self.curs.execute("CREATE TABLE IF NOT EXISTS Player (ID INT NOT NULL PRIMARY KEY, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
-        self.curs.execute("CREATE TABLE IF NOT EXISTS `Character` (ID INT NOT NULL PRIMARY KEY, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
+        self.curs.execute("CREATE TABLE IF NOT EXISTS Player (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Username CHAR(255) NOT NULL, Password CHAR(255) NOT NULL)")
+        self.curs.execute("CREATE TABLE IF NOT EXISTS `Character` (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Player_ID INTEGER NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
         self.curs.execute("CREATE TABLE IF NOT EXISTS Item_Type (ID INT NOT NULL PRIMARY KEY, Name CHAR(64))")
         self.curs.execute("CREATE TABLE IF NOT EXISTS Item (ID INT NOT NULL PRIMARY KEY, Item_Type_ID INT NOT NULL, Name CHAR(64), Description CHAR(255), FOREIGN KEY (Item_Type_ID) REFERENCES Item_Type (ID))")
         self.curs.execute("CREATE TABLE IF NOT EXISTS Equipped_Item (Character_ID INT NOT NULL, Slot_ID INT NOT NULL, Item_ID INT NOT NULL, PRIMARY KEY (Character_ID, Slot_ID), FOREIGN KEY (Character_ID) REFERENCES `Character` (ID), FOREIGN KEY (Slot_ID) REFERENCES Slot (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID))")
@@ -49,6 +49,7 @@ class DatabaseTestCase (unittest.TestCase):
         assert create_player(None, None) == False
         assert create_player("TestUsername", None) == False
         assert create_player(None, "TestPassword") == False
+        assert create_player("TestUsername", "TestPassword")
         
     def test_get_player (self):
         assert get_player("TestUsername", "TestPassword") == None
@@ -73,6 +74,7 @@ class DatabaseTestCase (unittest.TestCase):
         assert create_character(None, "TestCharName") == False
         assert create_character(None, None) == False
         assert create_character("TestUsername", None) == False
+        assert create_character("TestUsername", "TestCharname")
         
     def test_get_items (self):
         assert get_items() != None
