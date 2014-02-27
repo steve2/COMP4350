@@ -104,7 +104,7 @@ public class Server
 	public void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
 	{
 		//TODO: Query server for this data
-		//throw new NotImplementedException();
+		throw new NotImplementedException();
 		
 		//AsyncSend ("test", "test", null);
 	}

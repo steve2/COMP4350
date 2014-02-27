@@ -20,7 +20,6 @@ def get_items():
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
     
 def get_item(itemname):
@@ -31,7 +30,6 @@ def get_item(itemname):
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
     
 def reset_item_types():
@@ -41,7 +39,6 @@ def reset_item_types():
 #   c.execute("DROP TABLE IF EXISTS Item_Type")
 #   c.execute("CREATE TABLE Item_Type (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Name CHAR(64))")
     db.commit()
-    db.close()
     
 def reset_items():
     db = db_connect()
@@ -50,7 +47,6 @@ def reset_items():
 #   c.execute("DROP TABLE IF EXISTS Item")
 #   c.execute("CREATE TABLE Item (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Item_Type_ID INT NOT NULL, Name CHAR(64), Description CHAR(255), FORIEGN KEY (Item_Type_ID) REFERENCES Item_Type)")
     db.commit()
-    db.close()
     
 def reset_item_attributes():
     db = db_connect()
@@ -59,7 +55,6 @@ def reset_item_attributes():
 #   c.execute("DROP TABLE IF EXISTS Item_Attributes")
 #   c.execute("CREATE TABLE Item_Attributes ( Item_ID INT NOT NULL, Attribute_ID INT NOT NULL, Value INT, FOREIGN KEY (Item_ID) REFERENCES Item (ID), FOREIGN KEY (Attribute_ID) REFERENCES Attribute (ID), PRIMARY KEY (Item_ID, Attribute_ID) )")
     db.commit()
-    db.close()
     
 def reset_tables():
     print "> Reset Item Type Table"
@@ -72,14 +67,3 @@ def reset_tables():
 if __name__ == '__main__':
     if ("-reset" in sys.argv):
         reset_tables()
-    
-    if ("-test" in sys.argv):
-        print "Test get_items().."
-        get_items()
-        print "\t...Success."
-        
-        print "Test get_item(itemname).."
-        get_item("Test\ItemName")
-        print "\t...Success."
-        
-        print "Testing 'item.py' Complete."

@@ -31,7 +31,6 @@ def get_inventory(charid):
     result = []
     for row in c:
         result.append(row)
-    db.close()
     return result
 
 #TODO: Should we use this? Or loop through the result of get_inventory?
@@ -63,7 +62,6 @@ def reset_inventory():
 #   c.execute("DROP TABLE IF EXISTS Inventory_Item")
 #   c.execute("CREATE TABLE Inventory_Item (Character_ID INT NOT NULL, Item_ID INT NOT NULL, Quantity INT, PRIMARY KEY (Character_ID, Item_ID), FOREIGN KEY (Character_ID) REFERENCES `Character` (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID))")
     db.commit()
-    db.close()
     
     
 def reset_tables():
@@ -74,11 +72,3 @@ def reset_tables():
 if __name__ == '__main__':
     if "-reset" in sys.argv:
         reset_tables()
-        
-    if "-test" in sys.argv:
-        print "Test get_inventory(charid).."
-        get_inventory(0)
-        print "\t...Success."
-        
-        print "Testing 'inventory.py' Complete"
-
