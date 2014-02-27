@@ -10,7 +10,8 @@
 #
 # Dependencies
 #====================
-from database import *
+import database
+import sys
 
 
 #
@@ -29,14 +30,15 @@ from database import *
 # -We could also just have a function that returns a detailed list of items.
 #
 def get_inventory(charid):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+INSERT_SYM
+    qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+database.INSERT_SYM
     c.execute(qry, (charid,)) #result should contain Name of items and their quantity.
     result = []
     for row in c:
         result.append(row)
     return result
+<<<<<<< HEAD
 
 def contains_items(charid, rows):
     for row in rows:
@@ -73,9 +75,12 @@ def add(charid, item, quantity):
     c = db.cursor()
     #TODO: Find the item, insert row if it doesn't exist
     #TODO: Increment quantity
+=======
+    
+>>>>>>> 254571f375720ea6722515522885ec4b267be10f
 
 def reset_inventory():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM Inventory_Item")
 #   c.execute("DROP TABLE IF EXISTS Inventory_Item")

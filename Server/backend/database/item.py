@@ -9,11 +9,11 @@
 #
 # Dependencies
 #====================
-from database import *
-  
+import database
+import sys
 
 def get_items():
-    db = db_connect();
+    db = database.db_connect();
     c = db.cursor()
     qry = "SELECT Item.Name, Description, Attribute.Text, Value, Item_Type.Name FROM Item JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) JOIN Attribute ON (Attribute.ID=Attribute_ID)";
     c.execute(qry)
@@ -23,9 +23,9 @@ def get_items():
     return result
     
 def get_item(itemname):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Description, Attribute.Text, Value, Item_Type.Name FROM Item JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) JOIN Attribute ON (Attribute.ID=Attribute_ID) WHERE Item.Name="+INSERT_SYM;
+    qry = "SELECT Item.Name, Description, Attribute.Text, Value, Item_Type.Name FROM Item JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) JOIN Attribute ON (Attribute.ID=Attribute_ID) WHERE Item.Name="+database.INSERT_SYM;
     c.execute(qry, (itemname,))
     result = []
     for row in c:
@@ -33,7 +33,7 @@ def get_item(itemname):
     return result
     
 def reset_item_types():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM Item_Type")
 #   c.execute("DROP TABLE IF EXISTS Item_Type")
@@ -41,7 +41,7 @@ def reset_item_types():
     db.commit()
     
 def reset_items():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM Item")
 #   c.execute("DROP TABLE IF EXISTS Item")
@@ -49,7 +49,7 @@ def reset_items():
     db.commit()
     
 def reset_item_attributes():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM Item_Attributes")
 #   c.execute("DROP TABLE IF EXISTS Item_Attributes")

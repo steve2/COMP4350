@@ -38,20 +38,17 @@ public class HUD : MonoBehaviour {
 
 	void OnGUI() 
 	{
-		LoadHealthBar (healthBarRect);
-		LoadExpBar (expBarRect);
-
-		//LoadBar (healthBarRect, health.PercentHealth);
-		//LoadBar (expBarRect, exp.PercentEXP);
+		LoadHealthBar ();
+		LoadExpBar ();
 	}
 
-	private void LoadHealthBar(Rect rect)
+	private void LoadHealthBar()
 	{
-		float percent = 1;// health.PercentHealth; 
-		float x = rect.x;
-		float y = rect.y;
-		float width = rect.width;
-		float height = rect.height;
+		float percent = health.PercentHealth; 
+		float x = healthBarRect.x;
+		float y = healthBarRect.y;
+		float width = healthBarRect.width;
+		float height = healthBarRect.height;
 		float newWidth = width * percent;
 
 		SetColor (Color.Lerp (Color.red, Color.green, percent));
@@ -62,48 +59,17 @@ public class HUD : MonoBehaviour {
 			var clr = Color.grey;
 			clr.a = 0.2f;
 			SetColor(clr);
-			GUI.DrawTexture(new Rect(x + newWidth, rect.y, width * (1.0f - percent), height), blank);
+			GUI.DrawTexture(new Rect(x + newWidth, healthBarRect.y, width * (1.0f - percent), height), blank);
 		}
 
 		ResetColor ();
 	}
 
-	// TODO
-	private void LoadExpBar(Rect rect)
+	// TODO: Use percentEXP to draw the experience bar
+	private void LoadExpBar()
 	{
-		GUI.DrawTexture (new Rect (rect.x, rect.y, rect.width, rect.height), blank);
-	}
-
-	// TODO
-	private void LoadBar(Rect rect, float? barPercent)
-	{
-		float percent;
-
-		if (barPercent.HasValue) 
-		{
-			percent = barPercent.Value;
-		} else {
-			percent = 1;
-		}
-
-		float x = rect.x;
-		float y = rect.y;
-		float width = rect.width;
-		float height = rect.height;
-		float newWidth = width * percent;
-		
-		SetColor (Color.Lerp (Color.red, Color.green, percent));
-		GUI.DrawTexture (new Rect (x, y, newWidth, height), blank);
-		
-		if (percent < 1) 
-		{
-			var clr = Color.grey;
-			clr.a = 0.2f;
-			SetColor(clr);
-			GUI.DrawTexture(new Rect(x + newWidth, rect.y, width * (1.0f - percent), height), blank);
-		}
-		
-		ResetColor ();
+		float percentEXP = exp.PercentEXP; // Not used yet...
+		GUI.DrawTexture (new Rect (expBarRect.x, expBarRect.y, expBarRect.width, expBarRect.height), blank);
 	}
 
 	private void SetColor(Color color)

@@ -6,6 +6,8 @@ from flask import jsonify, redirect
 from flask import request, session
 
 from backend import app
+
+import database.database as database
 import database.character as character
 import database.player as player
 
@@ -24,10 +26,14 @@ def handle_new_account():
         password_hash = hash_password(password)
 
         try:
+            database.db_connect()
             player.create_player(name, password_hash)
+            database.db_close()
+            
             session['username'] = name
             result = {'result': True}
         except Exception, e:
+            print e
             result = {'result': False}
 
     return jsonify(result)
@@ -106,13 +112,19 @@ def handle_undo_recipe():
 @app.route('/character/getAll', methods = ['POST', 'GET'])
 def handle_get_characters():
     data = request.json
-
+    
     if 'username' not in session:
         return redirect('/login')
 
+    print "Get characters request for ", session['username']
     username = session['username']
 
-    result = {'characters': character.get_characters(username)}
+    database.db_connect()
+    characters = character.get_characters(username)
+    database.db_close()
+    print "Characters: ", characters
+    
+    result = {'characters': characters}
     return jsonify(result)
 
 @app.route('/character/create', methods = ['POST', 'GET'])

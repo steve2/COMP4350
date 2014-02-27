@@ -9,7 +9,8 @@
 #
 # Dependencies
 #====================
-from database import *
+import database
+import sys
 
 
 
@@ -23,9 +24,9 @@ from database import *
 #
 
 def get_player_id(username):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Player.ID FROM Player WHERE Username="+INSERT_SYM
+    qry = "SELECT Player.ID FROM Player WHERE Username="+database.INSERT_SYM
     c.execute(qry, (username,))
     result = c.fetchone()
     if (result != None):
@@ -43,9 +44,9 @@ def get_player_id(username):
 # to delete characters from Player accounts. 
 #
 def get_character(id):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT * FROM `Character` WHERE ID=" + INSERT_SYM
+    qry = "SELECT * FROM `Character` WHERE ID=" + database.INSERT_SYM
     c.execute(qry, (id,))
     result = c.fetchone()
     return result
@@ -56,11 +57,11 @@ def get_character(id):
 # 	@return:	returns list of characters currently owned by specified player.
 #
 def get_characters(username):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     id = get_player_id(username)
     if (id != None):
-        qry = "SELECT * FROM `Character` WHERE Player_ID=" + INSERT_SYM
+        qry = "SELECT * FROM `Character` WHERE Player_ID=" + database.INSERT_SYM
         c.execute(qry, (id,))
         result = []
         for row in c:
@@ -71,11 +72,11 @@ def get_characters(username):
 	
 
 def create_character(username, charname):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     id = get_player_id(username)
     if (id != None):
-        qry = "INSERT INTO `Character` (Player_ID, Name) VALUES ("+INSERT_SYM+", "+INSERT_SYM+")"
+        qry = "INSERT INTO `Character` (Player_ID, Name) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+")"
         c.execute(qry, (id, charname))
         db.commit()
         success = True
@@ -88,7 +89,7 @@ def reset_tables():
     reset_characters()
 	
 def reset_characters():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM `Character`")
 #   c.execute("DROP TABLE IF EXISTS `Character`")

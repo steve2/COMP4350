@@ -10,7 +10,8 @@
 #
 # Dependencies
 #====================
-from database import *
+import database
+import sys
 
 
 #
@@ -22,9 +23,9 @@ from database import *
 # of the Slot.
 #
 def get_equipment(charid):
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Slot.Name FROM Equipped_Item JOIN Slot ON Slot_ID=Slot.ID JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+INSERT_SYM
+    qry = "SELECT Item.Name, Slot.Name FROM Equipped_Item JOIN Slot ON Slot_ID=Slot.ID JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+database.INSERT_SYM
     c.execute(qry, (charid,)) #result should contain name and slot of items equipped by this character.
     result = []
     for row in c:
@@ -33,7 +34,7 @@ def get_equipment(charid):
     
 
 def reset_equipment():
-    db = db_connect()
+    db = database.db_connect()
     c = db.cursor()
     c.execute("DELETE FROM Equipped_Item")
 #   c.execute("DROP TABLE IF EXISTS Equipped_Item")
