@@ -4,29 +4,54 @@ using System.Collections;
 // For use with the EXP bar in the HUD
 public class Experience : MonoBehaviour {
 
-	private float percentEXP;
+	private int currentEXP;
 
 	// Use this for initialization
 	void Start () 
 	{
-		percentEXP = 100;
+		currentEXP = 0; 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
-	
+
+	// Start at level 1
+	// Increase level for every 100 experienct points gained
+	// TODO: Implement a way to determine how much exp is required for next level
+	public int Level
+	{
+		get
+		{
+			return (currentEXP / 100) + 1;
+		}
+	}
+
+	// TODO: Change this once we change how much experience is required for each level
 	public float PercentEXP
+	{
+		get 
+		{
+			return currentEXP % 100;
+		}
+	}
+	
+	public int CurrentEXP
 	{
 	    get
 	    {
-	        return percentEXP;
+	        return currentEXP;
 	    }
 	}
 
-	public void increaseEXP(float increase)
+	public void IncreaseEXP(int increase)
 	{
-		percentEXP += increase;
+		currentEXP += increase;
+	}
+
+	public void DcreaseEXP(int decrease)
+	{
+		currentEXP -= decrease;
 	}
 }
