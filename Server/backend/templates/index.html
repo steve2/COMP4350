@@ -68,6 +68,7 @@
     <script src="static/jquery/jquery-1.10.2.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <script src="static/js/util.js"></script>
+
     <script>
     /*$(function(){
         alert("Test");
@@ -128,23 +129,15 @@
         });
     
         $('#Characters').on('click', function() {
-            data = {};
-            $.ajax({
-                type: "POST",
-                url: "/character/getAll",
-                data: JSON.stringify(data),
-                success: function(data, _1, _2) {
-                    var printHTML = "<h1>Your Characters:</h1> <br><br>"
-                    printHTML += "<ol>";
-                    for (var i=0; i < data['characters'].length; i++) {
-                        var charname = data['characters'][i][2];
-                        printHTML += "<li>" + charname + "</li>";
-                    }
-                    printHTML += "</ol>";
-                    $('#contents').html(printHTML);            
-                },
-                contentType: 'application/json',
-                dataType: "json"
+            request("/character/getAll", {}, function(data, _1, _2) {
+                var printHTML = "<h1>Your Characters:</h1> <br><br>"
+                printHTML += "<ol>";
+                for (var i=0; i < data['characters'].length; i++) {
+                    var charname = data['characters'][i][2];
+                    printHTML += "<li>" + charname + "</li>";
+                }
+                printHTML += "</ol>";
+                $('#contents').html(printHTML);
             });
         });                
     });
