@@ -33,18 +33,20 @@ def handle_new_account():
             session['username'] = name
             result = {'result': True}
         except Exception, e:
-            print e
             result = {'result': False}
 
     return jsonify(result)
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
 def handle_login_request():
+    print "REQUEST"
     data = request.json
     
     if data == None or 'user' not in data or 'password' not in data:
+        print "NOPE:", data
         result = {'result': False}
     else:
+        print "Test:", data
         name = data['user']
         password = data['password']
         password_hash = hash_password(password)
@@ -52,13 +54,22 @@ def handle_login_request():
         try:
             loginPlayer = player.get_player(name, password_hash)
         except Exception, e:
+            print e
             loginPlayer = None
 
+        print "Player:", loginPlayer
         if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
         else:
             result = {'result': False}
+    return jsonify(result)
+
+@app.route('/logoutRequest', methods = ['POST', 'GET'])
+def handle_logout_request():
+    data = request.json
+    session.clear()
+    result = {'result': True}
     return jsonify(result)
 
 @app.route('/player/current', methods = ['POST', 'GET'])
