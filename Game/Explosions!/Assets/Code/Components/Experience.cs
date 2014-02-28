@@ -6,6 +6,11 @@ public class Experience : MonoBehaviour {
 
 	private int currentEXP;
 
+	public Experience()
+	{
+		int currentEXP = 0;
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -50,8 +55,12 @@ public class Experience : MonoBehaviour {
 		currentEXP += increase;
 	}
 
-	public void DcreaseEXP(int decrease)
+	public void DecreaseEXP(int decrease)
 	{
 		currentEXP -= decrease;
+		if (currentEXP < 0) 
+		{
+			currentEXP = 0;
+		}
 	}
 }

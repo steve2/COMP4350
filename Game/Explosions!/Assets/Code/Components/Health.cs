@@ -6,6 +6,11 @@ public class Health : MonoBehaviour {
 
 	private float percentHealth;
 
+	public Health()
+	{
+		percentHealth = 1;
+	}
+
 	// Use this for initialization
 	void Start () {
 		percentHealth = 1; // Start with full health
@@ -39,9 +44,9 @@ public class Health : MonoBehaviour {
 		if (percentHealth != 0) 
 		{
 			percentHealth += increase;
-			if (percentHealth > 100)
+			if (percentHealth > 1)
 			{
-				percentHealth = 100;
+				percentHealth = 1f;
 			}
 			return true;
 		}
