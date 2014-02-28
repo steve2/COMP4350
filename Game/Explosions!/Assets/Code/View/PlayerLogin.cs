@@ -1,4 +1,4 @@
-﻿UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections;
 using Assets.Code.Components;
@@ -10,7 +10,7 @@ public class PlayerLogin : GameComponent {
 	private string output;
 	
 	// Use this for initialization
-	void Start () {
+	public override void Start () {
 		base.Start();
 		
 		username = "";
