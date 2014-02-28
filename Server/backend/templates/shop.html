@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Shop at Explosions</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <form class="form-signin" id="shop-form" role="form" method="post">
+      <h1 class="text-center">Shop</a></h6>
+      <table class="table table-bordered" id = "purchasables" cellpadding="10">
+      <tr name="data" >
+        <th>Item Name</th>
+        <th>Item Cost</th>
+        <th>Purchase</th>
+      </table>
+      </form>
+    </div>
+
+
+    <script src="static/jquery/jquery-1.10.2.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+        $.ajax({
+            url: "/getPurchasables",
+            dataType: "json",
+            success: function(data) {
+            for (var i in data.rows) {
+                row += '<tr id="' + i + '">';
+                row += '<td><button class = purchasebtn>' + data[purchasables][i][0] + '</button></td>';  <!--quantity-->
+                row += '<td>' + data['purchasables'][i][1] + '</td>';<!--recipe ID-->
+                row += '<td>' + data['purchasables'][i][2] + '</td>';<!--item ID-->
+                row += '</tr>';
+            }
+            $(row).appendTo('table.purchasables');
+            },
+        });
+    </script>
+
+    <script>
+        $("#purchasables" ).on('click', '.purchasebtn', function(event) {
+            event.preventDefault();
+            var objs = $(this).serializeArray());
+
+            var data = {};
+            for(var i = 0; i < objs.length; i++) {
+                var obj = objs[i];
+                data[obj.name] = obj.value;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/use_recipe",
+                data: JSON.stringify(data),
+                success: function(data, _1, _2) {
+                    if(data.result) {
+                        window.location.replace("/");
+                    } else {
+                        window.location.replace("/failpurchase");
+                    }
+                },
+                contentType: 'application/json',
+                dataType: "json"
+            });
+        });
+    </script>
+  </body>
+</html>
