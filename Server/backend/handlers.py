@@ -12,6 +12,7 @@ import database.character as character
 import database.player as player
 import database.equipment as equipment
 import database.item as item
+import database.inventory as inventory
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -30,7 +31,6 @@ def handle_new_account():
         try:
             database.db_connect()
             player.create_player(name, password_hash)
-            database.db_close()
             
             session['username'] = name
             result = {'result': True}
@@ -41,14 +41,11 @@ def handle_new_account():
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
 def handle_login_request():
-    print "REQUEST"
     data = request.json
     
     if data == None or 'user' not in data or 'password' not in data:
-        print "NOPE:", data
         result = {'result': False}
     else:
-        print "Test:", data
         name = data['user']
         password = data['password']
         password_hash = hash_password(password)
@@ -59,7 +56,6 @@ def handle_login_request():
             print e
             loginPlayer = None
 
-        print "Player:", loginPlayer
         if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
@@ -136,30 +132,35 @@ def handle_get_characters():
     data = request.json
     
     if 'username' not in session:
-        return redirect('/login')
+        result = {'characters': None, "BadReqest": True}
+    else:
+        username = session['username']
 
-    print "Get characters request for ", session['username']
-    username = session['username']
-
-    database.db_connect()
-    characters = character.get_characters(username)
-    database.db_close()
-    print "Characters: ", characters
-    
-    result = {'characters': characters}
+        try:
+            database.db_connect()
+            characters = character.get_characters(username)
+            
+            result = {'characters': characters}
+        except Exception, e:
+            print "Error in /character/getAll:", e
+            result = {'characters': None, "BadReqest": True}
     return jsonify(result)
 
 @app.route('/character/create', methods = ['POST', 'GET'])
 def handle_create_character():
     data = request.json
 
-    if 'username' not in session:
+    if 'username' not in session or 'charname' not in data:
         result = False 
     else:
         username = session['username']
         charname = data['charname']
 
-        result = character.create_character(username, charname)
+        try:
+            result = character.create_character(username, charname)
+        except Exception, e:
+            print "Error in /character/create:", e
+            result = False
     response = {"result": result}
     return jsonify(response)
 
@@ -169,7 +170,13 @@ def handle_get_character_inventory():
 
     charid = data['charid'] # TODO: Make this character name?
 
-    result = {"inventory": character.get_inventory(charId)}
+    try:
+        inv = inventory.get_inventory(charid)
+        result = {"inventory": inv}
+    except Exception, e:
+        print e
+        result = {"inventory": None, "BadRequest": True }
+    
     return jsonify(result)
 
 @app.route('/character/equipped', methods = ['POST', 'GET'])
