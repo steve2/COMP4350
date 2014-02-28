@@ -77,12 +77,14 @@ class CharacterHandlerTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_get_characters(self):
+    def test_get_characters_empty(self):
         with self.app.session_transaction() as sess:
             sess['username'] = 'UserJoe'
 
         header = {"user": "notARealUserForSure", "password": "123456"}
         resp = self.app.post('/character/getAll', data=json.dumps(header), content_type='application/json')
+        data = json.loads(resp.data)
+        assert len(data['characters']) == 0
 
     def test_create_character(self):
         with self.app.session_transaction() as sess:
@@ -90,6 +92,8 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"user": "notARealUserForSure", "password": "123456"}
         resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
+        data = json.loads(resp.data)
+        assert not data["result"]
 
     def test_get_created_character(self):
         with self.app.session_transaction() as sess:
@@ -97,7 +101,19 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterBob"}
         resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
+
+        data = json.loads(resp.data)
+        assert data["result"]
+
         resp = self.app.post('/character/getAll', data=json.dumps({}), content_type='application/json')
+
+        data = json.loads(resp.data)
+        characters = data["characters"]
+
+        assert len(characters) == 1
+        bob = characters[0]
+        assert len(bob) == 5 # make sure schema hasn't changed
+        assert bob[2] == "CharacterBob"
 
     def test_get_empty_inventory(self):
         with self.app.session_transaction() as sess:
@@ -107,6 +123,8 @@ class CharacterHandlerTestCase(unittest.TestCase):
         resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
         resp = self.app.post('/character/getAll', data=json.dumps({}), content_type='application/json')
         data = json.loads(resp.data)
+
+        assert len(data) == 1 # Make sure we got a character
 
         header = {"charid": data["characters"][0][0]}
         resp = self.app.post('/character/inventory', data=json.dumps(header), content_type='application/json')
