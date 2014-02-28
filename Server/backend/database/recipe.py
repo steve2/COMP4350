@@ -23,10 +23,10 @@ def exec_recipe(recipe, inChar, outChar):
     
     #Verify the recipe is valid (Character has sufficient items in inventory)
     #We don't want to remove/add anything until we know that the transaction is valid
-    if inChar != character.SHOP and not contains_items(inChar, inItems):
-       return false
-    if outChar != character.SHOP and not contains_items(outChar, outItems):
-        return false
+    if inChar != character.SHOP and not inventory.contains_items(inChar, inItems):
+       return False
+    if outChar != character.SHOP and not inventory.contains_items(outChar, outItems):
+        return False
         
     #Remove items from inventories
     if(inChar != character.SHOP):
@@ -36,10 +36,10 @@ def exec_recipe(recipe, inChar, outChar):
 
     #Add items to inventories
     if(inChar != character.SHOP):
-        inventory.add_items(outChar, outItems)
+        inventory.add_items(inChar, outItems)
     if(outChar != character.SHOP):
-        inventory.add_items(inChar, inItems)
-    return true
+        inventory.add_items(outChar, inItems)
+    return True
 
 #Returns a list of recipe ID's that can be purchased through gold alone 
 #(Not sure what Item_ID Gold would be so at the moment hard coded it as 0)
@@ -59,8 +59,8 @@ def get_purchasable_items():
 def get_recipe_in(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.name, Quantity FROM Recipe_In JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
-    c.execute(qry, (recipe_id))
+    qry = "SELECT Item.ID, Quantity FROM Recipe_In JOIN Item ON (Recipe_In.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
+    c.execute(qry, (recipe_id,))
     result = []
     for row in c:
         result.append(row)
@@ -70,8 +70,8 @@ def get_recipe_in(recipe_id):
 def get_recipe_out(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.name, Quantity FROM Recipe_Out JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
-    c.execute(qry, (recipe_id))
+    qry = "SELECT Item.ID, Quantity FROM Recipe_Out JOIN Item ON (Recipe_Out.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
+    c.execute(qry, (recipe_id,))
     result = []
     for row in c:
         result.append(row)
