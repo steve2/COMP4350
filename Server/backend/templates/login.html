@@ -31,6 +31,7 @@
 
     <script src="static/jquery/jquery-1.10.2.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/js/util.js"></script>
 
     <script>
         $("#login-form").submit(function(event) {
@@ -43,19 +44,13 @@
                 data[obj.name] = obj.value;
             }
 
-            $.ajax({
-                type: "POST",
-                url: "/loginRequest",
-                data: JSON.stringify(data),
-                success: function(data, _1, _2) {
-                    if(data.result) {
-                        window.location.replace("/");
-                    } else {
-                        window.location.replace("/loginFailed");
-                    }
-                },
-                contentType: 'application/json',
-                dataType: "json"
+            request("/loginRequest", data), function(data, _1, _2) {
+                if(data.result) {
+                    window.location.replace("/");
+                } else {
+                    // TODO: write a nice "login failed" website, complete with a helpful "Contact us!" page
+                    window.location.replace("/loginFailed");
+                }
             });
         });
     </script>
