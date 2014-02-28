@@ -73,6 +73,7 @@
 
     <script src="static/jquery/jquery-1.10.2.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
+		<script src="static/js/util.js"></script>
     <script>
     /*$(function(){
         alert("Test");
@@ -108,11 +109,7 @@
         $('#Characters').on('click', function() {
 				
 						data = {};
-            $.ajax({
-                type: "POST",
-                url: "/character/getAll",
-                data: JSON.stringify(data),
-                success: function(data, _1, _2) {
+						request ("/character/getAll", data, function(data, _1, _2) {
 				
 									var printHTML = "<h1>Your Characters:</h1> <br><br>"
 									printHTML += "<ol>";
@@ -123,12 +120,8 @@
 									printHTML += "</ol>";
 									$('#contents').html(printHTML);
 
-									
-								
-                },
-                contentType: 'application/json',
-                dataType: "json"
-            });
+                });
+
         });				
     });
 </script>
