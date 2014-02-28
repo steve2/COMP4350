@@ -10,6 +10,8 @@ from backend import app
 import database.database as database
 import database.character as character
 import database.player as player
+import database.equipment as equipment
+import database.item as item
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -165,13 +167,18 @@ def handle_create_character():
 def handle_get_character_inventory():
     data = request.json
 
-    #if 'username' not in session:
-    #    return redirect('/login')
-
-    #username = session['username']
     charid = data['charid'] # TODO: Make this character name?
 
     result = {"inventory": character.get_inventory(charId)}
+    return jsonify(result)
+
+@app.route('/character/equipped', methods = ['POST', 'GET'])
+def handle_get_character_equipment():
+    data = request.json
+
+    charid = data['charid']
+
+    result = {"equipment": equipment.get_equipment(charId)}
     return jsonify(result)
 
 @app.route('/isAlive', methods = ['POST', 'GET'])
