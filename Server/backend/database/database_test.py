@@ -10,6 +10,7 @@ from character import get_player_id
 from character import get_character
 from character import get_characters
 from character import create_character
+from character import SHOP
 from item import get_items
 from item import get_item
 #TODO: Why are we importing 1 at a time?
@@ -21,6 +22,9 @@ from inventory import remove_item
 from inventory import add_items
 from inventory import add_item
 from equipment import get_equipment
+from recipe import exec_recipe
+from recipe import get_recipe_in
+from recipe import get_recipe_out
 
 class DatabaseTestCase (unittest.TestCase):
     def cleanTables(self):
@@ -409,6 +413,48 @@ class DatabaseTestCase (unittest.TestCase):
         assert get_quantity(1, 1) == 3
         assert get_quantity(1, 2) == 2        
 ############
+
+####RECIPE#### 
+    def test_exec_recipeXpass(self):
+        add_item(1, 0, 50) #Add 50 Money
+        assert get_quantity(1, 1) == 2
+        assert get_quantity(1, 0) == 50 #Money
+        assert get_quantity(1, 2) == 0 #Purchased Item
+
+        assert exec_recipe(1, 1, SHOP) == True
+
+        assert get_quantity(1, 1) == 2
+        assert get_quantity(1, 0) == 0 #Money
+        assert get_quantity(1, 2) == 1 #Purchased Item
+
+    def test_exec_recipeXclosefail(self):
+        add_item(1, 0, 49) #Add 49 Money (Not enough)
+        assert get_quantity(1, 1) == 2
+        assert get_quantity(1, 2) == 0
+        assert get_quantity(1, 0) == 49
+
+        assert exec_recipe(1, 1, SHOP) == False
+
+        assert get_quantity(1, 1) == 2
+        assert get_quantity(1, 2) == 0
+        assert get_quantity(1, 0) == 49
+
+    def test_get_recipe_in(self):
+        rows = get_recipe_in(1)
+        assert len(rows) == 1
+        row = rows[0]
+        assert row[0] == 0 #Item id
+        assert row[1] == 50 #Quantity
+
+    def test_get_recipe_out(self):
+        rows = get_recipe_out(1)
+        assert len(rows) == 1
+        row = rows[0]
+        assert row[0] == 2 #Item id
+        assert row[1] == 1 #Quantity
+##############
+        
+        
 
 if __name__ == '__main__':
     unittest.main()
