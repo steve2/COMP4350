@@ -35,6 +35,7 @@ def get_item(itemname):
 def reset_item_types():
     db = database.db_connect()
     c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS Item_Type (ID INT NOT NULL PRIMARY KEY, Name CHAR(64))")
     c.execute("DELETE FROM Item_Type")
 #   c.execute("DROP TABLE IF EXISTS Item_Type")
 #   c.execute("CREATE TABLE Item_Type (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Name CHAR(64))")
@@ -43,6 +44,7 @@ def reset_item_types():
 def reset_items():
     db = database.db_connect()
     c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS Item (ID INT NOT NULL PRIMARY KEY, Item_Type_ID INT NOT NULL, Name CHAR(64), Description CHAR(255), FOREIGN KEY (Item_Type_ID) REFERENCES Item_Type (ID))")
     c.execute("DELETE FROM Item")
 #   c.execute("DROP TABLE IF EXISTS Item")
 #   c.execute("CREATE TABLE Item (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Item_Type_ID INT NOT NULL, Name CHAR(64), Description CHAR(255), FORIEGN KEY (Item_Type_ID) REFERENCES Item_Type)")
@@ -51,6 +53,7 @@ def reset_items():
 def reset_item_attributes():
     db = database.db_connect()
     c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS Item_Attributes ( Item_ID INT NOT NULL, Attribute_ID INT NOT NULL, Value INT, FOREIGN KEY (Item_ID) REFERENCES Item (ID), FOREIGN KEY (Attribute_ID) REFERENCES Attribute (ID), PRIMARY KEY (Item_ID, Attribute_ID) )")
     c.execute("DELETE FROM Item_Attributes")
 #   c.execute("DROP TABLE IF EXISTS Item_Attributes")
 #   c.execute("CREATE TABLE Item_Attributes ( Item_ID INT NOT NULL, Attribute_ID INT NOT NULL, Value INT, FOREIGN KEY (Item_ID) REFERENCES Item (ID), FOREIGN KEY (Attribute_ID) REFERENCES Attribute (ID), PRIMARY KEY (Item_ID, Attribute_ID) )")

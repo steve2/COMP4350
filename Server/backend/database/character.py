@@ -81,6 +81,7 @@ def create_character(username, charname):
         db.commit()
         success = True
     else:
+        print "FAILURE IN create_character()"
         success = False
     return success
 
@@ -91,6 +92,7 @@ def reset_tables():
 def reset_characters():
     db = database.db_connect()
     c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS `Character` (ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Player_ID INTEGER NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
     c.execute("DELETE FROM `Character`")
 #   c.execute("DROP TABLE IF EXISTS `Character`")
 #   c.execute("CREATE TABLE `Character` (ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, Player_ID INT NOT NULL, Name CHAR(64), Exp INT DEFAULT 0, Play_Time INT DEFAULT 0)")
