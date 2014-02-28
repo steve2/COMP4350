@@ -10,6 +10,8 @@ from backend import app
 import database.database as database
 import database.character as character
 import database.player as player
+import database.equipment as equipment
+import database.item as item
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -33,18 +35,20 @@ def handle_new_account():
             session['username'] = name
             result = {'result': True}
         except Exception, e:
-            print e
             result = {'result': False}
 
     return jsonify(result)
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
 def handle_login_request():
+    print "REQUEST"
     data = request.json
     
     if data == None or 'user' not in data or 'password' not in data:
+        print "NOPE:", data
         result = {'result': False}
     else:
+        print "Test:", data
         name = data['user']
         password = data['password']
         password_hash = hash_password(password)
@@ -52,13 +56,31 @@ def handle_login_request():
         try:
             loginPlayer = player.get_player(name, password_hash)
         except Exception, e:
+            print e
             loginPlayer = None
 
+        print "Player:", loginPlayer
         if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
         else:
             result = {'result': False}
+    return jsonify(result)
+
+@app.route('/logoutRequest', methods = ['POST', 'GET'])
+def handle_logout_request():
+    data = request.json
+    session.clear()
+    result = {'result': True}
+    return jsonify(result)
+
+@app.route('/player/current', methods = ['POST', 'GET'])
+def handle_current_player():
+    result = {}
+    if 'username' in session:
+        result["result"] = session["username"]
+    else:
+        result["result"] = None
     return jsonify(result)
 
 ######RECIPE######
@@ -145,13 +167,34 @@ def handle_create_character():
 def handle_get_character_inventory():
     data = request.json
 
-    #if 'username' not in session:
-    #    return redirect('/login')
-
-    #username = session['username']
     charid = data['charid'] # TODO: Make this character name?
 
     result = {"inventory": character.get_inventory(charId)}
+    return jsonify(result)
+
+@app.route('/character/equipped', methods = ['POST', 'GET'])
+def handle_get_equipped_character_equipment():
+    data = request.json
+
+    charid = data['charid']
+
+    result = {"equipment": equipment.get_equipment(charId)}
+    return jsonify(result)
+
+@app.route('/item/getAll', methods = ['POST', 'GET'])
+def handle_get_all_character_equipment():
+    data = request.json
+
+    result = {"equipment": item.get_items()}
+    return jsonify(result)
+
+@app.route('/item/get', methods = ['POST', 'GET'])
+def handle_get_character_equipment():
+    data = request.json
+
+    itemid = data['itemid']
+
+    result = {"equipment": item.get_item(itemId)}
     return jsonify(result)
 
 @app.route('/isAlive', methods = ['POST', 'GET'])

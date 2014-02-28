@@ -25,10 +25,11 @@
 
     <script src="/static/jquery/jquery-1.10.2.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/js/util.js"></script>
 
     <script>
         $("#char-form").submit(function(event) {
-            alert("TEST");
+            //alert("TEST");
 
             event.preventDefault();
             var objs = $(this).serializeArray();
@@ -39,22 +40,14 @@
                 data[obj.name] = obj.value;
             }
 
-            alert("Script");
+            //alert("Script");
 
-            $.ajax({
-                type: "POST",
-                url: "/character/create",
-                data: JSON.stringify(data),
-                success: function(data, _1, _2) {
-                    alert("success");
-                    if(data.result) {
-                        window.location.replace("/");
-                    } else {
-                        window.location.replace("/characterFailed");
-                    }
-                },
-                contentType: 'application/json',
-                dataType: "json"
+            request("/character/create", data, function(data, _1, _2) {
+                if(data.result) {
+                    window.location.replace("/");
+                } else {
+                    window.location.replace("/characterFailed");
+                }
             });
         });
     </script>

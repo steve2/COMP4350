@@ -5,6 +5,13 @@ using System.Collections;
 public class Experience : MonoBehaviour {
 
 	private int currentEXP;
+	private int maxEXP;
+
+	public Experience()
+	{
+		currentEXP = 0;
+		maxEXP = 100;
+	}
 
 	// Use this for initialization
 	void Start () 
@@ -24,7 +31,7 @@ public class Experience : MonoBehaviour {
 	{
 		get
 		{
-			return (currentEXP / 100) + 1;
+			return (currentEXP / maxEXP) + 1;
 		}
 	}
 
@@ -33,7 +40,7 @@ public class Experience : MonoBehaviour {
 	{
 		get 
 		{
-			return currentEXP % 100;
+			return (float)(currentEXP % 100) / (float)maxEXP;
 		}
 	}
 	
@@ -50,8 +57,12 @@ public class Experience : MonoBehaviour {
 		currentEXP += increase;
 	}
 
-	public void DcreaseEXP(int decrease)
+	public void DecreaseEXP(int decrease)
 	{
 		currentEXP -= decrease;
+		if (currentEXP < 0) 
+		{
+			currentEXP = 0;
+		}
 	}
 }

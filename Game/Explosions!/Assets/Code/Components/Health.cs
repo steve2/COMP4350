@@ -4,11 +4,20 @@ using System.Collections;
 // For use with the Health bar in the HUD
 public class Health : MonoBehaviour {
 
-	private float percentHealth;
+	private int health;
+	private int maxHealth;
+
+	public Health()
+	{
+		health = 100;
+		maxHealth = 100;
+	}
 
 	// Use this for initialization
 	void Start () {
-		percentHealth = 1; // Start with full health
+		// Start with full health
+		health = 100;
+		maxHealth = 100;
 	}
 	
 	// Update is called once per frame
@@ -20,28 +29,28 @@ public class Health : MonoBehaviour {
 	{
 	    get
 	    {
-	        return percentHealth;
+	        return (float)health / (float)maxHealth;
 	    }
 	}
 
 	// Take some damage
-	public void decreaseHealth(float decrease) 
+	public void decreaseHealth(int decrease) 
 	{
-		percentHealth -= decrease;
-		if (percentHealth < 0) 
+		health -= decrease;
+		if (health < 0) 
 		{
-			percentHealth = 0;
+			health = 0;
 		}
 	}
 	
-	public bool increaseHealth (float increase)
+	public bool increaseHealth (int increase)
 	{
-		if (percentHealth != 0) 
+		if (health > 0) 
 		{
-			percentHealth += increase;
-			if (percentHealth > 100)
+			health += increase;
+			if (health > maxHealth)
 			{
-				percentHealth = 100;
+				health = maxHealth;
 			}
 			return true;
 		}
@@ -53,6 +62,6 @@ public class Health : MonoBehaviour {
 
 	// A bool signifying empty health (i.e., Dead)
 	public bool isEmpty() {
-		return (percentHealth == 0);
+		return (health == 0);
 	}
 }
