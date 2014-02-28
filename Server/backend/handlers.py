@@ -150,7 +150,7 @@ def handle_get_characters():
 def handle_create_character():
     data = request.json
 
-    if 'username' not in session:
+    if 'username' not in session or 'charname' not in data:
         result = False 
     else:
         username = session['username']
