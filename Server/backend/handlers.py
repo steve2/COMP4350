@@ -183,16 +183,29 @@ def handle_get_character_inventory():
 def handle_get_equipped_character_equipment():
     data = request.json
 
-    charid = data['charid']
+    if 'charid' not in data:
+        result = {"equipment": None, "BadRequest": True}
+    else:
+        charid = data['charid']
 
-    result = {"equipment": equipment.get_equipment(charId)}
+        try:
+            eq = equipment.get_equipment(charid)
+            result = {"equipment": eq}
+        except Exception, e:
+            print "Error in /character/equipped:", e
+            result = {"equipment": None}
     return jsonify(result)
 
 @app.route('/item/getAll', methods = ['POST', 'GET'])
 def handle_get_all_character_equipment():
     data = request.json
 
-    result = {"equipment": item.get_items()}
+    try:
+        items = item.get_items()
+        result = {"equipment": items}
+    except Exception, e:
+        print e
+        result = {"equipment": None}
     return jsonify(result)
 
 @app.route('/item/get', methods = ['POST', 'GET'])
