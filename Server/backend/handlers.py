@@ -61,6 +61,15 @@ def handle_login_request():
             result = {'result': False}
     return jsonify(result)
 
+@app.route('/player/current', methods = ['POST', 'GET'])
+def handle_current_player():
+    result = {}
+    if 'username' in session:
+        result["result"] = session["username"]
+    else:
+        result["result"] = None
+    return jsonify(result)
+
 ######RECIPE######
 SHOP = -1 #Character ID for SHOP
 #Provides support for use/undo_recipe and trading
