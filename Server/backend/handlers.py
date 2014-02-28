@@ -31,12 +31,13 @@ def handle_new_account():
         try:
             database.db_connect()
             player.create_player(name, password_hash)
-            
             session['username'] = name
             result = {'result': True}
         except Exception, e:
             result = {'result': False}
-
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
@@ -49,13 +50,15 @@ def handle_login_request():
         name = data['user']
         password = data['password']
         password_hash = hash_password(password)
-
         try:
+            database.db_connect()
             loginPlayer = player.get_player(name, password_hash)
         except Exception, e:
             print e
             loginPlayer = None
-
+        finally:
+            database.db_close()
+            
         if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
@@ -135,15 +138,16 @@ def handle_get_characters():
         result = {'characters': None, "BadReqest": True}
     else:
         username = session['username']
-
         try:
             database.db_connect()
             characters = character.get_characters(username)
-            
             result = {'characters': characters}
         except Exception, e:
             print "Error in /character/getAll:", e
             result = {'characters': None, "BadReqest": True}
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/character/create', methods = ['POST', 'GET'])
@@ -155,12 +159,15 @@ def handle_create_character():
     else:
         username = session['username']
         charname = data['charname']
-
         try:
+            database.db_connect()
             result = character.create_character(username, charname)
         except Exception, e:
             print "Error in /character/create:", e
             result = False
+        finally:
+            database.db_close()
+        
     response = {"result": result}
     return jsonify(response)
 
@@ -169,13 +176,15 @@ def handle_get_character_inventory():
     data = request.json
 
     charid = data['charid'] # TODO: Make this character name?
-
     try:
+        database.db_connect()
         inv = inventory.get_inventory(charid)
         result = {"inventory": inv}
     except Exception, e:
         print e
         result = {"inventory": None, "BadRequest": True }
+    finally:
+        database.db_close()
     
     return jsonify(result)
 
@@ -187,25 +196,31 @@ def handle_get_equipped_character_equipment():
         result = {"equipment": None, "BadRequest": True}
     else:
         charid = data['charid']
-
         try:
+            database.db_connect()
             eq = equipment.get_equipment(charid)
             result = {"equipment": eq}
         except Exception, e:
             print "Error in /character/equipped:", e
             result = {"equipment": None}
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/item/getAll', methods = ['POST', 'GET'])
 def handle_get_all_character_equipment():
     data = request.json
-
     try:
+        database.db_connect()
         items = item.get_items()
         result = {"equipment": items}
     except Exception, e:
         print e
         result = {"equipment": None}
+    finally:
+        database.db_close()
+        
     return jsonify(result)
 
 @app.route('/item/get', methods = ['POST', 'GET'])
