@@ -40,12 +40,11 @@ def get_inventory(charid):
     return result
 
 def contains_items(charid, rows):
-    #for row in rows:
-        #TODO: Search thrhough get_invenotry?
-        #if not inventory.contains(charid, row['Item.ID'], row['Quantity']):
-            #return false
-    #return true
-    return false
+    for row in rows:
+        #TODO: Search through get_invenotry instead?
+        if inventory.get_quantity(charid, row['Item.ID']) < row['Quantity']:
+            return false
+    return true
 
 def get_quantity(charid, itemid):
     db = database.db_connect()
@@ -56,7 +55,7 @@ def get_quantity(charid, itemid):
     if result != None:
         result = result[0]
     else:
-        result = 0 #TODO: 0 or None?
+        result = 0
     return result
 
 def remove_items(charid, rows):
