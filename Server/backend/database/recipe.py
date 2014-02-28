@@ -17,7 +17,8 @@ import sys
 def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Recipe_ID From Recipe_In WHERE Item_ID = 0 GROUP BY Recipe_ID HAVING COUNT(Recipe_ID) = 1"
+    qry = "SELECT in.Recipe_ID From Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID WHERE Item_ID = 0 GROUP BY Recipe_ID HAVING COUNT(Recipe_ID) = 1"
+    
     c.execute(qry)
     result = []
     for row in c:

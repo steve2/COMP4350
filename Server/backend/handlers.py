@@ -12,6 +12,7 @@ import database.character as character
 import database.player as player
 import database.equipment as equipment
 import database.item as item
+import database.inventory as inventory
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -30,36 +31,34 @@ def handle_new_account():
         try:
             database.db_connect()
             player.create_player(name, password_hash)
-            database.db_close()
-            
             session['username'] = name
             result = {'result': True}
         except Exception, e:
             result = {'result': False}
-
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/loginRequest', methods = ['POST', 'GET'])
 def handle_login_request():
-    print "REQUEST"
     data = request.json
     
     if data == None or 'user' not in data or 'password' not in data:
-        print "NOPE:", data
         result = {'result': False}
     else:
-        print "Test:", data
         name = data['user']
         password = data['password']
         password_hash = hash_password(password)
-
         try:
+            database.db_connect()
             loginPlayer = player.get_player(name, password_hash)
         except Exception, e:
             print e
             loginPlayer = None
-
-        print "Player:", loginPlayer
+        finally:
+            database.db_close()
+            
         if loginPlayer != None:
             session['username'] = name
             result = {'result': True}
@@ -111,7 +110,7 @@ def exec_recipe(recipe, inChar, outChar):
     return true
 
 #Buy/Craft
-@app.route('/useRecipe', methods = ['POST', 'GET'])
+@app.route('/recipe/use', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
     recipe = data['recipe']
@@ -121,7 +120,7 @@ def handle_use_recipe():
     return jsonify(result)
 
 #Sell/Disassemble
-@app.route('/undoRecipe', methods = ['POST', 'GET'])
+@app.route('/recipe/undo', methods = ['POST', 'GET'])
 def handle_undo_recipe():
     data = request.json
     recipe = data['recipe']
@@ -136,30 +135,39 @@ def handle_get_characters():
     data = request.json
     
     if 'username' not in session:
-        return redirect('/login')
-
-    print "Get characters request for ", session['username']
-    username = session['username']
-
-    database.db_connect()
-    characters = character.get_characters(username)
-    database.db_close()
-    print "Characters: ", characters
-    
-    result = {'characters': characters}
+        result = {'characters': None, "BadReqest": True}
+    else:
+        username = session['username']
+        try:
+            database.db_connect()
+            characters = character.get_characters(username)
+            result = {'characters': characters}
+        except Exception, e:
+            print "Error in /character/getAll:", e
+            result = {'characters': None, "BadReqest": True}
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/character/create', methods = ['POST', 'GET'])
 def handle_create_character():
     data = request.json
 
-    if 'username' not in session:
+    if 'username' not in session or 'charname' not in data:
         result = False 
     else:
         username = session['username']
         charname = data['charname']
-
-        result = character.create_character(username, charname)
+        try:
+            database.db_connect()
+            result = character.create_character(username, charname)
+        except Exception, e:
+            print "Error in /character/create:", e
+            result = False
+        finally:
+            database.db_close()
+        
     response = {"result": result}
     return jsonify(response)
 
@@ -168,24 +176,51 @@ def handle_get_character_inventory():
     data = request.json
 
     charid = data['charid'] # TODO: Make this character name?
-
-    result = {"inventory": character.get_inventory(charId)}
+    try:
+        database.db_connect()
+        inv = inventory.get_inventory(charid)
+        result = {"inventory": inv}
+    except Exception, e:
+        print e
+        result = {"inventory": None, "BadRequest": True }
+    finally:
+        database.db_close()
+    
     return jsonify(result)
 
 @app.route('/character/equipped', methods = ['POST', 'GET'])
-def handle_get_character_equipment():
+def handle_get_equipped_character_equipment():
     data = request.json
 
-    charid = data['charid']
-
-    result = {"equipment": equipment.get_equipment(charId)}
+    if 'charid' not in data:
+        result = {"equipment": None, "BadRequest": True}
+    else:
+        charid = data['charid']
+        try:
+            database.db_connect()
+            eq = equipment.get_equipment(charid)
+            result = {"equipment": eq}
+        except Exception, e:
+            print "Error in /character/equipped:", e
+            result = {"equipment": None}
+        finally:
+            database.db_close()
+            
     return jsonify(result)
 
 @app.route('/item/getAll', methods = ['POST', 'GET'])
-def handle_get_character_equipment():
+def handle_get_all_character_equipment():
     data = request.json
-
-    result = {"equipment": item.get_items()}
+    try:
+        database.db_connect()
+        items = item.get_items()
+        result = {"equipment": items}
+    except Exception, e:
+        print e
+        result = {"equipment": None}
+    finally:
+        database.db_close()
+        
     return jsonify(result)
 
 @app.route('/item/get', methods = ['POST', 'GET'])

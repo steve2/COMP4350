@@ -36,6 +36,11 @@ public class Game
      *  If empty enumerable is returned, assume data is loading
     ****************************************************************************/
 
+	public void Authenticate(string username, string password, Action<bool> asyncReturn)
+	{
+		server.Login(username, password, (validPlayer) => asyncReturn(validPlayer) );
+	}
+
     public IEnumerable<Recipe> PurchasableItems
     {
         get

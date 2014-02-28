@@ -15,7 +15,7 @@
 
     <div class="container">
 
-      <form class="form-signin" action="test" id="signin-form" role="form" method="post">
+      <form class="form-signin" id="signin-form" role="form" method="post">
         <h2 class="form-signin-heading">Create new account</h2>
         <input type="username" class="form-control" placeholder="Username" name="user" required autofocus>
         <input type="email" class="form-control" placeholder="Email" name="email" required autofocus>
@@ -43,7 +43,7 @@
                 data[obj.name] = obj.value;
             }
 
-            request("/newAccount", data), function(data, _1, _2) {
+            request("/newAccount", data, function(data, _1, _2) {
                 if(data.result) {
                     window.location.replace("/");
                 } else {
