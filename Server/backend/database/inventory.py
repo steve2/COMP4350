@@ -40,11 +40,12 @@ def get_inventory(charid):
     return result
 
 def contains_items(charid, rows):
+    result = True
     for row in rows:
         #TODO: Search through get_inventory instead?
-        if inventory.get_quantity(charid, row['Item.ID']) < row['Quantity']:
-            return false
-    return true
+        if get_quantity(charid, row[0]) < row[1]: #0 = itemid, 1 = quantity
+            result = False
+    return result
 
 def get_quantity(charid, itemid):
     db = database.db_connect()
@@ -60,9 +61,9 @@ def get_quantity(charid, itemid):
 
 def remove_items(charid, rows):
     for row in rows:
-        remove(charid, row['Item.ID'], row['Quantity'])
+        remove_item(charid, row[0], row[1]) #0 = itemid, 1 = quantity
        
-def remove(charid, itemid, quantity):
+def remove_item(charid, itemid, quantity):
     db = database.db_connect()
     c = db.cursor()
 
@@ -79,9 +80,9 @@ def remove(charid, itemid, quantity):
 
 def add_items(charid, rows):
     for row in rows:
-        add(charid, row['Item.ID'], row['Quantity'])
+        add_item(charid, row[0], row[1]) #0 = itemid, 1 = quantity
         
-def add(charid, itemid, quantity):
+def add_item(charid, itemid, quantity):
     db = database.db_connect()
     c = db.cursor()
     curr_quantity = get_quantity(charid, itemid)
