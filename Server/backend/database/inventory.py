@@ -41,7 +41,7 @@ def get_inventory(charid):
 
 def contains_items(charid, rows):
     for row in rows:
-        #TODO: Search through get_invenotry instead?
+        #TODO: Search through get_inventory instead?
         if inventory.get_quantity(charid, row['Item.ID']) < row['Quantity']:
             return false
     return true
