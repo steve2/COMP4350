@@ -27,7 +27,7 @@ public class MainMenu : GameComponent {
 
 		// Load the Mission Menu
 		if (GUILayout.Button ("Single Player", GUILayout.Height(40))) {
-			Application.LoadLevel("MissionMenu"); 
+			Application.LoadLevel("PlayerLogin"); // Load the Mission List
 		}
 
 		// TODO
