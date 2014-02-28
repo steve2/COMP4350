@@ -144,6 +144,7 @@ class DatabaseTestCase (unittest.TestCase):
     def test_get_item (self):
         #Valid Items:
         assert get_item("Axe") != None
+        assert len(get_item("Axe")[0]) == 6
         #Invalid Items:
         assert not get_item(None)
         assert not get_item("")

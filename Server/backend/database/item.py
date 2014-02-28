@@ -31,7 +31,14 @@ def get_items():
 def get_item(itemname):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.Name, Description, Attribute.Text, Value, Item_Type.Name FROM Item JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) JOIN Attribute ON (Attribute.ID=Attribute_ID) WHERE Item.Name="+database.INSERT_SYM;
+    qry = '''SELECT Item.Name, Slot.Name, Description, Attribute.Text, Value, Item_Type.Name 
+                FROM Item 
+                    JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) 
+                    JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) 
+                    JOIN Attribute ON (Attribute.ID=Attribute_ID) 
+                    JOIN Item_Slot ON (Item_Slot.Item_Type_ID=Item.Item_Type_ID)
+                    JOIN Slot ON (Slot.ID=Item_Slot.Slot_ID)
+                        WHERE Item.Name='''+database.INSERT_SYM;
     c.execute(qry, (itemname,))
     result = []
     for row in c:
