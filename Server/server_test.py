@@ -121,6 +121,7 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterBob"}
         resp = post(self.app, '/character/create', header)
+        database.db_connect_test() # reconnect the DB to the mock
 
         data = json.loads(resp.data)
         assert data["result"]
@@ -141,7 +142,10 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterFred"}
         post(self.app, '/character/create', header)
+        database.db_connect_test() # reconnect the DB to the mock
+
         resp = post(self.app, '/character/getAll', {})
+        database.db_connect_test() # reconnect the DB to the mock
         data = json.loads(resp.data)
 
         assert len(data) == 1 # Make sure we got a character
@@ -159,7 +163,10 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterFred"}
         post(self.app, '/character/create', header)
+        database.db_connect_test() # reconnect the DB to the mock
+
         resp = post(self.app, '/character/getAll', {})
+        database.db_connect_test() # reconnect the DB to the mock
         data = json.loads(resp.data)
 
         assert len(data) == 1 # Make sure we got a character
