@@ -181,6 +181,22 @@ def handle_get_character_equipment():
     result = {"equipment": equipment.get_equipment(charId)}
     return jsonify(result)
 
+@app.route('/item/getAll', methods = ['POST', 'GET'])
+def handle_get_character_equipment():
+    data = request.json
+
+    result = {"equipment": item.get_items()}
+    return jsonify(result)
+
+@app.route('/item/get', methods = ['POST', 'GET'])
+def handle_get_character_equipment():
+    data = request.json
+
+    itemid = data['itemid']
+
+    result = {"equipment": item.get_item(itemId)}
+    return jsonify(result)
+
 @app.route('/isAlive', methods = ['POST', 'GET'])
 def handle_is_alive():
     #TODO: Should we just accept an empty request, or expect something?
