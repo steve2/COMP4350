@@ -13,9 +13,13 @@ public class Server
 {
     public const string PRODUCTION_URL = "http://54.200.201.50";
     public const string XEFIER_URL = "http://54.213.248.49/";
-    public const string LOCAL_HOST = "localhost";
-    private const string IS_ALIVE_PATH = "isAlive";
-    public const int DEFAULT_TIMEOUT = 10000;
+	public const string BRAHMDEEP_URL = "http://50.112.181.140";
+	public const string LOCAL_HOST = "localhost";
+    
+	private const string IS_ALIVE_PATH = "isAlive";
+	private const string LOGIN_REQUEST_PATH = "loginRequest";
+
+	public const int DEFAULT_TIMEOUT = 10000;
 
     //TODO: Thread pool?
     //private ThreadPool threads;
@@ -62,6 +66,20 @@ public class Server
         string response = client.UploadString(location, json);
 		return JSON.Parse(response);
     }
+	
+	// asyncReturn - boolean indicating whether or not the login was successful
+	public void Login(String username, String password, Action<bool> asyncReturn){
+		JSONClass playerCredentials = new JSONClass();
+		playerCredentials ["user"] = username;
+		playerCredentials ["password"] = password;
+		
+		//	protected virtual void AsyncSend(string path, JSONClass json, Action<JSONNode> asyncReturn)
+		AsyncSend (LOGIN_REQUEST_PATH, playerCredentials, (j) =>
+		           {
+			Console.WriteLine(j["result"]);		
+			asyncReturn (j ["result"].Value == "true");
+		});
+	}
 
     public void IsAlive(Action<bool> asyncReturn)
     {
