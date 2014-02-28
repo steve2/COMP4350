@@ -82,6 +82,14 @@ def handle_current_player():
         result["result"] = None
     return jsonify(result)
 
+@app.route('/getPurchasables', methods = ['POST', 'GET'])
+def get_purchasable_item_request():
+    data =  request.json
+    
+    purchasables = get_purchasable_items();
+    result = { 'purchasables' : purchasables }
+    return jsonify(result)
+    
 ######RECIPE######
 SHOP = -1 #Character ID for SHOP
 #Provides support for use/undo_recipe and trading
