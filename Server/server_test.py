@@ -1,6 +1,5 @@
 import unittest
 import json
-#from flask import jsonify
 
 from backend import app
 import backend.database.database as database
