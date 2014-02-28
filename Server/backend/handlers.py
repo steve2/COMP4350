@@ -107,7 +107,7 @@ def exec_recipe(recipe, inChar, outChar):
     return true
 
 #Buy/Craft
-@app.route('/useRecipe', methods = ['POST', 'GET'])
+@app.route('/recipe/use', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
     recipe = data['recipe']
@@ -117,7 +117,7 @@ def handle_use_recipe():
     return jsonify(result)
 
 #Sell/Disassemble
-@app.route('/undoRecipe', methods = ['POST', 'GET'])
+@app.route('/recipe/undo', methods = ['POST', 'GET'])
 def handle_undo_recipe():
     data = request.json
     recipe = data['recipe']
