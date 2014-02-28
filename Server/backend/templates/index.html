@@ -132,8 +132,8 @@
 								{		
 									/** Initial AJAX Request for Characters **/
 										var printHTML = "";
-										var characters = new Array();
-										var inventories = new Array();										
+										var characters = new Array();			
+										var inventories = new Array();						
 										var ajaxRequests = new Array();
 										
                     request("/character/getAll", {}, function(data, _1, _2) 
@@ -151,9 +151,9 @@
 												
                     }).done(function () 
 										{										
+												
 												for (var i=0; i < characters.length; i++)
-												{
-													
+												{	
 													/** Do several AJAX requests, storing the AJAX result in array **/
 													
 														ajaxRequests.push(request("/character/inventory", {charid: characters[i].id}, function(data, _1, _2)
