@@ -18,11 +18,6 @@ public class PlayerLogin : GameComponent {
 		output = "Please enter username and password.";
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-	
 	//Called when GUI is rendered
 	void OnGUI() {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
@@ -45,7 +40,8 @@ public class PlayerLogin : GameComponent {
 		 {
 			if (x){
 				output = "Login successful";
-				Application.LoadLevel("Demo");
+                //TODO: Switch to mission menu instead of loading Demo
+                InvokeOnMainThread(() => Application.LoadLevel("Demo"));
 			} else {
 				output = "Login failed";				
 			}
