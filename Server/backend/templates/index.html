@@ -101,7 +101,7 @@
 
         $("#Account").on('click', function() {
             window.location.replace("/login");
-        }
+        });
 
         request("/player/current", {}, function(data, _1, _2) {
             if(data.result !== null) {
@@ -138,8 +138,8 @@
                         $('#contents').html(printHTML);
                     });
                 });   
-            });
-        });             
+            }
+        });           
     });
 </script>
   </body>
