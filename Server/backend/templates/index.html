@@ -114,24 +114,89 @@
 
                 $("#Account").replaceWith($dropdown);
 
-                $('#Logout').on('click', function() {
-                    request("/logoutRequest", {}, function(data, _1, _2) {
+                $('#Logout').on('click', function() 
+								{
+                    request("/logoutRequest", {}, function(data, _1, _2) 
+										{
                         window.location.replace("/");
                     });
                 });
 
-                $('#Characters').on('click', function() {
-                    request("/character/getAll", {}, function(data, _1, _2) {
-                        var printHTML = "<h1>Your Characters:</h1> <br><br>"
-                        printHTML += "<ol>";
-                        for (var i=0; i < data['characters'].length; i++) {
-                            var charname = data['characters'][i][2];
-                            printHTML += "<li>" + charname + "</li>";
+								
+								var printHTML = "<h1>Your Characters:</h1> <br>"
+								var characters = new Array();
+								var inventories = new Array();
+								
+								var ajaxRequests = new Array();
+								
+								/*** This bit gets tricky. We need to make an AJAX request for a Player's 
+									characters, and then use the result of that AJAX request to make several 
+									additional AJAX requests. ***/
+								
+                $('#Characters').on('click', function() 
+								{		
+									
+									/** Initial AJAX Request for Characters **/
+									
+                    request("/character/getAll", {}, function(data, _1, _2) 
+										{
+                        for (var i=0; i < data['characters'].length; i++) 
+												{
+														var character = new Object();
+														character.name = data['characters'][i][2];
+														character.id   = data['characters'][i][0];
+														
+														characters.push(character);
                         }
-                        printHTML += "</ol>";
-                        $('#contents').html(printHTML);
-                    });
+												
+									/** Once Initial AJAX Has Completed **/
+												
+                    }).done(function () 
+										{																			
+												for (var i=0; i < characters.length; i++)
+												{
+													
+													/** Do several AJAX requests, storing the AJAX result in array **/
+													
+														ajaxRequests.push(request("/character/inventory", {charid: characters[i].id}, function(data, _1, _2)
+														{
+																var inventory = new Array();
+																
+																for (var j=0; j < data['inventory'].length; j++)
+																{
+																		var inventoryItem = new Object();
+																		inventoryItem.name = data['inventory'][j][0];
+																		inventoryItem.quantity = data['inventory'][j][1];
+																		
+																		inventory.push(inventoryItem);
+																}
+																inventories.push(inventory);
+														}));
+													
+												}
+												
+												/** Because we stored the AJAX requests in an array, we can wait
+												  for all of them to finish and then print the HTML knowing we've
+													got the rest of the object data that we need **/
+												
+												$.when.apply($, ajaxRequests).done(function ()
+												{
+														printHTML += "<ul>";
+														for (var i=0; i < characters.length; i++)
+														{ 
+																printHTML += "<li>" + characters[i].name + "</li>";
+																for (var j=0 ; j < inventories[i].length; j++)
+																{
+																		printHTML += "<ul><li>" + inventories[i][j].name + "[" + inventories[i][j].quantity + "]</li></ul>";
+																}
+														}
+														printHTML += "</ul>";
+														$('#contents').html(printHTML);	
+												});
+										});
+											
                 });   
+								
             }
         });           
     });

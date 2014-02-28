@@ -1,6 +1,6 @@
 // Some common scripts that we use everywhere
 function request(url, data, onSuccess) {
-    $.ajax({
+	return $.ajax({
         type: "POST",
         url: url,
         data: JSON.stringify(data),
