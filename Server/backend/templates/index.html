@@ -97,9 +97,8 @@
         $('#Marketplace').on('click', function() {
             $('#contents').html("Marketplace - Trade/Craft/Buy Items");
         });
-        $('#Logout').on('click', function() {
-            $('#contents').html("Goodbye");
-        });
+
+        
 
         request("/player/current", {}, function(data, _1, _2) {
             if(data.result !== null) {
@@ -117,6 +116,12 @@
                 var $dropdown = $(dropdown);
 
                 $("#Account").replaceWith($dropdown);
+
+                $('#Logout').on('click', function() {
+                    request("/logoutRequest", {}, function(data, _1, _2) {
+                        window.location.replace("/");
+                    });
+                });
             }
         });
     
