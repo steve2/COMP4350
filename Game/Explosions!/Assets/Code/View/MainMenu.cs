@@ -24,15 +24,30 @@ public class MainMenu : GameComponent {
 	// Called when the GUI is rendered
 	void OnGUI() {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
-		if (GUILayout.Button ("Single Player")) {
-			Application.LoadLevel("MissionMenu"); // Load the Mission List
+
+		// Load the Mission Menu
+		if (GUILayout.Button ("Single Player", GUILayout.Height(40))) {
+			Application.LoadLevel("MissionMenu"); 
 		}
-		GUILayout.Button ("Multiplayer");
-		if (GUILayout.Button ("Play Demo")) {
+
+		// TODO
+		GUILayout.Button ("Multiplayer", GUILayout.Height(40));
+
+		if (GUILayout.Button ("Play Demo", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo"); // Play the Demo 
 		}
-		GUILayout.Button ("View website");
-		GUILayout.Button ("Settings");
+
+		// Load the Website
+		if (GUILayout.Button ("View Website", GUILayout.Height(40))) 
+		{
+			Application.OpenURL("http://54.200.201.50/");
+		}
+
+		// Load the Settings 
+		if (GUILayout.Button ("Settings", GUILayout.Height(40))) 
+		{
+			Application.LoadLevel("Settings"); 
+		}
 		GUILayout.EndArea();
 	}
 }

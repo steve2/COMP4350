@@ -34,16 +34,16 @@ public class MissionMenu : GameComponent {
 
 		// Temporary (Testing)
 		// Just load the Demo for each Mission
-		if (GUILayout.Button ("Mission 1")) {
+		if (GUILayout.Button ("Mission 1", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo"); 
 		}
-		if (GUILayout.Button ("Mission 2")) {
+		if (GUILayout.Button ("Mission 2", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo");  
 		}
-		if (GUILayout.Button ("Mission 3")) {
+		if (GUILayout.Button ("Mission 3", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo");  
 		}
-		if (GUILayout.Button ("Mission 4")) {
+		if (GUILayout.Button ("Mission 4", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo"); 
 		}
 
