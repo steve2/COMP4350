@@ -11,6 +11,35 @@
 #==================
 import database
 import sys
+import character
+import inventory
+
+
+SHOP = -1 #Character ID for SHOP
+#Provides support for use/undo_recipe and trading
+def exec_recipe(recipe, inChar, outChar):
+    inItems = get_recipe_in(recipe)
+    outItems = get_recipe_out(recipe)
+    
+    #Verify the recipe is valid (Character has sufficient items in inventory)
+    #We don't want to remove/add anything until we know that the transaction is valid
+    if inChar != character.SHOP and not contains_items(inChar, inItems):
+       return false
+    if outChar != character.SHOP and not contains_items(outChar, outItems):
+        return false
+        
+    #Remove items from inventories
+    if(inChar != character.SHOP):
+        inventory.remove_items(inChar, inItems)
+    if(outChar != character.SHOP):
+        inventory.remove_items(outChar, outItems)
+
+    #Add items to inventories
+    if(inChar != character.SHOP):
+        inventory.add_items(outChar, outItems)
+    if(outChar != character.SHOP):
+        inventory.add_items(inChar, inItems)
+    return true
 
 #Returns a list of recipe ID's that can be purchased through gold alone 
 #(Not sure what Item_ID Gold would be so at the moment hard coded it as 0)

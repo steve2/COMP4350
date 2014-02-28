@@ -23,6 +23,8 @@ import sys
 #
 #
 
+SHOP = -1
+
 def get_player_id(username):
     db = database.db_connect()
     c = db.cursor()

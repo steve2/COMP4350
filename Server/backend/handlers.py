@@ -90,40 +90,14 @@ def get_purchasable_item_request():
     result = { 'purchasables' : purchasables }
     return jsonify(result)
     
-######RECIPE######
-SHOP = -1 #Character ID for SHOP
-#Provides support for use/undo_recipe and trading
-def exec_recipe(recipe, inChar, outChar):
-    inItems = recipe.get_recipe_in(recipe)
-    outItems = recipe.get_recipe_out(recipe)
-    
-    #Verify the recipe is valid (Character has sufficient items in inventory)
-    #We don't want to remove/add anything until we know that the transaction is valid
-    if inChar != SHOP and not contains_items(inChar, inItems):
-       return false
-    if outChar != SHOP and not contains_items(outChar, outItems):
-        return false
-        
-    #Remove items from inventories
-    if(inChar != SHOP):
-        remove_items(inChar, inItems)
-    if(outChar != SHOP):
-        remove_items(outChar, outItems)
-
-    #Add items to inventories
-    if(inChar != SHOP):
-        add_items(outChar, outItems)
-    if(outChar != SHOP):
-        add_items(inChar, inItems)
-    return true
-
+######RECIPES######
 #Buy/Craft
 @app.route('/recipe/use', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
     recipe = data['recipe']
     charid = data['character']
-    success = exec_recipe(recipe, charid, SHOP)
+    success = exec_recipe(recipe, charid, character.SHOP)
     result = { 'result' : success }
     return jsonify(result)
 
@@ -133,7 +107,7 @@ def handle_undo_recipe():
     data = request.json
     recipe = data['recipe']
     charid = data['character']
-    success = exec_recipe(recipe, SHOP, charid)
+    success = exec_recipe(recipe, character.SHOP, charid)
     result = { 'result' : success }
     return jsonify(result)
 ####################
