@@ -38,7 +38,6 @@ class TemplateTestCase(unittest.TestCase):
         rv = self.app.get('/character/new')
         assert rv.data != None
 
-#TODO: start using this
 def post(app, url, data):
     return app.post(url, data=json.dumps(data), content_type='application/json')
 
@@ -51,24 +50,24 @@ class HandlerTestCase(unittest.TestCase):
         pass
 
     def test_fail_empty_request(self):
-        resp = self.app.post('/newAccount', data=json.dumps({}), content_type='application/json')
+        resp = post(self.app, '/newAccount', {})
         data = json.loads(resp.data)
         assert data['result'] == False
 
     def test_create_new_account(self):
         header = {"user": "ABrandNewUser", "password": "new_guy"}
-        resp = self.app.post('/newAccount', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/newAccount', header)
         data = json.loads(resp.data)
         assert data['result'] == True
 
     def test_fail_bad_login(self):
         header = {"user": "notARealUserForSure", "password": "123456"}
-        resp = self.app.post('/loginRequest', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/loginRequest', header)
         data = json.loads(resp.data)
         assert data['result'] == False
 
     def test_current_character_none(self):
-        resp = self.app.post('/player/current', data=json.dumps({}), content_type='application/json')
+        resp = post(self.app, '/player/current', {})
         data = json.loads(resp.data)
         assert data["result"] == None
 
@@ -78,7 +77,7 @@ class HandlerTestCase(unittest.TestCase):
         with self.app.session_transaction() as sess:
             sess['username'] = username
 
-        resp = self.app.post('/player/current', data=json.dumps({}), content_type='application/json')
+        resp = post(self.app, '/player/current', {})
         data = json.loads(resp.data)
         assert data["result"] == username
 
@@ -104,7 +103,7 @@ class CharacterHandlerTestCase(unittest.TestCase):
             sess['username'] = 'UserJoe'
 
         header = {"user": "notARealUserForSure", "password": "123456"}
-        resp = self.app.post('/character/getAll', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/character/getAll', header)
         data = json.loads(resp.data)
         assert len(data['characters']) == 0
 
@@ -113,7 +112,7 @@ class CharacterHandlerTestCase(unittest.TestCase):
             sess['username'] = 'UserJoe'
 
         header = {"user": "notARealUserForSure", "password": "123456"}
-        resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/character/create', header)
         data = json.loads(resp.data)
         assert not data["result"]
 
@@ -122,12 +121,12 @@ class CharacterHandlerTestCase(unittest.TestCase):
             sess['username'] = 'UserJoe'
 
         header = {"charname": "CharacterBob"}
-        resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/character/create', header)
 
         data = json.loads(resp.data)
         assert data["result"]
 
-        resp = self.app.post('/character/getAll', data=json.dumps({}), content_type='application/json')
+        resp = post(self.app, '/character/getAll', {})
 
         data = json.loads(resp.data)
         characters = data["characters"]
@@ -142,14 +141,14 @@ class CharacterHandlerTestCase(unittest.TestCase):
             sess['username'] = 'UserJoe'
 
         header = {"charname": "CharacterFred"}
-        resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
-        resp = self.app.post('/character/getAll', data=json.dumps({}), content_type='application/json')
+        post(self.app, '/character/create', header)
+        resp = post(self.app, '/character/getAll', {})
         data = json.loads(resp.data)
 
         assert len(data) == 1 # Make sure we got a character
 
         header = {"charid": data["characters"][0][0]}
-        resp = self.app.post('/character/inventory', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/character/inventory', header)
         data = json.loads(resp.data)
 
         inventory = data["inventory"]
@@ -160,14 +159,14 @@ class CharacterHandlerTestCase(unittest.TestCase):
             sess['username'] = 'UserJoe'
 
         header = {"charname": "CharacterFred"}
-        resp = self.app.post('/character/create', data=json.dumps(header), content_type='application/json')
-        resp = self.app.post('/character/getAll', data=json.dumps({}), content_type='application/json')
+        post(self.app, '/character/create', header)
+        resp = post(self.app, '/character/getAll', {})
         data = json.loads(resp.data)
 
         assert len(data) == 1 # Make sure we got a character
 
         header = {"charid": data["characters"][0][0]}
-        resp = self.app.post('/character/equipped', data=json.dumps(header), content_type='application/json')
+        resp = post(self.app, '/character/equipped', header)
 
         data = json.loads(resp.data)
 
@@ -191,9 +190,11 @@ class ItemHandlerTestCase(unittest.TestCase):
         pass
 
     def test_get_all_items(self):
+        #resp = post(self.app, '/item/getAll', header)
         pass
 
     def test_get_item(self):
+        #resp = post(self.app, '/item/get', header)
         pass
 
 #TODO: Test recipes once the API has settled
