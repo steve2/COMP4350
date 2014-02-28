@@ -81,7 +81,6 @@ def create_character(username, charname):
         db.commit()
         success = True
     else:
-        print "FAILURE IN create_character()"
         success = False
     return success
 
