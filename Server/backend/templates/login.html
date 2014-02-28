@@ -44,7 +44,7 @@
                 data[obj.name] = obj.value;
             }
 
-            request("/loginRequest", data), function(data, _1, _2) {
+            request("/loginRequest", data, function(data, _1, _2) {
                 if(data.result) {
                     window.location.replace("/");
                 } else {
