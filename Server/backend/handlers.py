@@ -173,7 +173,7 @@ def handle_get_character_inventory():
     return jsonify(result)
 
 @app.route('/character/equipped', methods = ['POST', 'GET'])
-def handle_get_character_equipment():
+def handle_get_equipped_character_equipment():
     data = request.json
 
     charid = data['charid']
@@ -182,7 +182,7 @@ def handle_get_character_equipment():
     return jsonify(result)
 
 @app.route('/item/getAll', methods = ['POST', 'GET'])
-def handle_get_character_equipment():
+def handle_get_all_character_equipment():
     data = request.json
 
     result = {"equipment": item.get_items()}
