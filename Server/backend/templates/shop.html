@@ -49,7 +49,7 @@
     <script>
         $("#purchasables" ).on('click', '.purchasebtn', function(event) {
             event.preventDefault();
-            var objs = $(this).serializeArray());
+            var objs = $(this).serializeArray();
 
             var data = {};
             for(var i = 0; i < objs.length; i++) {
