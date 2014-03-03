@@ -75,6 +75,11 @@
 			//TODO: Get these effects working
 			fxFade: true, 
 			fxSpeed: 'slow',
+			beforeActivate: function (event, ui) {
+				//TODO: This is normally done automatically, not sure why it isn't
+				ui.oldTab.attr('class', '');
+				ui.newTab.attr('class', 'active');
+			},
 			beforeLoad: function( event, ui ) {
 				ui.jqXHR.error(function() {
 					ui.panel.html("Couldn't load this tab." );
