@@ -79,11 +79,28 @@
 				//TODO: This is normally done automatically, not sure why it isn't
 				ui.oldTab.attr('class', '');
 				ui.newTab.attr('class', 'active');
+				var id = $(ui.newTab.prevObject).prop('id');
+				if(id != "Home") {
+					window.location.hash = id;
+				}
+				else {
+					window.location.hash = '';
+				}
 			},
 			beforeLoad: function( event, ui ) {
 				ui.jqXHR.error(function() {
 					ui.panel.html("Couldn't load this tab." );
 				});
+			}
+		});
+		// Switch to correct tab when URL changes (back/forward browser buttons)
+		$(window).bind('hashchange', function() {
+			if (location.hash !== '') {
+				var id = location.hash.substring(1); //Get rid of #
+				var tabNum = $('a[id=' + id + ']').parent().index();
+				$tabsUI.tabs('option', 'active', tabNum);
+			} else {
+				$tabsUI.tabs('option', 'active', 0);
 			}
 		});
 	});
