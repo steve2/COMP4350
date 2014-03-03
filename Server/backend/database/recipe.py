@@ -17,8 +17,11 @@ import sys
 def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT in.Quantity, in.Recipe_ID, out.Item_ID From Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID WHERE Item_ID = 0 GROUP BY Recipe_ID HAVING COUNT(Recipe_ID) = 1"
-    
+    qry = '''SELECT in.Quantity, in.Recipe_ID, out.Item_ID 
+                FROM Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID 
+                WHERE Item_ID = 0 
+                GROUP BY Recipe_ID 
+                HAVING COUNT(Recipe_ID) = 1'''
     c.execute(qry)
     result = []
     for row in c:
@@ -30,7 +33,10 @@ def get_purchasable_items():
 def get_recipe_in(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.name, Quantity FROM Recipe_In JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
+    qry = '''SELECT Item.name, Quantity 
+                FROM Recipe_In 
+                    JOIN Item ON (recipe.Item_ID = Item.ID) 
+                    WHERE Recipe_ID='''+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
     for row in c:
@@ -41,7 +47,10 @@ def get_recipe_in(recipe_id):
 def get_recipe_out(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = "SELECT Item.name, Quantity FROM Recipe_Out JOIN Item ON (recipe.Item_ID = Item.ID) WHERE Recipe_ID="+database.INSERT_SYM
+    qry = '''SELECT Item.name, Quantity 
+                FROM Recipe_Out 
+                    JOIN Item ON (recipe.Item_ID = Item.ID) 
+                    WHERE Recipe_ID='''+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
     for row in c:

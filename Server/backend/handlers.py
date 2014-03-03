@@ -17,7 +17,19 @@ import database.inventory as inventory
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
     return hashlib.sha512(password + salt).hexdigest()
+    
+@app.route('/isAlive', methods = ['POST', 'GET'])
+def handle_is_alive():
+    #TODO: Should we just accept an empty request, or expect something?
+    response = {"result" : "1"}
+    return jsonify(response)
 
+#===========================================================================================
+#
+# PLAYER DATA 
+#
+#===========================================================================================
+    
 @app.route('/newAccount', methods=['POST', 'GET'])
 def handle_new_account():
     data = request.json
@@ -81,6 +93,12 @@ def handle_current_player():
     else:
         result["result"] = None
     return jsonify(result)
+    
+#===========================================================================================
+#
+# RECIPE DATA 
+#
+#===========================================================================================
 
 @app.route('/getPurchasables', methods = ['POST', 'GET'])
 def get_purchasable_item_request():
@@ -89,9 +107,9 @@ def get_purchasable_item_request():
     purchasables = get_purchasable_items();
     result = { 'purchasables' : purchasables }
     return jsonify(result)
-    
-######RECIPE######
+
 SHOP = -1 #Character ID for SHOP
+
 #Provides support for use/undo_recipe and trading
 def exec_recipe(recipe, inChar, outChar):
     inItems = recipe.get_recipe_in(recipe)
@@ -136,23 +154,29 @@ def handle_undo_recipe():
     success = exec_recipe(recipe, SHOP, charid)
     result = { 'result' : success }
     return jsonify(result)
-####################
+
+
+#===========================================================================================
+#
+# CHARACTER DATA 
+#
+#===========================================================================================
 
 @app.route('/character/getAll', methods = ['POST', 'GET'])
 def handle_get_characters():
     data = request.json
-    
+    badRequest = {'characters':None, 'BadRequest':True}
+   
     if 'username' not in session:
-        result = {'characters': None, "BadReqest": True}
+        result = badRequest
     else:
         username = session['username']
         try:
             database.db_connect()
             characters = character.get_characters(username)
             result = {'characters': characters}
-        except Exception, e:
-            print "Error in /character/getAll:", e
-            result = {'characters': None, "BadReqest": True}
+        except:
+            result = badRequest
         finally:
             database.db_close()
             
@@ -216,6 +240,12 @@ def handle_get_equipped_character_equipment():
             
     return jsonify(result)
 
+#===========================================================================================
+#
+# ITEM DATA 
+#
+#===========================================================================================
+    
 @app.route('/item/getAll', methods = ['POST', 'GET'])
 def handle_get_all_character_equipment():
     data = request.json
@@ -239,10 +269,4 @@ def handle_get_character_equipment():
 
     result = {"equipment": item.get_item(itemId)}
     return jsonify(result)
-
-@app.route('/isAlive', methods = ['POST', 'GET'])
-def handle_is_alive():
-    #TODO: Should we just accept an empty request, or expect something?
-    response = {"result" : "1"}
-    return jsonify(response)
     
