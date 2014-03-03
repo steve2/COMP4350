@@ -62,16 +62,16 @@ public class Server
     {
         var location = this.url + "/" + path;
         var client = new WebClient();
-        client.Headers["Content-Type"] = "text/json";
-        string response = client.UploadString(location, json);
+        client.Headers["Content-Type"] = "application/json";
+        string response = client.UploadString(location, json.ToString());
 		return JSON.Parse(response);
     }
 	
 	// asyncReturn - boolean indicating whether or not the login was successful
 	public void Login(String username, String password, Action<bool> asyncReturn){
 		JSONClass playerCredentials = new JSONClass();
-		playerCredentials ["user"] = username;
-		playerCredentials ["password"] = password;
+		playerCredentials.Add("user", username);
+		playerCredentials.Add("password", password);
 		
 		//	protected virtual void AsyncSend(string path, JSONClass json, Action<JSONNode> asyncReturn)
 		AsyncSend (LOGIN_REQUEST_PATH, playerCredentials, (j) =>
@@ -84,7 +84,7 @@ public class Server
     public void IsAlive(Action<bool> asyncReturn)
     {
 		//Empty JSON Request
-		AsyncSend(IS_ALIVE_PATH, new JSONClass(), (j) =>
+        AsyncSend(IS_ALIVE_PATH, new JSONClass(), (j) =>
             {
                 asyncReturn(j["result"].Value == "1");
             });

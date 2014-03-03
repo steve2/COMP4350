@@ -21,4 +21,15 @@ def signup():
 def character_create():
     return render_template('characterCreate.html')
 
+#TODO: Make a marketplace page that contains more than just the buy/sell shop
+@app.route('/marketplace')
+def marketplace():
+    return render_template('shop.html')
 
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template('leaderboard.html')
+
+@app.route('/items')
+def items():
+    return render_template('items.html')

@@ -14,43 +14,49 @@
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
     <link href="/static/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-
+    
   </head>
 
   <body role="document">
-
-    <nav class="navbar navbar-inverse" role="navigation">
-      <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Explosions!</a>
+	
+    <div id="tabs">
+        <nav class="navbar navbar-inverse" role="navigation">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#">Explosions!</a>
+            </div>
+    
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                <li class="active"><a id="Home" href="#contents">Home</a></li>
+                <li><a id="Leaderboard" href="leaderboard">Leaderboard</a></li>
+                <li><a id="Items" href="items">Items</a></li>
+                <li><a id="Marketplace" href="marketplace">Marketplace</a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <!--<li class="dropdown">
+                  <a href="#Account" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a> -->
+                  <li><a id="Account" href="login">Login</a></li>
+                <!--</li>-->
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+    
+        <div id="contents">
+        "Home page. News?"
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li class="active"><a id="Home" href="#">Home</a></li>
-            <li><a id="Leaderboard" href="#Leaderboard">Leaderboard</a></li>
-            <li><a id="Items" href="#Items">Items</a></li>
-            <li><a id="Marketplace" href="#Marketplace">Marketplace</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <!--<li class="dropdown">
-              <a href="#Account" class="dropdown-toggle" data-toggle="dropdown">Login <b class="caret"></b></a> -->
-              <li><a id="Account" href="#Account">Login</a></li>
-            <!--</li>-->
-          </ul>
-        </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-    </nav>
-
-    <div id="contents"></div>
+        <div id="YourCharacters">
+        </div>
+    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -62,18 +68,14 @@
     <script src="static/jquery/jquery-1.10.2.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <script src="static/js/util.js"></script>
-
+    
+    <script src="static/jquery/jquery-ui-1.10.4.custom.js"></script>
+    <script src="static/js/tabs.js"></script>
     <script>
-    /*$(function(){
-        alert("Test");
-        $('#Leaderboard').load('hello.html', function() {
-            alert("Leaderboard");
-            $('.nav a:contains("Home")').parent().addClass('active');
-        })
-    });*/
-
     $(function() {
-        // TODO: switch all this to ajax
+		createTabs("#tabs", "Home");
+        // TODO: Remove these handlers
+		/*
         var homehtml = "Home page. News?";
 
         $('#contents').ready(function() {
@@ -92,10 +94,11 @@
         $('#Marketplace').on('click', function() {
             $('#contents').html("Marketplace - Trade/Craft/Buy Items");
         });
-
+		//We don't want to do this, this makes it so the user cannot use the back button to navigate back to the website
+		//Also if we want a cool login, we could make it a modal dialog
         $("#Account").on('click', function() {
             window.location.replace("/login");
-        });
+        });*/
 
         request("/player/current", {}, function(data, _1, _2) {
             if(data.result !== null) {
@@ -104,9 +107,9 @@
                 dropdown += data.result;
                 dropdown += ' <b class="caret"></b></a> ';
                 dropdown += '<ul class="dropdown-menu"> ';
-                dropdown += '<li><a id="Characters" href="#Characters">Characters</a></li> ';
+                dropdown += '<li><a id="Characters" href="#YourCharacters">Characters</a></li> ';
                 dropdown += '<li class="divider"></li> ';
-                dropdown += '<li><a id="Logout" href="#Logout">Log out</a></li> ';
+                dropdown += '<li><a id="Logout" href="#">Log out</a></li> ';
                 dropdown += '</ul> ';
                 dropdown += '</li> ';
 
@@ -190,7 +193,7 @@
 																}
 														}
 														printHTML += "</ul>";
-														$('#contents').html(printHTML);	
+														$('#YourCharacters').html(printHTML);	
 												});
 										});
 											
