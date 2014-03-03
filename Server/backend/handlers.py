@@ -13,6 +13,7 @@ import database.player as player
 import database.equipment as equipment
 import database.item as item
 import database.inventory as inventory
+import database.recipe as recipe
 
 def hash_password(password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -86,7 +87,7 @@ def handle_current_player():
 def get_purchasable_item_request():
     data =  request.json
     
-    purchasables = get_purchasable_items();
+    purchasables = recipe.get_purchasable_items();
     result = { 'purchasables' : purchasables }
     return jsonify(result)
     
