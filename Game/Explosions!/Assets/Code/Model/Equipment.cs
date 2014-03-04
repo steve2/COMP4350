@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Assets.Code.Components
 {
-    public class Equipment : MonoBehaviour
+    public class Equipment
     {
         /** Constant Definitions **/
         public static int EQUIP_SLOTS = Enum.GetValues(typeof(Slot)).Length;
