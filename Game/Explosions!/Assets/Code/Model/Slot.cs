@@ -6,7 +6,7 @@ using System.Text;
 namespace Assets.Code.Model
 {
     //Identical to database
-    public enum ItemType
+    public enum Slot
     {
         RightHand   = 1,
         LeftHand    = 2,

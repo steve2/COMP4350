@@ -8,6 +8,6 @@ namespace Assets.Code.Model
     //Identical to database
     public enum ItemType
     {
-        Weapon = 0,
+        Weapon = 1,
     }
 }

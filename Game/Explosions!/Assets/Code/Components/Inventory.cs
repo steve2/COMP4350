@@ -4,32 +4,28 @@ using System.Collections.Generic;
 
 namespace Assets.Code.Components
 {
-    [RequireComponent(typeof(AttributeManager))]
     public class Inventory : MonoBehaviour
     {
-        private AttributeManager attrMgr;
         private HashSet<Item> items;
 
-        // Use this for initialization
         public void Start()
         {
-            attrMgr = GetComponent<AttributeManager>();
             items = new HashSet<Item>();
         }
 
-        public void Equip(Item item)
+        public bool Contains(Item item)
         {
-            items.Add(item);
-            attrMgr.AddAttributes(item.ItemAttributes);
+            return items.Contains(item);
         }
 
-        public void Dequip(Item item)
+        public bool Remove(Item item)
         {
-            if (items.Contains(item))
-            {
-                items.Remove(item);
-                attrMgr.SubtractAttributes(item.ItemAttributes);
-            }
+            return items.Remove(item);
+        }
+
+        public bool Add(Item item)
+        {
+            return items.Add(item);
         }
     }
 }

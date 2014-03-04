@@ -16,8 +16,11 @@ public class Game
     /// Options: ProductionServer, TestServer, DemoServer, ServerStub
     /// </summary>
     private Server server;
+
     //Currently selected character
     private Character character; //TODO: Keep track of selected character 
+    private EquipmentManager equipManager; //
+
     //Cache
     //TODO: We are using threading, we should probably include locks
     private IEnumerable<Mission> missions;

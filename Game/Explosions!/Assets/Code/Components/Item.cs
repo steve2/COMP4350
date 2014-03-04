@@ -16,6 +16,7 @@ namespace Assets.Code.Components
 
         private List<GameAttribute> itemAttributes; //The "REAL" attribute list
 
+
         #region Properties
         //All items support attributes
         public IEnumerable<GameAttribute> ItemAttributes { get { return itemAttributes; } }
@@ -24,7 +25,7 @@ namespace Assets.Code.Components
         // Use this for initialization
         public virtual void Start()
         {
-            InitAttributes();
+            InitAttributes();   
         }
 
         protected virtual void InitAttributes()
