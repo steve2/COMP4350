@@ -49,6 +49,38 @@ def add_player_achievement_by_id(playerId, achievementId):
     qry = "INSERT INTO Achievement_Completed VALUES (" + database.INSERT_SYM + ", " + INSERT_SYM + ")"
     c.execute(qry, (playerId, achievementId))
 
+def get_player_achievement(player):
+    db = database.db_connect()
+    c = db.cursor()
+
+    qry = "SELECT Player.ID FROM Player WHERE Username="+database.INSERT_SYM
+    c.execute(qry, (player,))
+    playerId = c.fetchone()
+
+    ids = get_player_achievement_by_id(playerId)
+    
+    qry = "SELECT Achievement.Name FROM Achievement WHERE Achievement.ID IN " + database.INSERT_SYM
+
+    c.execute(qry, (ids,)) 
+
+    result = []
+    for row in c:
+        result.append(row)
+
+    return result
+
+def get_player_achievement_by_id(playerId):
+    db = database.db_connect()
+    c = db.cursor()
+    qry = "SELECT Achievement_Completed.Achievement_ID FROM Achievement_Completed WHERE Achievement_Completed.Player_ID=" + database.INSERT_SYM
+    c.execute(qry, (playerId,))
+
+    result = []
+    for row in c:
+        result.append(row)
+
+    return result
+
 def reset_achievements():
     db = database.db_connect()
     c = db.cursor()
