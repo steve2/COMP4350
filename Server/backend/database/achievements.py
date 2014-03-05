@@ -15,7 +15,7 @@ def get_all_achievements():
     db = database.db_connect()
     c = db.cursor()
     qry = "SELECT Achievement.Name FROM Achievement"
-    c.execute(qry, ()) #result should contain name and slot of items equipped by this character.
+    c.execute(qry, ())
     result = []
     for row in c:
         result.append(row)
@@ -25,7 +25,7 @@ def get_achievement_description(name):
     db = database.db_connect()
     c = db.cursor()
     qry = "SELECT Achievement.Descr FROM Achievement WHERE Achievement.Name=" + database.INSERT_SYM
-    c.execute(qry, (name,)) #result should contain name and slot of items equipped by this character.
+    c.execute(qry, (name,))
     result = c.fetchone()
     return result
 
