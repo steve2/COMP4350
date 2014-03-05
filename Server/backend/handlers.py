@@ -15,7 +15,7 @@ import database.item as item
 import database.inventory as inventory
 import database.recipe as recipe
 
-def hash_password(password):
+def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
     return hashlib.sha512(password + salt).hexdigest()
     
@@ -38,7 +38,7 @@ def handle_new_account():
     else:
         name = data['user']
         password = data['password']
-        password_hash = hash_password(password)
+        password_hash = hash_password(name, password)
 
         try:
             database.db_connect()
@@ -61,7 +61,7 @@ def handle_login_request():
     else:
         name = data['user']
         password = data['password']
-        password_hash = hash_password(password)
+        password_hash = hash_password(name, password)
         try:
             database.db_connect()
             loginPlayer = player.get_player(name, password_hash)
