@@ -22,12 +22,13 @@ namespace Assets.Code.Components.Attacks
         /// Checks if squared distance is less than squared range
         /// Magnitude is not used because square root is much less efficient than multipling the range
         /// </summary>
-        /// <param name="hitPos">The position of the hit</param>
+        /// <param name="pos">The final position that will be range checked</param>
         /// <param name="range">Maximum range</param>
         /// <returns>Returns whether or not the hit position is within the maximum range</returns>
-        private bool InRange(Vector3 hitPos, int range)
+        public override bool InRange(Vector3 pos, int range)
         {
-            return (hitPos - transform.position).sqrMagnitude < (range * range); 
+			Vector3 dist = pos - transform.position;
+            return (dist).sqrMagnitude <= (range * range); 
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Assets.Code.Components.Attacks
         /// <param name="go">GameObject instance (Could be null)</param>
         /// <param name="damage"></param>
         /// <returns>How much damage is actually dealt</returns>
-        private int ApplyDamage(GameObject go, int damage)
+        protected int ApplyDamage(GameObject go, int damage)
         {
             int ret = 0;
             DamageReceiver recv;

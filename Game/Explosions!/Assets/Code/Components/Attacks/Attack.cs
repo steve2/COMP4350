@@ -10,6 +10,7 @@ namespace Assets.Code.Components.Attacks
         //TODO: Allow specifying a "target", which could be a rigidbody or simply a location
 
         public abstract void Use(int damage, int range);
+        public abstract bool InRange(Vector3 pos, int range);
 
         protected LayerMask Mask { get { return mask; } }
     }
