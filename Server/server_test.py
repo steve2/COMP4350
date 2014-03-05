@@ -216,7 +216,6 @@ class AchievementHandlerTestCase(unittest.TestCase):
         self.user = "UserJoe"
         self.name = "Test writing"
         self.descr = "Find ways to entertain yourself while writing tests"
-        achievements.create_achievement(self.name, self.descr)
         player.create_player(self.user, "test")
 
     def tearDown(self):
@@ -226,11 +225,13 @@ class AchievementHandlerTestCase(unittest.TestCase):
         achievements.reset_achievements()
         achievements.reset_achievement_completed()
 
-        data = post(self.app, '/achievement/getAll', {}, True)
+        data = post(self.app, '/achievement/getAll', {})
         assert data['achievements'] == []
 
     def test_get_all_achievements(self):
-        data = post(self.app, '/achievement/getAll', {}, True)
+
+        achievements.create_achievement(self.name, self.descr)
+        data = post(self.app, '/achievement/getAll', {})
         assert data['achievements'] == [self.name]
 
 if __name__ == '__main__':
