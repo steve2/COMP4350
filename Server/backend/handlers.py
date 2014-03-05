@@ -217,7 +217,7 @@ def handle_create_character():
 def handle_get_character_inventory():
     data = request.json
 
-    if 'charId' not in data:
+    if 'charid' not in data:
         result = {"inventory": None, "BadRequest": True }
     else:
         charid = data['charid'] # TODO: Make this character name?
