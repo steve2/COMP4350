@@ -81,6 +81,13 @@ def get_player_achievement_by_id(playerId):
 
     return result
 
+# NB: Don't expose this one to the web
+def create_achievement(name, description):
+    db = database.db_connect()
+    c = db.cursor()
+    qry = "INSERT INTO Achievement_Completed VALUES (" + database.INSERT_SYM + ", " + database.INSERT_SYM + ")"
+    c.execute(qry, (name, description))
+
 def reset_achievements():
     db = database.db_connect()
     c = db.cursor()
@@ -92,6 +99,6 @@ def reset_achievement_completed():
     db = database.db_connect()
     c = db.cursor()
     
-    c.execute("CREATE TABLE IF NOT EXISTS Achievement_Completed (FOREIGN KEY (Player_ID) REFERENCES Player (ID), FOREIGN KEY (Achievement_ID) REFERENCES Achievement (ID))")
+    c.execute("CREATE TABLE IF NOT EXISTS Achievement_Completed ( Player_ID INTEGER NOT NULL, Achievement_ID INTEGER NOT NULL, FOREIGN KEY (Player_ID) REFERENCES Player (ID), FOREIGN KEY (Achievement_ID) REFERENCES Achievement (ID) )")
     c.execute("DELETE FROM Achievement_Completed")
     db.commit()
