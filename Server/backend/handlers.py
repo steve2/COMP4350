@@ -217,16 +217,19 @@ def handle_create_character():
 def handle_get_character_inventory():
     data = request.json
 
-    charid = data['charid'] # TODO: Make this character name?
-    try:
-        database.db_connect()
-        inv = inventory.get_inventory(charid)
-        result = {"inventory": inv}
-    except Exception, e:
-        print e
+    if 'charId' not in data:
         result = {"inventory": None, "BadRequest": True }
-    finally:
-        database.db_close()
+    else:
+        charid = data['charid'] # TODO: Make this character name?
+        try:
+            database.db_connect()
+            inv = inventory.get_inventory(charid)
+            result = {"inventory": inv}
+        except Exception, e:
+            print e
+            result = {"inventory": None}
+        finally:
+            database.db_close()
     
     return jsonify(result)
 
@@ -274,9 +277,21 @@ def handle_get_all_character_equipment():
 def handle_get_character_equipment():
     data = request.json
 
-    itemid = data['itemid']
+    if 'itemid' not in data:
+        result = {"equipment": None, "BadRequest": True}
+    else:
+        itemid = data['itemid']
 
-    result = {"equipment": item.get_item(itemId)}
+        try:
+            database.db_connect()
+            item = item.get_item(itemId)
+            result = {"equipment": item}
+        except Exception, e:
+            print e
+            result = {"equipment": None}
+        finally:
+            database.db_close()
+
     return jsonify(result)
 
 #===========================================================================================
