@@ -21,7 +21,6 @@ def hash_password(password):
     
 @app.route('/isAlive', methods = ['POST', 'GET'])
 def handle_is_alive():
-    #TODO: Should we just accept an empty request, or expect something?
     response = {"result" : "1"}
     return jsonify(response)
 
