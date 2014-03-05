@@ -38,8 +38,10 @@ class TemplateTestCase(unittest.TestCase):
         rv = self.app.get('/character/new')
         assert rv.data != None
 
-def post(app, url, data):
+def post(app, url, data, debugPrint = False):
     resp = app.post(url, data=json.dumps(data), content_type='application/json')
+    if debugPrint:
+        print resp.data
     return json.loads(resp.data)
 
 class HandlerTestCase(unittest.TestCase):
@@ -208,23 +210,28 @@ class AchievementHandlerTestCase(unittest.TestCase):
         database.db_connect_test()
 
         achievements.reset_achievements()
-        achievements.reset_achievements_completed()
+        achievements.reset_achievement_completed()
         player.reset_players()
 
         self.user = "UserJoe"
         self.name = "Test writing"
         self.descr = "Find ways to entertain yourself while writing tests"
-        achievement.create_achievement(self.name, self.descr)
+        achievements.create_achievement(self.name, self.descr)
         player.create_player(self.user, "test")
 
     def tearDown(self):
         pass
 
-    #def test_get_empty_achievements(self):
-    #    achievements.reset_achievements()
-    #   achievements.reset_achievements_completed()
+    def test_get_empty_achievements(self):
+        achievements.reset_achievements()
+        achievements.reset_achievement_completed()
 
-    #    data = post(self.app, '/character/create', header)
+        data = post(self.app, '/achievement/getAll', {}, True)
+        assert data['achievements'] == []
+
+    def test_get_all_achievements(self):
+        data = post(self.app, '/achievement/getAll', {}, True)
+        assert data['achievements'] == [self.name]
 
 if __name__ == '__main__':
     app.secret_key = "Testing secret key"
