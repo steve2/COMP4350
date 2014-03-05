@@ -18,7 +18,7 @@ def get_all_achievements():
     c.execute(qry, ())
     result = []
     for row in c:
-        result.append(row)
+        result.append(row[0])
     return result
 
 def get_achievement_description(name):
@@ -85,13 +85,14 @@ def get_player_achievement_by_id(playerId):
 def create_achievement(name, description):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO Achievement_Completed VALUES (" + database.INSERT_SYM + ", " + database.INSERT_SYM + ")"
+    qry = "INSERT INTO Achievement (Name, Descr) VALUES (" + database.INSERT_SYM + ", " + database.INSERT_SYM + ")"
     c.execute(qry, (name, description))
 
 def reset_achievements():
     db = database.db_connect()
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS Achievement (ID INT NOT NULL PRIMARY KEY, Name CHAR (64), Descr CHAR (255))")
+    c.execute("DROP TABLE Achievement")
+    c.execute("CREATE TABLE IF NOT EXISTS Achievement (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name CHAR (64), Descr CHAR (255))")
     c.execute("DELETE FROM Achievement")
     db.commit()
 
