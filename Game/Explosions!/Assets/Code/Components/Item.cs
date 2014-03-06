@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.Code.Components
 {
     //TODO: Override Comparison to compare by name?
-    public class Item : MonoBehaviour
+    public class Item : MonoBehaviour, IEnumerable<GameAttribute>  //All items support attributes
     {
 		public string name;
 
@@ -21,8 +21,6 @@ namespace Assets.Code.Components
 		private ItemType itemtype;
 
         #region Properties
-        //All items support attributes
-        public IEnumerable<GameAttribute> ItemAttributes { get { return itemAttributes; } }
         #endregion
 
         // Use this for initialization
@@ -54,6 +52,16 @@ namespace Assets.Code.Components
         public void AddAttribute(GameAttribute attr)
         {
             itemAttributes.Add(attr);
+        }
+
+        public IEnumerator<GameAttribute> GetEnumerator()
+        {
+            return itemAttributes.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Assets.Code.Components
             {
 				inventory.Add(equipped);
 				equipment.SetSlot(whatSlot, null);
-                attributeMngr.SubtractAttributes(equipped.ItemAttributes);
+                attributeMngr.SubtractAttributes(equipped);
                 return true;
             }
             return false;
@@ -69,7 +69,7 @@ namespace Assets.Code.Components
             	Dequip(whatSlot);
 				equipment.SetSlot(whatSlot, toEquip);
 				inventory.Remove (toEquip);
-				attributeMngr.AddAttributes(toEquip.ItemAttributes);
+				attributeMngr.AddAttributes(toEquip);
 				return true;
 			}
 			return false;
