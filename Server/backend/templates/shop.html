@@ -11,7 +11,7 @@
 
   </head>
 
-  <body>
+  <body onload="populatTable()">
 
     <div class="container">
       <form class="form-signin" id="shop-form" role="form" method="post">
@@ -30,46 +30,55 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-        $.ajax({
-            url: "/getPurchasables",
-            dataType: "json",
-            success: function(data) {
-            for (var i in data.rows) {
-                row += '<tr id="' + i + '">';
-                row += '<td><button class = purchasebtn>' + data[purchasables][i][0] + '</button></td>';  <!--quantity-->
-                row += '<td>' + data['purchasables'][i][1] + '</td>';<!--recipe ID-->
-                row += '<td>' + data['purchasables'][i][2] + '</td>';<!--item ID-->
-                row += '</tr>';
+          $function populateTable()
+          {
+            request("/getpurchasables", {}, function(data, _1, _2)
+            {
+              var items = new Array();
+              for (var i in data.rows) {
+                  var item = new Object();
+                  item.quantity =  data['purchasables'][i][0];
+                  item.recipe = data['purchasables'][i][1];
+                  item.name = data['purchasables'][i][2];
+
+                  items.push(item);
+              }
             }
-            $(row).appendTo('table.purchasables');
-            },
-        });
-    </script>
+          }).done(function()
+          {
+              var row;
+              for (var i = 0; i < items.length; i++)
+              {
+                  row += '<tr id="' + i + '">';
+                  row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
+                  row += '<td>' + items[i].recipe + '</td>';
+                  row += '<td>' + items[i].name + '</td>';
+                  row += '</tr>';
+              }
+              $(row).appendTo("#purchasables");
 
-    <script>
-        $("#purchasables" ).on('click', '.purchasebtn', function(event) {
-            event.preventDefault();
-            var objs = $(this).serializeArray();
+              //takes the index of the row clicked and sends the appropriate recipe request
 
-            var data = {};
-            for(var i = 0; i < objs.length; i++) {
-                var obj = objs[i];
-                data[obj.name] = obj.value;
-            }
+              $("#purchasables" ).on('click', '#purchasebtn', function(event) {
+                  event.preventDefault();
+                  var i = $(this).parent().parent().index();
 
-            $.ajax({
-                type: "POST",
-                url: "/use_recipe",
-                data: JSON.stringify(data),
-                success: function(data, _1, _2) {
-                    if(data.result) {
-                        window.location.replace("/");
-                    } else {
-                        window.location.replace("/failpurchase");
-                    }
-                },
-                contentType: 'application/json',
-                dataType: "json"
+                  var jsonArg = new Object();
+                  jsonArg.recipe = items[i].recipe;
+
+                  $.ajax({
+                      type: "POST",
+                      url: "/use_recipe",
+                      data: JSON.stringify(jsonArg),
+                      success: function(data, _1, _2) {
+                          if(data.result) {
+                              window.location.replace("/");
+                          } else {
+                              window.location.replace("/failpurchase");
+                          }
+                      },
+                      contentType: 'application/json',
+                      dataType: "json"
             });
         });
     </script>

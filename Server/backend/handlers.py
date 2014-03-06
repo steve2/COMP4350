@@ -140,8 +140,6 @@ def handle_get_all_player_achievements():
 
 @app.route('/getPurchasables', methods = ['POST', 'GET'])
 def get_purchasable_item_request():
-    data =  request.json
-    
     purchasables = recipe.get_purchasable_items();
     result = { 'purchasables' : purchasables }
     return jsonify(result)
@@ -150,10 +148,21 @@ def get_purchasable_item_request():
 @app.route('/recipe/use', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
-    recipe = data['recipe']
-    charid = data['character']
-    success = exec_recipe(recipe, charid, character.SHOP)
-    result = { 'result' : success }
+    if 'username' not in session:
+    	result = {'recipemade' :Non, 'BadRequest':True}
+    else:
+			charid = session['username']    	
+			try:
+					database.db_connect()
+					recipe = data['recipe']
+					success = exec_recipe(recipe, charid, character.SHOP)
+					result = { 'result' : success }
+			except Exception, e:
+					print e
+					result = {"result": None}
+			finally:
+					database.db_close()
+					
     return jsonify(result)
 
 #Sell/Disassemble
