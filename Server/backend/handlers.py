@@ -14,14 +14,14 @@ import database.equipment as equipment
 import database.item as item
 import database.inventory as inventory
 import database.recipe as recipe
+import database.achievements as achievements
 
-def hash_password(password):
+def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
     return hashlib.sha512(password + salt).hexdigest()
     
 @app.route('/isAlive', methods = ['POST', 'GET'])
 def handle_is_alive():
-    #TODO: Should we just accept an empty request, or expect something?
     response = {"result" : "1"}
     return jsonify(response)
 
@@ -39,7 +39,7 @@ def handle_new_account():
     else:
         name = data['user']
         password = data['password']
-        password_hash = hash_password(password)
+        password_hash = hash_password(name, password)
 
         try:
             database.db_connect()
@@ -62,7 +62,7 @@ def handle_login_request():
     else:
         name = data['user']
         password = data['password']
-        password_hash = hash_password(password)
+        password_hash = hash_password(name, password)
         try:
             database.db_connect()
             loginPlayer = player.get_player(name, password_hash)
@@ -93,6 +93,43 @@ def handle_current_player():
         result["result"] = session["username"]
     else:
         result["result"] = None
+    return jsonify(result)
+
+@app.route('/player/addAchievement', methods = ['POST', 'GET'])
+def handle_add_player_achievement():
+    if 'username' not in session or 'achievement' not in data:
+        result = {'result': False, 'BadRequest':True}
+    else:
+        player = session['username']
+        achievement = data['achievement']
+        try:
+            database.db_connect()
+            achievements.add_player_achievement(player, achievement)
+            result = {"result": True}
+        except Exception, e:
+            print e
+            result = {"result": False}
+        finally:
+            database.db_close()
+        
+    return jsonify(result)
+
+@app.route('/player/getAchievement', methods = ['POST', 'GET'])
+def handle_get_all_player_achievements():
+    if 'username' not in session:
+        result = {'achievements': None, 'BadRequest': True}
+    else:
+        player = session['username']
+        try:
+            database.db_connect()
+            achieves = achievements.get_player_achievements(player)
+            result = {"achievements": achieves}
+        except Exception, e:
+            print e
+            result = {"achievements": None}
+        finally:
+            database.db_close()
+        
     return jsonify(result)
     
 #===========================================================================================
@@ -139,10 +176,9 @@ def handle_undo_recipe():
 @app.route('/character/getAll', methods = ['POST', 'GET'])
 def handle_get_characters():
     data = request.json
-    badRequest = {'characters':None, 'BadRequest':True}
    
     if 'username' not in session:
-        result = badRequest
+        result = {'characters':None, 'BadRequest':True}
     else:
         username = session['username']
         try:
@@ -150,7 +186,7 @@ def handle_get_characters():
             characters = character.get_characters(username)
             result = {'characters': characters}
         except:
-            result = badRequest
+            result = {'characters': None}
         finally:
             database.db_close()
             
@@ -181,16 +217,19 @@ def handle_create_character():
 def handle_get_character_inventory():
     data = request.json
 
-    charid = data['charid'] # TODO: Make this character name?
-    try:
-        database.db_connect()
-        inv = inventory.get_inventory(charid)
-        result = {"inventory": inv}
-    except Exception, e:
-        print e
+    if 'charid' not in data:
         result = {"inventory": None, "BadRequest": True }
-    finally:
-        database.db_close()
+    else:
+        charid = data['charid'] # TODO: Make this character name?
+        try:
+            database.db_connect()
+            inv = inventory.get_inventory(charid)
+            result = {"inventory": inv}
+        except Exception, e:
+            print e
+            result = {"inventory": None}
+        finally:
+            database.db_close()
     
     return jsonify(result)
 
@@ -222,7 +261,6 @@ def handle_get_equipped_character_equipment():
     
 @app.route('/item/getAll', methods = ['POST', 'GET'])
 def handle_get_all_character_equipment():
-    data = request.json
     try:
         database.db_connect()
         items = item.get_items()
@@ -239,8 +277,61 @@ def handle_get_all_character_equipment():
 def handle_get_character_equipment():
     data = request.json
 
-    itemid = data['itemid']
+    if 'itemid' not in data:
+        result = {"equipment": None, "BadRequest": True}
+    else:
+        itemid = data['itemid']
 
-    result = {"equipment": item.get_item(itemId)}
+        try:
+            database.db_connect()
+            item = item.get_item(itemId)
+            result = {"equipment": item}
+        except Exception, e:
+            print e
+            result = {"equipment": None}
+        finally:
+            database.db_close()
+
+    return jsonify(result)
+
+#===========================================================================================
+#
+# Achievement Data
+#
+#===========================================================================================
+
+@app.route('/achievement/getAll', methods = ['POST', 'GET'])
+def handle_get_all_achievements():
+    try:
+        database.db_connect()
+        achieves = achievements.get_all_achievements()
+        result = {"achievements": achieves}
+    except Exception, e:
+        print e
+        result = {"achievements": None}
+    finally:
+        database.db_close()
+        
+    return jsonify(result)
+
+@app.route('/achievement/description', methods = ['POST', 'GET'])
+def handle_get_achievement_description():
+    data = request.json
+
+    if 'achievementName' not in data:
+        result = {"description": None, "BadRequest": True}
+    else:
+        achievementName = data['achievementName']
+
+        try:
+            database.db_connect()
+            description = achievements.get_achievement_description(achievementName)
+            result = {"description": description}
+        except Exception, e:
+            print e
+            result = {"description": None}
+        finally:
+            database.db_close()
+        
     return jsonify(result)
     
