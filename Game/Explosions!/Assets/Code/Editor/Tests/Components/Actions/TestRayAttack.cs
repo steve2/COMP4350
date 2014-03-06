@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using Assets.Code.Components.Attacks;
+using Assets.Code.Components.Actions;
 using NUnit.Framework;
 using UnityEngine;
 

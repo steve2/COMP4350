@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-namespace Assets.Code.Components.Attacks
+namespace Assets.Code.Components.Actions
 {
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(AttributeManager))]

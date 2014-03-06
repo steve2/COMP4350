@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Assets.Code.Components.Attacks
+namespace Assets.Code.Components.Actions
 {
-    public class RayAttack : Attack
+    public class RayAttack : DamageAction
     {
+        [SerializeField]
+        private LayerMask mask = 1;
+
         public override void Use(int damage, int range)
         {
             RaycastHit hit;
@@ -11,7 +14,7 @@ namespace Assets.Code.Components.Attacks
             //TODO: Ray cast to target position
 
             //Raycast 
-            if (Physics.Raycast(transform.position, dir, out hit, Mask) && 
+            if (Physics.Raycast(transform.position, dir, out hit, mask) && 
                 InRange(hit.transform.position, range)) //Range check
             {
                 ApplyDamage(hit.collider.gameObject, damage);
