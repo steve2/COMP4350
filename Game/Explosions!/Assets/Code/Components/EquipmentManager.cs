@@ -36,9 +36,9 @@ namespace Assets.Code.Components
             Item equipped = equipment.GetSlot(whatSlot);
             if (equipped != null)
             {
-                inventory.Add(equipped);
+				inventory.Add(equipped);
+				equipment.SetSlot(whatSlot, null);
                 attributeMngr.SubtractAttributes(equipped.ItemAttributes);
-                equipment.SetSlot(whatSlot, null);
                 return true;
             }
             return false;
@@ -54,21 +54,25 @@ namespace Assets.Code.Components
          * 
          * The specified Slot "whatSlot" is Dequipped from prior to Equipping
          * the new Item. This will essentially "swap" the Equipped item in that spot.
+         * 
+         * It is the responsibility of this manager to check to make sure that an Item
+         * does not violate any "Slot" requirements.
          */
         public bool Equip(Item toEquip, Slot whatSlot)
         {
-            if (!inventory.Contains(toEquip))
+            if (toEquip == null || !inventory.Contains(toEquip))
             {
                 return false;
             }
-            Dequip(whatSlot);
-
-            if (equipment.SetSlot(whatSlot, toEquip))
-            {
-                attributeMngr.AddAttributes(toEquip.ItemAttributes);
-                return true;
-            }
-            return false;
+			if (toEquip.GetItemType().IsSlotAllowed (whatSlot))
+			{
+            	Dequip(whatSlot);
+				equipment.SetSlot(whatSlot, toEquip);
+				inventory.Remove (toEquip);
+				attributeMngr.AddAttributes(toEquip.ItemAttributes);
+				return true;
+			}
+			return false;
         }
 
     }

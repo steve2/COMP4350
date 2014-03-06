@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Assets.Code.Components;
+using Assets.Code.Controller;
 
 public class MainMenu : GameComponent {
 
@@ -15,7 +16,7 @@ public class MainMenu : GameComponent {
 	public override void Start () 
     {
         base.Start();
-        Game.IsServerOnline((x) =>
+        Game.Instance.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });

@@ -6,11 +6,11 @@ namespace Assets.Code.Components
 {
     public class Inventory : MonoBehaviour
     {
-        private HashSet<Item> items;
+        private List<Item> items;
 
         public void Start()
         {
-            items = new HashSet<Item>();
+            items = new List<Item>();
         }
 
         public bool Contains(Item item)
@@ -21,11 +21,21 @@ namespace Assets.Code.Components
         public bool Remove(Item item)
         {
             return items.Remove(item);
+        } 
+
+        public void Add(Item item)
+        {
+            items.Add(item);
         }
 
-        public bool Add(Item item)
-        {
-            return items.Add(item);
-        }
+		public void Print()
+		{
+			string toPrint = "";
+			foreach (Item item in items)
+			{
+				toPrint += item.name + " | ";
+			}
+			Debug.Log (toPrint);
+		}
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using Assets.Code.Components;
 using Assets.Code.Model;
-
+using Assets.Code.Controller;
 
 public class MissionMenu : GameComponent {
 
@@ -21,6 +21,7 @@ public class MissionMenu : GameComponent {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
 
 		// Load Mission list for the character
+
 		foreach (Mission mission in Game.Missions) 
 		{
 			if (GUILayout.Button ("Mission" + mission.ID)) 

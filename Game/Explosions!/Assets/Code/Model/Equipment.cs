@@ -14,14 +14,8 @@ namespace Assets.Code.Components
         /** Class Members **/
         private Item[] equippedItems; //initialized to NULL entries
 
-        /** In Bounds Check **/
-        private bool IndexInBounds(int index)
-        {
-            return (index >= 0 && index < EQUIP_SLOTS);
-        }
-
         /** Initialization **/
-        public void Start()
+        public Equipment()
         {
             equippedItems = new Item[EQUIP_SLOTS];
             for (int i = 0; i < EQUIP_SLOTS; i++)
@@ -33,22 +27,13 @@ namespace Assets.Code.Components
         /** Get/Set Slot Item **/
         public Item GetSlot(Slot whichSlot)
         {
-            if (IndexInBounds((int) whichSlot - 1))
-            {
-                return equippedItems[(int) whichSlot - 1];
-            }
-            return null;
+			return equippedItems[(int) whichSlot - 1];	
         }
 
-        public bool SetSlot(Slot whichSlot, Item setTo)
+        public void SetSlot(Slot whichSlot, Item setTo)
         {
-            if (IndexInBounds((int) whichSlot - 1))
-            {
-
-                equippedItems[(int) whichSlot - 1] = setTo;
-                return true;
-            }
-            return false;
+			equippedItems[(int)whichSlot - 1] = setTo;
         }
     }
 }
+

@@ -11,14 +11,14 @@ namespace Assets.Code.Components
     public class GameComponent : MonoBehaviour
     {
         Queue<Action> tasks;
-        private Game gameInstance;
-        public Game Game { get { return gameInstance; } }
+        private Controller.Game gameInstance;
+        public Controller.Game Game { get { return gameInstance; } }
 
         // Use this for initialization
         public virtual void Start()
         {
             tasks = new Queue<Action>();
-            this.gameInstance = Game.Instance;
+            this.gameInstance = Controller.Game.Instance;
         }
 
         /// <summary>

@@ -6,8 +6,11 @@ using UnityEngine;
 namespace Assets.Code.Components
 {
     //TODO: Override Comparison to compare by name?
-    public abstract class Item : MonoBehaviour
+    public class Item : MonoBehaviour
     {
+		public string name;
+
+
         #region Editor Fields
         //Note: Use the built in name
         [SerializeField]
@@ -15,7 +18,7 @@ namespace Assets.Code.Components
         #endregion
 
         private List<GameAttribute> itemAttributes; //The "REAL" attribute list
-
+		private ItemType itemtype;
 
         #region Properties
         //All items support attributes
@@ -33,12 +36,22 @@ namespace Assets.Code.Components
             itemAttributes = new List<GameAttribute>();
         }
 
-        protected void AddAttribute(AttributeType type, int value)
+		public void SetItemType(ItemType setTo)
+		{
+			itemtype = setTo;
+		}
+
+		public ItemType GetItemType()
+		{
+			return itemtype;
+		}
+
+        public void AddAttribute(AttributeType type, int value)
         {
             AddAttribute(new GameAttribute(type, value));
         }
 
-        protected void AddAttribute(GameAttribute attr)
+        public void AddAttribute(GameAttribute attr)
         {
             itemAttributes.Add(attr);
         }
