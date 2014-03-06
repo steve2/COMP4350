@@ -1,20 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Code.Model;
 
 namespace Assets.Code.Components.Actions
 {
+    [RequireComponent(typeof(AttributeManager))]
     public abstract class DamageAction : GameAction
     {
-        //TODO: Allow specifying a "target", which could be a rigidbody or simply a location
+        private AttributeManager attr;
 
-        public abstract void Use(int damage, int range);
-        public abstract bool InRange(Vector3 pos, int range);
+        protected AttributeManager AttrMgr;
 
+        public override void Start()
+        {
+            attr = GetComponent<AttributeManager>();
+        }
+
+        /// <summary>
+        /// Perform this damage action
+        /// </summary>
         public override void Perform()
         {
-            int damage = 0;
-            int range = 0;
-            Use(damage, range);
+            int damage = AttrMgr.GetAttributeValue(AttributeType.Damage);
+            //TODO: Percent calculation?
+            PerformImpl(damage);
         }
+
+        //Concrete implementation of specific damage action
+        protected abstract void PerformImpl(int damage);
     }
 }

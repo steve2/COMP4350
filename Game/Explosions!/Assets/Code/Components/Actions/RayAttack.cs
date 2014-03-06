@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Code.Model;
+using UnityEngine;
 
 namespace Assets.Code.Components.Actions
 {
@@ -7,12 +8,15 @@ namespace Assets.Code.Components.Actions
         [SerializeField]
         private LayerMask mask = 1;
 
-        public override void Use(int damage, int range)
+        //TODO: Allow specifying a "target", which could be a rigidbody or simply a location
+
+        protected override void PerformImpl(int damage)
         {
             RaycastHit hit;
             Vector3 dir = transform.forward; //Default to straight forward
-            //TODO: Ray cast to target position
+            int range = AttrMgr.GetAttributeValue(AttributeType.Range);
 
+            //TODO: Ray cast to target position
             //Raycast 
             if (Physics.Raycast(transform.position, dir, out hit, mask) && 
                 InRange(hit.transform.position, range)) //Range check
@@ -28,7 +32,8 @@ namespace Assets.Code.Components.Actions
         /// <param name="pos">The final position that will be range checked</param>
         /// <param name="range">Maximum range</param>
         /// <returns>Returns whether or not the hit position is within the maximum range</returns>
-        public override bool InRange(Vector3 pos, int range)
+        //TODO: Make this a "Condition"?
+        public bool InRange(Vector3 pos, int range)
         {
 			Vector3 dist = pos - transform.position;
             return (dist).sqrMagnitude <= (range * range); 

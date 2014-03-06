@@ -3,7 +3,7 @@ using Assets.Code.Components.Actions;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Assets.Code.Editor.Tests.Components.Attacks
+namespace Assets.Code.Editor.Tests.Components.Actions
 {
     [ExecuteInEditMode]
     class TestRayAttack

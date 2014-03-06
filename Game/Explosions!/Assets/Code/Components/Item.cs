@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets.Code.Components.Actions;
 using Assets.Code.Model;
 using UnityEngine;
 
@@ -18,6 +19,7 @@ namespace Assets.Code.Components
         #endregion
 
         private List<GameAttribute> itemAttributes; //The "REAL" attribute list
+        private IEnumerable<GameAction> actions; //The actions to perform when used
 		private ItemType itemtype;
 
         #region Properties
@@ -26,12 +28,18 @@ namespace Assets.Code.Components
         // Use this for initialization
         public virtual void Start()
         {
-            InitAttributes();   
+            InitAttributes();
+            InitActions();
         }
 
         protected virtual void InitAttributes()
         {
             itemAttributes = new List<GameAttribute>();
+        }
+
+        protected virtual void InitActions()
+        {
+            actions = GetComponents<GameAction>(); //Can have any number of actions (Including 0)
         }
 
 		public void SetItemType(ItemType setTo)
@@ -52,6 +60,14 @@ namespace Assets.Code.Components
         public void AddAttribute(GameAttribute attr)
         {
             itemAttributes.Add(attr);
+        }
+
+        public void Use()
+        {
+            foreach (GameAction action in actions)
+            {
+                action.Perform();
+            }
         }
 
         public IEnumerator<GameAttribute> GetEnumerator()
