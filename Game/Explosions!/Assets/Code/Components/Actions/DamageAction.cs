@@ -4,16 +4,55 @@ using Assets.Code.Model;
 
 namespace Assets.Code.Components.Actions
 {
-    [RequireComponent(typeof(AttributeManager))]
+    /// <summary>
+    /// An action that applies damage to something
+    /// </summary>
     public abstract class DamageAction : GameAction
     {
+        /// <summary>
+        /// Damage actions can work with, or without an AttributeManager
+        /// </summary>
         private AttributeManager attr;
+        [SerializeField]
+        private int defaultDamage = 0;
 
         protected AttributeManager AttrMgr;
 
+        public override GameObject Source
+        {
+            get
+            {
+                return base.Source;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    this.attr = value.GetComponent<AttributeManager>();
+                }
+                base.Source = value;
+            }
+        }
+
+        public int Damage
+        {
+            get
+            {
+                if (AttrMgr != null)
+                {
+                    //TODO: Perform calculations? (Percentages, etc)
+                    return AttrMgr.GetAttributeValue(AttributeType.Damage);
+                }
+                else
+                {
+                    return defaultDamage;
+                }
+            }
+        }
+
         public override void Start()
         {
-            attr = GetComponent<AttributeManager>();
+            attr = null;
         }
 
         /// <summary>
@@ -21,9 +60,7 @@ namespace Assets.Code.Components.Actions
         /// </summary>
         public override void Perform()
         {
-            int damage = AttrMgr.GetAttributeValue(AttributeType.Damage);
-            //TODO: Percent calculation?
-            PerformImpl(damage);
+            PerformImpl(Damage);
         }
 
         //Concrete implementation of specific damage action

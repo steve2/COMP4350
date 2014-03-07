@@ -6,20 +6,61 @@ namespace Assets.Code.Components.Actions
     public class RayAttack : DamageAction
     {
         [SerializeField]
+        private int defaultRange = 0;
+        [SerializeField]
         private LayerMask mask = 1;
 
+        private Ray lastRay;
+
         //TODO: Allow specifying a "target", which could be a rigidbody or simply a location
+
+        public int Range
+        {
+            get
+            {
+                if (AttrMgr != null)
+                {
+                    //TODO: Perform calculations? (Percentages, etc)
+                    return AttrMgr.GetAttributeValue(AttributeType.Range);
+                }
+                else
+                {
+                    return defaultRange;
+                }
+            }
+        }
+
+        //TODO: Exclude this if we're not in debug mode
+        public void Update()
+        {
+            Debug.DrawRay(lastRay.origin, lastRay.direction, Color.red);
+        }
+
+        public Vector3 StartPosition
+        {
+            get
+            {
+                //TODO: Start from GunBarrel, etc?
+                if (Source == null)
+                {
+                    return transform.position;
+                }
+                return Source.transform.position; //TODO: What if source is null?
+            }
+        }
+        //TODO: EndPosition
 
         protected override void PerformImpl(int damage)
         {
             RaycastHit hit;
             Vector3 dir = transform.forward; //Default to straight forward
-            int range = AttrMgr.GetAttributeValue(AttributeType.Range);
 
-            //TODO: Ray cast to target position
+            //TODO: Ray cast to target position (Change direction
             //Raycast 
-            if (Physics.Raycast(transform.position, dir, out hit, mask) && 
-                InRange(hit.transform.position, range)) //Range check
+            Ray ray = new Ray(StartPosition, dir * Range);
+            this.lastRay = ray; //TODO: Maybe build a queue for the view?
+            if (Physics.Raycast(ray, out hit, mask) && 
+                InRange(hit.transform.position, Range)) //Range check
             {
                 ApplyDamage(hit.collider.gameObject, damage);
             }
