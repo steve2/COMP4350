@@ -6,6 +6,7 @@ namespace Assets.Code.Components
 {
     public class Inventory : MonoBehaviour
     {
+        [SerializeField]
         private List<Item> items;
 
         public void Start()
