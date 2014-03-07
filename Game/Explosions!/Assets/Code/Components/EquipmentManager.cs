@@ -2,15 +2,20 @@
 using System.Collections;
 using Assets.Code.Model;
 using System.Collections.Generic;
+using Assets.Code.Components.Actions;
 
 namespace Assets.Code.Components
 {
     [RequireComponent(typeof(AttributeManager))]
+    [RequireComponent(typeof(GameActionManager))]
     [RequireComponent(typeof(Inventory))]
     public class EquipmentManager : MonoBehaviour
     {
         private AttributeManager attributeMngr;
+        private GameActionManager actionMgr;
         private Equipment equipment;
+        [SerializeField]
+        private Item[] defaultEquipment; //Loaded from the editor
         private Inventory inventory;
 
         /** Initialization **/
@@ -19,6 +24,16 @@ namespace Assets.Code.Components
             equipment = new Equipment();
             inventory = GetComponent<Inventory>();
             attributeMngr = GetComponent<AttributeManager>();
+            actionMgr = GetComponent<GameActionManager>();
+
+            //Load in some default items from editor without contacting server (Ex: Demo)
+            if (defaultEquipment != null)
+            {
+                for (int i = 0; i < defaultEquipment.Length; i++)
+                {
+                    Equip(defaultEquipment[i], (Slot)i);
+                }
+            }
         }
 
         /**
@@ -39,6 +54,7 @@ namespace Assets.Code.Components
 				inventory.Add(equipped);
 				equipment.SetSlot(whatSlot, null);
                 attributeMngr.SubtractAttributes(equipped);
+                actionMgr.RemoveActions(equipped.Actions);
                 return true;
             }
             return false;
@@ -64,12 +80,13 @@ namespace Assets.Code.Components
             {
                 return false;
             }
-			if (toEquip.GetItemType().IsSlotAllowed (whatSlot))
+			if (toEquip.Type.IsSlotAllowed (whatSlot))
 			{
             	Dequip(whatSlot);
 				equipment.SetSlot(whatSlot, toEquip);
 				inventory.Remove (toEquip);
 				attributeMngr.AddAttributes(toEquip);
+                actionMgr.AddActions(toEquip.Actions);
 				return true;
 			}
 			return false;

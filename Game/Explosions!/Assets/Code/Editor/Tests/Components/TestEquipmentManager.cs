@@ -66,8 +66,8 @@ namespace Assets.Code.Editor.Tests.Components
 			{
 				testItems[i].AddAttribute(testAttributes[i]);
 			}
-            testItems[0].SetItemType(testItemTypes[0]);
-            testItems[1].SetItemType(testItemTypes[1]);
+            testItems[0].Type = testItemTypes[0];
+            testItems[1].Type = testItemTypes[1];
 		}
 
 		[Test]

@@ -23,6 +23,8 @@ namespace Assets.Code.Components
 		private ItemType itemtype;
 
         #region Properties
+        public ItemType Type { get; set; }
+        public IEnumerable<GameAction> Actions { get { return actions; } }
         #endregion
 
         // Use this for initialization
@@ -42,21 +44,11 @@ namespace Assets.Code.Components
             actions = GetComponents<GameAction>(); //Can have any number of actions (Including 0)
         }
 
-		public void SetItemType(ItemType setTo)
-		{
-			itemtype = setTo;
-		}
-
-		public ItemType GetItemType()
-		{
-			return itemtype;
-		}
-
         public void AddAttribute(AttributeType type, int value)
         {
             AddAttribute(new GameAttribute(type, value));
         }
-
+        
         public void AddAttribute(GameAttribute attr)
         {
             itemAttributes.Add(attr);
