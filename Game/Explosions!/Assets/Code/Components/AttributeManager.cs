@@ -7,12 +7,18 @@ namespace Assets.Code.Components
 {
     public class AttributeManager : MonoBehaviour
     {
+        [SerializeField]
+        private List<GameAttribute> baseAttributes; //This objects base attributes (Before anything else is applied)
         private Dictionary<AttributeType, int> attributes; //Theoretically O(1) lookup
 
         // Use this for initialization
         public void Start()
         {
             attributes = new Dictionary<AttributeType, int>();
+            if (baseAttributes != null)
+            {
+                AddAttributes(baseAttributes);
+            }
         }
 
         public void AddAttributes(IEnumerable<GameAttribute> attrs)
