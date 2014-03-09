@@ -11,7 +11,6 @@ namespace Assets.Code.Components
     {
 		public string name;
 
-
         #region Editor Fields
         //Note: Use the built in name
         [SerializeField]
@@ -20,15 +19,21 @@ namespace Assets.Code.Components
 
         private List<GameAttribute> itemAttributes; //The "REAL" attribute list
         private IEnumerable<GameAction> actions; //The actions to perform when used
+        [SerializeField]
 		private ItemType itemtype;
 
         #region Properties
-        public ItemType Type { get; set; }
+        public ItemType Type 
+        { 
+            get { return itemtype; } 
+            set { itemtype = value; } 
+        }
         public IEnumerable<GameAction> Actions { get { return actions; } }
         #endregion
 
+
         // Use this for initialization
-        public virtual void Start()
+        public virtual void Awake()
         {
             InitAttributes();
             InitActions();

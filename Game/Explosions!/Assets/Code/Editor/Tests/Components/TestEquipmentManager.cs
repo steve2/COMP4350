@@ -5,42 +5,49 @@ using NUnit.Framework;
 using Assets.Code.Components;
 using System.Collections.Generic;
 using Assets.Code.Model;
+using Assets.Code.Components.Actions;
+using Assets.Code.Editor.Stubs;
 
 namespace Assets.Code.Editor.Tests.Components
 {
     [ExecuteInEditMode]
-    class TestEquipmentManager
+    class TestEquipmentManagerStub
     {
 		private GameObject testGameObject;
 		private Item[] testItems;
         private ItemType[] testItemTypes;
 		private GameAttribute[] testAttributes;
 
+        //TODO: Create IntegrationTests that actually Create/Destroy prefabs 
+
 		/** Setup **/
 		private void Setup()
 		{
-			//Setup Game Object and necessary Components for EquipmentManager.
+			//Setup Game Object and necessary Components for EquipmentManagerStub.
 			testGameObject = new GameObject();
 			testItems = new Item[4];
             testItemTypes = new ItemType[2];
 			testAttributes = new GameAttribute[4];
 
+            GameActionManager actionMgr = testGameObject.AddComponent<GameActionManager>();
+            actionMgr.Awake();
+            actionMgr.Start();
 			testGameObject.AddComponent<AttributeManager>().Start ();
 			testGameObject.AddComponent<Inventory>().Start ();
-			testGameObject.AddComponent<EquipmentManager>().Start ();
+			testGameObject.AddComponent<EquipmentManagerStub>().Start ();
 
 			//Setup Items that can be used to Equip/Unequip.
 			testItems[0] = testGameObject.AddComponent<Item>();
-			testItems[0].Start ();
+			testItems[0].Awake ();
 			testItems[0].name = "Item 01";
 			testItems[1] = testGameObject.AddComponent<Item>();
-			testItems[1].Start ();
+			testItems[1].Awake ();
 			testItems[1].name = "Item 02";
 			testItems[2] = testGameObject.AddComponent<Item>();
-			testItems[2].Start ();
+			testItems[2].Awake ();
 			testItems[2].name = "Item 03";
 			testItems[3] = testGameObject.AddComponent<Item>();
-			testItems[3].Start ();
+			testItems[3].Awake ();
 			testItems[3].name = "Item 04";
 
             //Setup Item Types for more thorough testing.
@@ -75,7 +82,7 @@ namespace Assets.Code.Editor.Tests.Components
 		{
 			Setup ();
 
-            EquipmentManager equipMgr = testGameObject.GetComponent<EquipmentManager>();
+            EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
             Inventory inventory = testGameObject.GetComponent<Inventory>();
 
             inventory.Add(testItems[0]);
@@ -108,7 +115,7 @@ namespace Assets.Code.Editor.Tests.Components
 		{
 			Setup ();
 
-            EquipmentManager equipMgr = testGameObject.GetComponent<EquipmentManager>();
+            EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
             Inventory inventory = testGameObject.GetComponent<Inventory>();
 
             inventory.Add(testItems[0]);
@@ -137,6 +144,50 @@ namespace Assets.Code.Editor.Tests.Components
 
 		}
 
+        //TODO:
+        private Item CreateActionItem(params string[] actionNames)
+        {
+            GameObject itemgo = new GameObject();
+            Item item = itemgo.AddComponent<Item>();
+            foreach (string name in actionNames)
+            {
+                GameActionStub action = itemgo.AddComponent<GameActionStub>();
+                action.SetName(name);
+                action.Start();
+            }
+            item.Awake();
+            return item;
+        }
+
+        [Test]
+        public void TestEquipping_OneAction()
+        {
+            Setup();
+
+            EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
+            Inventory inventory = testGameObject.GetComponent<Inventory>();
+            GameActionManager actMgr = testGameObject.GetComponent<GameActionManager>();
+            Item item = CreateActionItem("test");
+            item.Type = testItemTypes[0]; //TODO: Why is ItemType a component?
+            inventory.Add(item);
+
+            Assert.AreEqual(0, actMgr.Count);
+            equipMgr.Equip(item, Slot.RightHand);
+            Assert.AreEqual(1, actMgr.Count);
+        }
+
+        //TODO:
+        //[Test]
+        //public void TestInitPrefab()
+        //{
+
+        //}
+
+        //[Test]
+        //public void TestDestroyPrefab()
+        //{
+
+        //}
  
     }
 }
