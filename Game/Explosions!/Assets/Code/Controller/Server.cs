@@ -4,6 +4,7 @@ using System.Threading;
 using System.Net;
 using SimpleJSON;
 using Assets.Code.Model;
+using Assets.Code.Components;
 
 namespace Assets.Code.Controller
 {
@@ -70,7 +71,7 @@ namespace Assets.Code.Controller
         }
 	
 	    // asyncReturn - boolean indicating whether or not the login was successful
-	    public void Login(String username, String password, Action<bool> asyncReturn){
+	    public virtual void Login(String username, String password, Action<bool> asyncReturn){
 		    JSONClass playerCredentials = new JSONClass();
 		    playerCredentials.Add("user", username);
 		    playerCredentials.Add("password", password);
@@ -83,7 +84,7 @@ namespace Assets.Code.Controller
 		    });
 	    }
 
-        public void IsAlive(Action<bool> asyncReturn)
+        public virtual void IsAlive(Action<bool> asyncReturn)
         {
 		    //Empty JSON Request
             AsyncSend(IS_ALIVE_PATH, new JSONClass(), (j) =>
@@ -99,7 +100,7 @@ namespace Assets.Code.Controller
         /// <param name="inChar">Loses in items according to</param>
         /// <param name="outChar"></param>
         /// <returns></returns>
-        public void UseRecipe(Recipe recipe, Character inChar, Character outChar, Action<bool> asyncReturn)
+        public virtual void UseRecipe(Recipe recipe, Character inChar, Character outChar, Action<bool> asyncReturn)
         {
             bool success = false;
             //TODO: Retrieve id from recipeIDs (If we don't know about it, then it's not valid)
@@ -107,27 +108,38 @@ namespace Assets.Code.Controller
             asyncReturn(success);
         }
 
-        public void GetPurchasableItems(Action<IEnumerable<Recipe>> asyncReturn)
+        public virtual void GetPurchasableItems(Action<IEnumerable<Recipe>> asyncReturn)
         {
             //TODO: Query server for this data
             //TODO: Store these recipes in the recipeIDs dictionary
             throw new NotImplementedException();
         }
 
-        public void GetCraftableItems(Action<IEnumerable<Recipe>> asyncReturn)
+        public virtual void GetCraftableItems(Action<IEnumerable<Recipe>> asyncReturn)
         {
             //TODO: Query server for this data
             //TODO: Store these recipes in the recipeIDs dictionary
             throw new NotImplementedException();
         }
 
-	    public void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
+	    public virtual void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
 	    {
 		    //TODO: Query server for this data
 		    //This method is actually being called, don't throw an exception
 		
 		    //AsyncSend ("test", "test", null);
 	    }
+
+        public virtual void GetInventory(Character character, Action<IEnumerable<Item>> asyncReturn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void GetEquipment(Character character, Action<IEnumerable<Item>> asyncReturn)
+        {
+            //TODO: Order by slot id? (Otherwise we need to return Item/Slot pairs)
+            throw new NotImplementedException();
+        }
 
         //TODO: Get Characters
     }
