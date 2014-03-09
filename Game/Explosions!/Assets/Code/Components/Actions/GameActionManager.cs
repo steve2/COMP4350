@@ -8,25 +8,33 @@ namespace Assets.Code.Components.Actions
     public class GameActionManager : MonoBehaviour, IEnumerable<string>
     {
         private Dictionary<string, GameAction> actions;
+        
+        public int Count { get { return actions.Count; } }
+
+        public void Awake()
+        {
+            actions = new Dictionary<string, GameAction>();
+        }
 
         public void Start()
         {
-            actions = new Dictionary<string, GameAction>();
             var myActions = GetComponents<GameAction>(); //Get our own actions
-            foreach (GameAction action in myActions)
-            {
-                AddAction(action);
-            }
+	        foreach (GameAction action in myActions)
+	        {
+	            AddAction(action);
+	        }
         }
 
         //TODO: How will we group actions?
-        public void Perform(string name)
+        public bool Perform(string name)
         {
+            bool success = false;
             GameAction action;
             if (actions.TryGetValue(name, out action))
             {
-                action.Perform();
+                success = action.Perform();
             }
+            return success;
         }
 
         //TODO: What if we get a name conflict?

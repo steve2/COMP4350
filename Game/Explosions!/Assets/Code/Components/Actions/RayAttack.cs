@@ -50,7 +50,7 @@ namespace Assets.Code.Components.Actions
         }
         //TODO: EndPosition
 
-        protected override void PerformImpl(int damage)
+        protected override bool PerformImpl(int damage)
         {
             RaycastHit hit;
             Vector3 dir = transform.forward; //Default to straight forward
@@ -63,7 +63,10 @@ namespace Assets.Code.Components.Actions
                 InRange(hit.transform.position, Range)) //Range check
             {
                 ApplyDamage(hit.collider.gameObject, damage);
+                return true;
             }
+
+            return false;
         }
 
         /// <summary>

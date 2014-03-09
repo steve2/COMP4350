@@ -58,12 +58,12 @@ namespace Assets.Code.Components.Actions
         /// <summary>
         /// Perform this damage action
         /// </summary>
-        public override void Perform()
+        public override bool Perform()
         {
-            PerformImpl(Damage);
+            return PerformImpl(Damage);
         }
 
         //Concrete implementation of specific damage action
-        protected abstract void PerformImpl(int damage);
+        protected abstract bool PerformImpl(int damage);
     }
 }
