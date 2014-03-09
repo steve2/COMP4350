@@ -54,14 +54,6 @@ namespace Assets.Code.Components
             itemAttributes.Add(attr);
         }
 
-        public void Use()
-        {
-            foreach (GameAction action in actions)
-            {
-                action.Perform();
-            }
-        }
-
         public IEnumerator<GameAttribute> GetEnumerator()
         {
             return itemAttributes.GetEnumerator();
