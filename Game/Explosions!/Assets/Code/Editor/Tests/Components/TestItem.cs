@@ -27,7 +27,7 @@ namespace Assets.Code.Editor.Tests.Components
         //TODO: Put this in a common location
         private void Init()
         {
-            testGameObject.GetComponent<Item>().Start();
+            testGameObject.GetComponent<Item>().Awake();
 
             //TODO: Try to get something like this working
             //var components = testGameObject.GetComponents<MonoBehaviour>();
