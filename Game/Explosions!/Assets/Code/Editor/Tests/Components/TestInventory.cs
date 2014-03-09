@@ -20,15 +20,15 @@ namespace Assets.Code.Editor.Tests.Components
 			testItems = new Item[4];
 
 			testItems[0] = testGameObj.AddComponent<Item>();
-			testItems[0].Start ();
+			testItems[0].Awake ();
 			testItems[0].name = "Item 01";
 
 			testItems[1] = testGameObj.AddComponent<Item>();
-			testItems[1].Start ();
+			testItems[1].Awake ();
 			testItems[1].name = "Item 02";
 
 			testItems[2] = testGameObj.AddComponent<Item>();
-			testItems[2].Start ();
+			testItems[2].Awake ();
 			testItems[2].name = "Item 02";
 		}
     }
