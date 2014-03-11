@@ -50,7 +50,7 @@ def reset_mission_type():
     db = database.db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Mission_Type")
-    c.execute("CREATE TABLE Mission_Type (ID INT NOT NULL PRIMARY KEY, Name CHAR)")
+    c.execute("CREATE TABLE Mission_Type (ID INT NOT NULL PRIMARY KEY, Name CHAR(255))")
     db.commit()
 	
 def reset_mission():

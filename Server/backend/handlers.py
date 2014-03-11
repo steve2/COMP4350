@@ -344,3 +344,23 @@ def handle_get_achievement_description():
         
     return jsonify(result)
     
+#===========================================================================================
+#
+# Mission Data
+#
+#===========================================================================================
+
+@app.route('/mission/getAll', methods = ['POST', 'GET'])
+def handle_get_all_missions():
+    try:
+        database.db_connect()
+        missions = mission.get_missions()
+        result = {"missions": achieves}
+    except Exception, e:
+        print e
+        result = {"missions": None}
+    finally:
+        database.db_close()
+        
+    return jsonify(result)
+
