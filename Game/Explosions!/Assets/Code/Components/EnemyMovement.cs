@@ -24,13 +24,19 @@ public class EnemyMovement : MonoBehaviour {
 	[SerializeField]
 	private int numExplosionParticles = 50;
 	[SerializeField]
-	private byte particleYellowness = 0x10;
+	private byte minParticleYellow = 0x10;
+	[SerializeField]
+	private byte maxParticleYellow = 0xFF;
 	[SerializeField]
 	private float particleSpeed = 2.0f;
 	[SerializeField]
 	private float particleSize = 0.5f;
 	[SerializeField]
-	private float particleLifeTime = 2.0f;
+	private float particleLifeTime = 1.5f;
+	[SerializeField]
+	private float maxSpeedVariation = 1.5f;
+	[SerializeField]
+	private float maxLifespanVariation = 1.2f;
 
 	// Use this for initialization
 	void Start () {
@@ -78,13 +84,16 @@ public class EnemyMovement : MonoBehaviour {
 		var particles = pointsOnSphere (numExplosionParticles);
 		
 		foreach( Vector3 particle in particles ) {
-			var particleColour = new Color32(0xff, particleYellowness, 0, 0xff);
-			
+			var speedVariation = Random.Range(1.0f, maxSpeedVariation);
+			var yellow = (byte) Random.Range (minParticleYellow, maxParticleYellow);
+			var particleColour = new Color32(0xff, yellow, 0, 0xff);
+			var lifespanVariation = Random.Range(1.0f, maxLifespanVariation);
+
 			explosion.Emit (
 				pos,
-				particle * particleSpeed,
+				particle * (particleSpeed * speedVariation),
 				particleSize,
-				particleLifeTime,
+				particleLifeTime * lifespanVariation,
 				particleColour );
 		}
 		
