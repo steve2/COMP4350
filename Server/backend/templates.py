@@ -33,3 +33,7 @@ def leaderboard():
 @app.route('/items')
 def items():
     return render_template('items.html')
+	
+@app.route('/missions')
+def missions():
+	return render_template('missions.html')

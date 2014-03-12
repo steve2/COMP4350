@@ -19,20 +19,20 @@ namespace Assets.Code.Controller
         /// </summary>
         private Server server;
 
-        //Currently selected character
-        private Character character; //TODO: Keep track of selected character 
         private EquipmentManager equipManager; //
 
         //Cache
         //TODO: We are using threading, we should probably include locks
-        private IEnumerable<Mission> missions;
+		private IEnumerable<Character> characters;
+		private IEnumerable<Mission> missions;
         private IEnumerable<Recipe> purchaseItems;
         private IEnumerable<Recipe> craftItems;
 
         public static Game Instance { get; private set; }
 
-        public Character Character { get { return character; } }
-        public bool CharacterSelected { get { return this.Character != null; } }
+		public string username;
+		public Character character; //TODO: Keep track of selected character 
+		public bool CharacterSelected { get { return this.character != null; } }
 
         #region Asynchronous Properties
         /****************************************************************************
@@ -45,6 +45,19 @@ namespace Assets.Code.Controller
 	    {
 		    server.Login(username, password, (validPlayer) => asyncReturn(validPlayer) );
 	    }
+
+		public IEnumerable<Character> Characters
+		{
+			get
+			{
+				if (characters == null)
+				{
+					characters = Enumerable.Empty<Character>(); 	//Empty
+					server.GetCharacters(username, (x) => characters = x); 		//TODO: lock?
+				}
+				return characters;
+			}
+		}
 
         public IEnumerable<Recipe> PurchasableItems
         {
@@ -78,6 +91,7 @@ namespace Assets.Code.Controller
         public Game(Server server)
         {
             this.server = server;
+			this.username = null;
             this.character = null;
             this.purchaseItems = null;
             this.craftItems = null;
@@ -122,7 +136,7 @@ namespace Assets.Code.Controller
         /// </summary>
         public static void Init()
         {
-            Instance = new Game(new Server(Server.PRODUCTION_URL));
+			Instance = new Game(new Server(Server.PRODUCTION_URL));
         }
 
         /// <summary>
