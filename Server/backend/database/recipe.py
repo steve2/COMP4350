@@ -46,11 +46,11 @@ def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
     qry = '''SELECT in.Quantity, in.Recipe_ID, Item.Name 
-                FROM ((Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID)
-                INNER JOIN Item ON Item.ID = out.Item_ID)
+                FROM ((Recipe_In INNER JOIN Recipe_Out Recipe_In.Recipe_ID = Recipe_out.Recipe_ID)
+                INNER JOIN Item Item.ID = Recipe_out.Item_ID)
                 WHERE Item.Name = "Gold" 
-                GROUP BY in.Recipe_ID 
-                HAVING COUNT(Recipe_ID) = 1'''
+                GROUP BY Recipe_In.Recipe_ID 
+                HAVING COUNT(Recipe_In.Recipe_ID) = 1'''
     c.execute(qry)
     result = []
     for row in c:
