@@ -1,10 +1,13 @@
+using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Net;
 using SimpleJSON;
 using Assets.Code.Model;
 using Assets.Code.Components;
+
 
 namespace Assets.Code.Controller
 {
@@ -21,6 +24,7 @@ namespace Assets.Code.Controller
     
 	    private const string IS_ALIVE_PATH = "isAlive";
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
+		private const string CHARACTERS_PATH = "character/getAll";
 
 	    public const int DEFAULT_TIMEOUT = 10000;
 
@@ -67,6 +71,8 @@ namespace Assets.Code.Controller
             var client = new WebClient();
             client.Headers["Content-Type"] = "application/json";
             string response = client.UploadString(location, json.ToString());
+			Debug.Log ("sending... " + path + " " + json.ToString());
+			Debug.Log ("" + response);
 		    return JSON.Parse(response);
         }
 	
@@ -79,10 +85,24 @@ namespace Assets.Code.Controller
 		    //	protected virtual void AsyncSend(string path, JSONClass json, Action<JSONNode> asyncReturn)
 		    AsyncSend (LOGIN_REQUEST_PATH, playerCredentials, (j) =>
 		               {
-			    Console.WriteLine(j["result"]);		
 			    asyncReturn (j ["result"].Value == "true");
 		    });
 	    }
+
+		public virtual void GetCharacters(string username, Action<IEnumerable<Character>> asyncReturn)
+		{
+			JSONClass characters = new JSONClass ();
+			characters.Add("user", username);
+
+			Debug.Log ("---------> ASYNC SEND -- getAll --------------");
+			AsyncSend (CHARACTERS_PATH, characters, (j) =>
+				{
+				//TODO: verify response contains all characters, parse into Character Objects, return list
+					Debug.Log("------Characters----" + j.ToString());
+//					asyncReturn (j);
+				throw new NotImplementedException();
+				});
+		}
 
         public virtual void IsAlive(Action<bool> asyncReturn)
         {

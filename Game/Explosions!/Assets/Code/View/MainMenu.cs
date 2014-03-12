@@ -41,7 +41,8 @@ public class MainMenu : GameComponent {
 		// Load the Website
 		if (GUILayout.Button ("View Website", GUILayout.Height(40))) 
 		{
-			Application.OpenURL("http://54.200.201.50/");
+			//Application.OpenURL("http://54.200.201.50/");
+			Application.OpenURL(Server.PRODUCTION_URL + "/");
 		}
 
 		// Load the Settings 
