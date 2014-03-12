@@ -30,57 +30,57 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-          $function populateTable()
-          {
-            request("/getpurchasables", {}, function(data, _1, _2)
-            {
-              var items = new Array();
-              for (var i in data.rows) {
-                  var item = new Object();
-                  item.quantity =  data['purchasables'][i][0];
-                  item.recipe = data['purchasables'][i][1];
-                  item.name = data['purchasables'][i][2];
+			request("/getPurchasables", {}, function(data, _1, _2)
+			{
+					var items = new Array();
+					for (var i in data.rows) {
+							var item = new Object();
+							item.quantity =  data['purchasables'][i][0];
+							item.recipe = data['purchasables'][i][1];
+							item.name = data['purchasables'][i][2];
 
-                  items.push(item);
-              }
-            }
-          }).done(function()
-          {
-              var row;
-              for (var i = 0; i < items.length; i++)
-              {
-                  row += '<tr id="' + i + '">';
-                  row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
-                  row += '<td>' + items[i].recipe + '</td>';
-                  row += '<td>' + items[i].name + '</td>';
-                  row += '</tr>';
-              }
-              $(row).appendTo("#purchasables");
+							items.push(item);
+					}
+			}).done(function()
+			{
+				var row;
+				for (var i = 0; i < items.length; i++)
+				{
+						row += '<tr id="' + i + '">';
+						row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
+						row += '<td>' + items[i].recipe + '</td>';
+						row += '<td>' + items[i].name + '</td>';
+						row += '</tr>';
+				}
+				$(row).appendTo("#purchasables");
 
-              //takes the index of the row clicked and sends the appropriate recipe request
+				//takes the index of the row clicked and sends the appropriate recipe request
 
-              $("#purchasables" ).on('click', '#purchasebtn', function(event) {
-                  event.preventDefault();
-                  var i = $(this).parent().parent().index();
+				$("#purchasables" ).on('click', '#purchasebtn', function(event) {
+						event.preventDefault();
+						var i = $(this).parent().parent().index();
 
-                  var jsonArg = new Object();
-                  jsonArg.recipe = items[i].recipe;
+						var jsonArg = new Object();
+						jsonArg.recipe = items[i].recipe;
 
-                  $.ajax({
-                      type: "POST",
-                      url: "/use_recipe",
-                      data: JSON.stringify(jsonArg),
-                      success: function(data, _1, _2) {
-                          if(data.result) {
-                              window.location.replace("/");
-                          } else {
-                              window.location.replace("/failpurchase");
-                          }
-                      },
-                      contentType: 'application/json',
-                      dataType: "json"
-            });
-        });
+						//Should be using the util.js function "request".
+						
+						$.ajax({
+								type: "POST",
+								url: "/use_recipe",
+								data: JSON.stringify(jsonArg),
+								success: function(data, _1, _2) {
+										if(data.result) {
+												window.location.replace("/");
+										} else {
+												window.location.replace("/failpurchase");
+										}
+								},
+								contentType: 'application/json',
+								dataType: "json"
+						});
+				});
+			});
     </script>
   </body>
 </html>

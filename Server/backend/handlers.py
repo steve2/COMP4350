@@ -150,19 +150,19 @@ def get_purchasable_item_request():
 def handle_use_recipe():
     data = request.json
     if 'username' not in session:
-    	result = {'recipemade' :Non, 'BadRequest':True}
+    	result = {'recipemade' :None, 'BadRequest':True}
     else:
-			charid = session['username']    	
-			try:
-					database.db_connect()
-					recipe = data['recipe']
-					success = exec_recipe(recipe, charid, character.SHOP)
-					result = { 'result' : success }
-			except Exception, e:
-					print e
-					result = {"result": None}
-			finally:
-					database.db_close()
+        charid = session['username']    	
+        try:
+                database.db_connect()
+                recipe = data['recipe']
+                success = exec_recipe(recipe, charid, character.SHOP)
+                result = { 'result' : success }
+        except Exception, e:
+                print e
+                result = {"result": None}
+        finally:
+                database.db_close()
 					
     return jsonify(result)
 
