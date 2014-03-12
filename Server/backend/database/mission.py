@@ -24,12 +24,13 @@ def print_missions():
     print "----\n"
 
 def get_missions():
-	db = database.db_connect()
-	c = db.cursor()
-	c.execute("SELECT M.ID, MT.Name As MissionType " +
-			"FROM Mission M INNER JOIN Mission_Type MT on M.Mission_Type_ID = MT.ID ")
-	result = c.fetchall()
-	return result
+    db = database.db_connect()
+    c = db.cursor()
+    c.execute("SELECT M.ID, MT.Name As MissionType FROM Mission M JOIN Mission_Type MT on M.Mission_Type_ID = MT.ID")
+    result = []
+    for row in c:
+        result.append(row)
+    return result
 
 def reset_tables():
 	print "> Reset Mission Completed Table"

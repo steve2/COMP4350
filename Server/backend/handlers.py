@@ -15,6 +15,7 @@ import database.item as item
 import database.inventory as inventory
 import database.recipe as recipe
 import database.achievements as achievements
+import database.mission as mission
 
 def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -355,7 +356,7 @@ def handle_get_all_missions():
     try:
         database.db_connect()
         missions = mission.get_missions()
-        result = {"missions": achieves}
+        result = {"missions": missions}
     except Exception, e:
         print e
         result = {"missions": None}

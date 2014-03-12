@@ -27,34 +27,27 @@
     <script src="static/jquery/jquery-1.10.2.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 	
-	<script>
-          $function populateTable()
-          {
-            request("/mission/getAll", {}, function(data, _1, _2)
-            {
-              var missions = new Array();
-              for (var i in data.rows) {
-                  var mission = new Object();
-                  mission.ID =  data['missions'][i][0];
-                  mission.Type = data['missions'][i][1];
+		<script>
+			request("/mission/getAll", {}, function(data, _1, _2)
+			{
+					if (data['missions'] == null)
+					{
+							return;
+					}
+					var missions = new Array();
+					var out = "";
+					for (var i = 0; i < data['missions'].length; i++) {
+							var mission = new Object();
+							mission.ID =  data['missions'][i][0];
+							mission.Type = data['missions'][i][1];
 
-                  missions.push(mission);
-              }
-            }
-          }).done(function()
-          {
-              var row;
-              for (var i = 0; i < items.length; i++)
-              {
-                  row += '<tr id="' + i + '">';
-                  row += '<td> Mission ' + missions[i].ID + '</td>';
-                  row += '<td>' + missions[i].Type + '</td>';
-				  row += '<td>$100</td>';
-                  row += '</tr>';
-              }
-              $(row).appendTo("#missions");
-            });
-        });
-    </script>
+							out += "<tr> <td> Mission " + mission.ID + "</td>";
+							out += "<td>" + mission.Type + "</td>";
+							out += "<td>$100</td> </tr>";
+					}
+					$(out).appendTo("#missions");
+					
+			});
+		</script>
   </body>
 </html>
