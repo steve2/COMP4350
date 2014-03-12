@@ -58,7 +58,7 @@ def get_purchasable_items():
     return result    
    
 #Returns a list of recipe ID's that is not purchasable
-def get_craftable_items()
+def get_craftable_items():
     db = database.db_connect()
     c = db.cursor()
     qry = '''Select in.Recipe_ID
