@@ -25,6 +25,29 @@ import sys
 
 SHOP = -1
 
+def search_characters(target):
+    db = database.db_connect()
+    c = db.cursor()
+
+    if (target is None):
+        target = "";
+    qry = "SELECT * FROM `Character` Where Name LIKE %" + target + "%"
+    c.execute(qry)
+    result = []
+    for row in c:
+        result.append(row)
+    return result
+
+def get_all_characters():
+    db = database.db_connect()
+    c = db.cursor()
+    qry = "SELECT * FROM `Character`"
+    c.execute(qry)
+    result = []
+    for row in c:
+        result.append(row)
+    return result
+
 def get_player_id(username):
     db = database.db_connect()
     c = db.cursor()
