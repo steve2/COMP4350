@@ -243,7 +243,7 @@ def handle_create_character():
     response = {"result": result}
     return jsonify(response)
 
-@app.route('/character/inventory', methods = ['POST', 'GET'])
+@app.route('/character/inventory/get', methods = ['POST', 'GET'])
 def handle_get_character_inventory():
     data = request.json
 
@@ -258,6 +258,28 @@ def handle_get_character_inventory():
         except Exception, e:
             print e
             result = {"inventory": None}
+        finally:
+            database.db_close()
+    
+    return jsonify(result)
+
+@app.route('/character/inventory/add', methods = ['POST', 'GET'])
+def handle_add_character_inventory():
+    data = request.json
+
+    if 'itemid' not in data or 'quantity' not in data or 'charid' not in data:
+        result = {"result": False, "BadRequest": True }
+    else:
+        charid = data['charid'] # TODO: Make this character name?
+        itemid = data['itemid']
+        quantity = data['quantity']
+        try:
+            database.db_connect()
+            inv = inventory.add_item(charid, itemid, quantity)
+            result = {"result": True}
+        except Exception, e:
+            print e
+            result = {"result": False}
         finally:
             database.db_close()
     
@@ -296,7 +318,7 @@ def handle_get_all_character_equipment():
         items = item.get_items()
         result = {"equipment": items}
     except Exception, e:
-        print e
+        print "Error in /item/getAll:", e
         result = {"equipment": None}
     finally:
         database.db_close()
