@@ -41,22 +41,41 @@ def exec_recipe(recipe, inChar, outChar):
         inventory.add_items(outChar, inItems)
     return True
 
-#Returns a list of recipe ID's that can be purchased through gold alone 
-#(Not sure what Item_ID Gold would be so at the moment hard coded it as 0)
+#Returns a list of recipe ID's with name and quantity that can be purchased through gold alone 
 def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT in.Quantity, in.Recipe_ID, out.Item_ID 
-                FROM Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID 
-                WHERE Item_ID = 0 
-                GROUP BY Recipe_ID 
-                HAVING COUNT(Recipe_ID) = 1'''
+    qry = '''SELECT Recipe_In.Quantity, Recipe_In.Recipe_ID, Item.Name 
+                FROM ((Recipe_In INNER JOIN Recipe_Out Recipe_In.Recipe_ID = Recipe_out.Recipe_ID)
+                INNER JOIN Item Item.ID = Recipe_out.Item_ID)
+                WHERE Item.Name = "Gold" 
+                GROUP BY Recipe_In.Recipe_ID 
+                HAVING COUNT(Recipe_In.Recipe_ID) = 1'''
     c.execute(qry)
     result = []
     for row in c:
         result.append(row)
     return result    
    
+#Returns a list of recipe ID's that is not purchasable
+def get_craftable_items():
+    db = database.db_connect()
+    c = db.cursor()
+    qry = '''Select in.Recipe_ID
+    					From ((Recipe_In AS in INNER JOIN Recipe_Out AS out ON in.Recipe_ID = out.Recipe_ID)
+                INNER JOIN Item ON Item.ID = out.Item_ID)
+                WHERE in.Recipe_ID NOT IN (SELECT inB.Recipe_ID
+                FROM ((Recipe_In AS inB INNER JOIN Recipe_Out AS outB ON inB.Recipe_ID = outB.Recipe_ID)
+                INNER JOIN Item AS it ON it.ID = outB.Item_ID)
+                WHERE itB.Name = "Gold" 
+                GROUP BY inB.Recipe_ID 
+                HAVING COUNT(inB.Recipe_ID) = 1)
+                GROUP BY in.Recipe_ID'''
+    c.execute(qry)
+    result = []
+    for row in c:
+        result.append(row)
+    return result 
     
 #Given a recipe_id returns a list of the required items and quantity
 def get_recipe_in(recipe_id):

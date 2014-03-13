@@ -4,8 +4,10 @@ using System.Collections;
 // For use with the Health bar in the HUD
 public class Health : MonoBehaviour {
 
-	private int health;
-	private int maxHealth;
+    [SerializeField]
+	private int health = 100; //Default
+    [SerializeField] //TODO: Load maxHealth from AttributeManager
+    private int maxHealth = 100; //Default 
 
 	public Health()
 	{
@@ -16,8 +18,7 @@ public class Health : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Start with full health
-		health = 100;
-		maxHealth = 100;
+        health = maxHealth;
 	}
 	
 	// Update is called once per frame

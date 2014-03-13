@@ -27,6 +27,9 @@ public class PlayerLogin : GameComponent {
 		if (GUILayout.Button ("Login")) {
 			this.attemptLogin();	
 		}
+		if (GUILayout.Button ("Back")) {
+			InvokeOnMainThread(() => Application.LoadLevel("MainMenu"));
+		}
 		
 		GUILayout.Label (output);
 		GUILayout.EndArea();
@@ -40,8 +43,9 @@ public class PlayerLogin : GameComponent {
 		 {
 			if (x){
 				output = "Login successful";
-                //TODO: Switch to mission menu instead of loading Demo
-                InvokeOnMainThread(() => Application.LoadLevel("Demo"));
+
+				Game.username = username;
+				InvokeOnMainThread(() => Application.LoadLevel("CharacterSelection")); //CharacterSelection loads "Demo"
 			} else {
 				output = "Login failed";				
 			}

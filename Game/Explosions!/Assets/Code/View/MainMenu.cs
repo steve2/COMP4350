@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Assets.Code.Components;
+using Assets.Code.Controller;
 
 public class MainMenu : GameComponent {
 
@@ -15,7 +16,7 @@ public class MainMenu : GameComponent {
 	public override void Start () 
     {
         base.Start();
-        Game.IsServerOnline((x) =>
+        Game.Instance.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
@@ -40,7 +41,8 @@ public class MainMenu : GameComponent {
 		// Load the Website
 		if (GUILayout.Button ("View Website", GUILayout.Height(40))) 
 		{
-			Application.OpenURL("http://54.200.201.50/");
+			//Application.OpenURL("http://54.200.201.50/");
+			Application.OpenURL(Server.PRODUCTION_URL + "/");
 		}
 
 		// Load the Settings 

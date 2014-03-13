@@ -2,7 +2,7 @@
 using System.Collections;
 using Assets.Code.Components;
 using Assets.Code.Model;
-
+using Assets.Code.Controller;
 
 public class MissionMenu : GameComponent {
 
@@ -20,31 +20,32 @@ public class MissionMenu : GameComponent {
 	void OnGUI() {
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 100, 200, 300));
 
-		// Load Mission list for the character
-		foreach (Mission mission in Game.Missions) 
-		{
-			if (GUILayout.Button ("Mission" + mission.ID)) 
-			{
-					Application.LoadLevel ("Demo"); 
-			}
-		}
+		// TODO: Dynamically Load Mission list for the character
 
-		// TODO: Populate Mission Description	
+//		foreach (Mission mission in Game.Missions) 
+//		{
+//			if (GUILayout.Button ("Mission" + mission.ID)) 
+//			{
+//					Application.LoadLevel ("Demo"); 
+//			}
+//		}	
 
 
-		// Temporary (Testing)
-		// Just load the Demo for each Mission
-		if (GUILayout.Button ("Mission 1", GUILayout.Height(40))) {
+		// Hardcode the missions for now
+		if (GUILayout.Button ("Mission 1")) {
 			Application.LoadLevel("Demo"); 
 		}
-		if (GUILayout.Button ("Mission 2", GUILayout.Height(40))) {
+		if (GUILayout.Button ("Mission 2")) {
 			Application.LoadLevel("Demo");  
 		}
-		if (GUILayout.Button ("Mission 3", GUILayout.Height(40))) {
+		if (GUILayout.Button ("Mission 3")) {
 			Application.LoadLevel("Demo");  
 		}
-		if (GUILayout.Button ("Mission 4", GUILayout.Height(40))) {
+		if (GUILayout.Button ("Mission 4")) {
 			Application.LoadLevel("Demo"); 
+		}
+		if (GUILayout.Button ("Back")) {
+			Application.LoadLevel("CharacterSelection");
 		}
 
 		GUILayout.EndArea();

@@ -11,11 +11,15 @@
 
   </head>
 
-  <body>
+  <body onload="populatTable()">
 
     <div class="container">
       <form class="form-signin" id="shop-form" role="form" method="post">
       <h1 class="text-center">Shop</a></h6>
+
+      <select id = "characters">
+      </select>
+
       <table class="table table-bordered" id = "purchasables" cellpadding="10">
       <tr name="data" >
         <th>Item Name</th>
@@ -30,37 +34,70 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-        $.ajax({
-            url: "/getPurchasables",
-            dataType: "json",
-            success: function(data) {
-            for (var i in data.rows) {
-                row += '<tr id="' + i + '">';
-                row += '<td><button class = purchasebtn>' + data[purchasables][i][0] + '</button></td>';  <!--quantity-->
-                row += '<td>' + data['purchasables'][i][1] + '</td>';<!--recipe ID-->
-                row += '<td>' + data['purchasables'][i][2] + '</td>';<!--item ID-->
-                row += '</tr>';
-            }
-            $(row).appendTo('table.purchasables');
-            },
-        });
-    </script>
+      //populates the character datalist
 
-    <script>
-        $("#purchasables" ).on('click', '.purchasebtn', function(event) {
+      var characters = new Array();
+      request("/character/getAll", {}, function(data, _1, _2)
+      {
+          for (var i=0; i < data['characters'].length; i++)
+          {
+              var character = new Object();
+              character.id   = data['characters'][i][0];
+              character.name = data['characters'][i][2];
+
+              characters.push(character);
+          }
+      }).done(function()
+      {
+        var options;
+        for (var i = 0; i < characters.length; i++)
+        {
+            options += '<option value = ' + characters[i].id + '>' + character[i].name + '</option>';
+        }
+        $(options).appendTo("#character");
+      });
+
+      request("/getPurchasables", {}, function(data, _1, _2)
+      {
+          var items = new Array();
+          for (var i in data.rows) {
+              var item = new Object();
+              item.quantity =  data['purchasables'][i][0];
+              item.recipe = data['purchasables'][i][1];
+              item.name = data['purchasables'][i][2];
+
+              items.push(item);
+          }
+      }).done(function()
+      {
+        var row;
+        for (var i = 0; i < items.length; i++)
+        {
+            row += '<tr id="' + i + '">';
+            row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
+            row += '<td>' + items[i].recipe + '</td>';
+            row += '<td>' + items[i].name + '</td>';
+            row += '</tr>';
+        }
+        $(row).appendTo("#purchasables");
+
+        //takes the index of the row clicked and sends the appropriate recipe request
+
+        $("#purchasables" ).on('click', '#purchasebtn', function(event) {
             event.preventDefault();
-            var objs = $(this).serializeArray();
+            var i = $(this).parent().parent().index();
+            var selectedChar = document.getElementId('characters');
 
-            var data = {};
-            for(var i = 0; i < objs.length; i++) {
-                var obj = objs[i];
-                data[obj.name] = obj.value;
-            }
+            var jsonArg = new Object();
+            jsonArg.recipe = items[i].recipe;
+            jsonArg.charid = selectedChar;
+
+            //Should be using the util.js function "request".
 
             $.ajax({
                 type: "POST",
                 url: "/use_recipe",
-                data: JSON.stringify(data),
+                data: JSON.stringify(jsonArg),
                 success: function(data, _1, _2) {
                     if(data.result) {
                         window.location.replace("/");
@@ -72,6 +109,7 @@
                 dataType: "json"
             });
         });
+      });
     </script>
   </body>
 </html>

@@ -15,6 +15,7 @@ import database.item as item
 import database.inventory as inventory
 import database.recipe as recipe
 import database.achievements as achievements
+import database.mission as mission
 
 def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -160,8 +161,6 @@ def handle_get_all_player_achievements():
 
 @app.route('/getPurchasables', methods = ['POST', 'GET'])
 def get_purchasable_item_request():
-    data =  request.json
-    
     purchasables = recipe.get_purchasable_items();
     result = { 'purchasables' : purchasables }
     return jsonify(result)
@@ -170,10 +169,21 @@ def get_purchasable_item_request():
 @app.route('/recipe/use', methods = ['POST', 'GET'])
 def handle_use_recipe():
     data = request.json
-    recipe = data['recipe']
-    charid = data['character']
-    success = exec_recipe(recipe, charid, character.SHOP)
-    result = { 'result' : success }
+    if 'username' not in session:
+    	result = {'recipemade' :None, 'BadRequest':True}
+    else: 	
+        try:
+                database.db_connect()
+                charid = data['charid']   
+                recipe = data['recipe']
+                success = exec_recipe(recipe, charid, character.SHOP)
+                result = { 'result' : success }
+        except Exception, e:
+                print e
+                result = {"result": None}
+        finally:
+                database.db_close()
+					
     return jsonify(result)
 
 #Sell/Disassemble
@@ -355,3 +365,23 @@ def handle_get_achievement_description():
         
     return jsonify(result)
     
+#===========================================================================================
+#
+# Mission Data
+#
+#===========================================================================================
+
+@app.route('/mission/getAll', methods = ['POST', 'GET'])
+def handle_get_all_missions():
+    try:
+        database.db_connect()
+        missions = mission.get_missions()
+        result = {"missions": missions}
+    except Exception, e:
+        print e
+        result = {"missions": None}
+    finally:
+        database.db_close()
+        
+    return jsonify(result)
+

@@ -8,8 +8,7 @@ using System.Collections.Generic;
 namespace Assets.Code.Components
 {
     [AddComponentMenu("Items/Weapon")]
-    //TODO: Should create child components MeleeWeapon/RangedWeapon (And make this abstract)
-    public class Weapon : Item, IUsableItem
+    public class Weapon : Item
     {
         #region Editor Fields
         [SerializeField]
@@ -42,23 +41,6 @@ namespace Assets.Code.Components
             this.attributes = editorAttributes;
         }
 
-        #region Public Interface
-        public bool Use()
-        {
-            //TODO: Implement
-            throw new NotImplementedException();
-        } 
-        #endregion
-
-        #region Unity Methods
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        } 
-        #endregion
-
         #region Overrides
         protected override void InitAttributes()
         {
@@ -76,6 +58,8 @@ namespace Assets.Code.Components
 
             attributes.Clear();
             attributes = null; //"Free"
+
+            //TODO: Set item type to weapon
         }
         #endregion
     }
