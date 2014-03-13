@@ -43,6 +43,7 @@ def reset_equipment():
 def reset_slots():
     db = database.db_connect()
     c = db.cursor()
+    c.execute("DROP Table IF EXISTS Slot")
     c.execute("CREATE TABLE IF NOT EXISTS Slot (ID INT NOT NULL PRIMARY KEY, Name CHAR(64))")
     c.execute("DELETE FROM Slot")
     db.commit()
