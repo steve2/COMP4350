@@ -170,8 +170,8 @@ def get_purchasable_item_request():
 def handle_use_recipe():
     data = request.json
     if 'username' not in session:
-    	result = {'recipemade' :None, 'BadRequest':True}
-    else: 	
+        result = {'recipemade' :None, 'BadRequest':True}
+    else:     
         try:
                 database.db_connect()
                 charid = data['charid']   
@@ -183,7 +183,7 @@ def handle_use_recipe():
                 result = {"result": None}
         finally:
                 database.db_close()
-					
+                    
     return jsonify(result)
 
 #Sell/Disassemble
@@ -406,7 +406,7 @@ def handle_get_all_missions():
         database.db_close()
         
     return jsonify(result)
-	
+    
 #===========================================================================================
 #
 # Reward Data
@@ -414,22 +414,22 @@ def handle_get_all_missions():
 #===========================================================================================
 @app.route('/reward/get', methods = ['POST', 'GET'])
 def handle_get_reward():
-	data = request.json
-	
-	if 'rewardid' not in data:
-		result = {"rewardexp": None, "rewarditems": None, "BadRequest": True}
-	else:
-		rewardid = data['rewardid']
-		
-		try:
-			database.db_connect()
-			rewardItems = reward.get_reward_items(rewardid)
-			rewardExp = reward.get_reward_exp(rewardid)
-			result = {"rewardexp": rewardExp, "rewarditems": rewardItems}
-		except Exception, e:
-			print e
-			result = {"rewards": None}
-		finally:
-			database.db_close()
+    data = request.json
+    
+    if 'rewardid' not in data:
+        result = {"rewardexp": None, "rewarditems": None, "BadRequest": True}
+    else:
+        rewardid = data['rewardid']
+        
+        try:
+            database.db_connect()
+            rewardItems = reward.get_reward_items(rewardid)
+            rewardExp = reward.get_reward_exp(rewardid)
+            result = {"rewardexp": rewardExp, "rewarditems": rewardItems}
+        except Exception, e:
+            print e
+            result = {"rewards": None}
+        finally:
+            database.db_close()
         
     return jsonify(result)
