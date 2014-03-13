@@ -45,12 +45,13 @@ def exec_recipe(recipe, inChar, outChar):
 def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT Recipe_In.Quantity, Recipe_In.Recipe_ID, Item.Name 
-                FROM ((Recipe_In INNER JOIN Recipe_Out Recipe_In.Recipe_ID = Recipe_out.Recipe_ID)
-                INNER JOIN Item Item.ID = Recipe_out.Item_ID)
-                WHERE Item.Name = "Gold" 
-                GROUP BY Recipe_In.Recipe_ID 
-                HAVING COUNT(Recipe_In.Recipe_ID) = 1'''
+    qry = '''SELECT Recipe_In.Quantity, Recipe_In.Recipe_ID, Item_Out.Name FROM 
+    (((Recipe_In INNER JOIN Recipe_Out ON Recipe_In.Recipe_ID = Recipe_Out.Recipe_ID) 
+    INNER JOIN Item AS Item_Out ON Item_Out.ID = Recipe_Out.Item_ID) 
+    INNER JOIN Item AS Item_In On Item_In.ID = Recipe_In.Item_ID)
+    WHERE Item_In.Name = "Gold" 
+    GROUP BY Recipe_In.Recipe_ID 
+    HAVING COUNT(Recipe_In.Recipe_ID) = 1'''
     c.execute(qry)
     result = []
     for row in c:
@@ -61,16 +62,15 @@ def get_purchasable_items():
 def get_craftable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = '''Select in.Recipe_ID
-    					From ((Recipe_In AS in INNER JOIN Recipe_Out AS out ON in.Recipe_ID = out.Recipe_ID)
-                INNER JOIN Item ON Item.ID = out.Item_ID)
-                WHERE in.Recipe_ID NOT IN (SELECT inB.Recipe_ID
-                FROM ((Recipe_In AS inB INNER JOIN Recipe_Out AS outB ON inB.Recipe_ID = outB.Recipe_ID)
-                INNER JOIN Item AS it ON it.ID = outB.Item_ID)
-                WHERE itB.Name = "Gold" 
-                GROUP BY inB.Recipe_ID 
-                HAVING COUNT(inB.Recipe_ID) = 1)
-                GROUP BY in.Recipe_ID'''
+    qry = '''Select input.Recipe_ID From ((Recipe_In AS input 
+    INNER JOIN Recipe_Out AS output ON input.Recipe_ID = output.Recipe_ID)
+    INNER JOIN Item ON Item.ID = output.Item_ID) WHERE input.Recipe_ID 
+    NOT IN (SELECT Recipe_In.Recipe_ID FROM (((Recipe_In INNER JOIN Recipe_Out ON Recipe_In.Recipe_ID = Recipe_Out.Recipe_ID)
+    INNER JOIN Item AS Item_Out ON Item_Out.ID = Recipe_Out.Item_ID)
+    INNER JOIN Item AS Item_In On Item_In.ID = Recipe_In.Item_ID) 
+    WHERE Item_In.Name = "Gold" GROUP BY Recipe_In.Recipe_ID 
+    HAVING COUNT(Recipe_In.Recipe_ID) = 1)
+		GROUP BY input.Recipe_ID'''
     c.execute(qry)
     result = []
     for row in c:
@@ -106,7 +106,7 @@ def get_recipe_out(recipe_id):
 def create_recipe(recipe_id, recipe_name):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe' (Recipe_ID, Recipe_Name) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+")"
+    qry = "INSERT INTO Recipe (ID, Name) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, recipe_name))
     db.commit()
     return True
@@ -114,7 +114,7 @@ def create_recipe(recipe_id, recipe_name):
 def create_recipe_in(recipe_id, item_id, quantity):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe_In' (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
+    qry = "INSERT INTO Recipe_In (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, item_id, quantity))
     db.commit()
     return True
@@ -122,7 +122,7 @@ def create_recipe_in(recipe_id, item_id, quantity):
 def create_recipe_out(recipe_id, item_id, quantity):
     db = database.db_connect()
     c = db.cursor()
-    qry = "INSERT INTO 'Recipe_Out' (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
+    qry = "INSERT INTO Recipe_Out (Recipe_ID, Item_ID, Quantity) VALUES ("+database.INSERT_SYM+", "+database.INSERT_SYM+", "+database.INSERT_SYM+")"
     c.execute(qry, (recipe_id, item_id, quantity))
     db.commit()
     return True
@@ -132,7 +132,7 @@ def reset_recipe_in():
     c = db.cursor()
     c.execute("DELETE FROM Recipe_In")
     #c.executescript('''DROP TABLE IF EXISTS Recipe_In''')
-    #c.execute('''CREATE TABLE Recipe_In (Recipe_ID INT, Item_ID INT, Quantity INT, FOREIGN KEY (Recipe_ID) REFERENCES Recipe (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID)''')
+    #c.execute('''CREATE TABLE Recipe_In (Recipe_ID INT, Item_ID INT, Quantity INT, FOREIGN KEY (Recipe_ID) REFERENCES Recipe (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID))''')
     db.commit()
     db.close()       
     
@@ -141,7 +141,7 @@ def reset_recipe_out():
     c = db.cursor()
     c.execute("DELETE FROM Recipe_Out")
     #c.executescript('''DROP TABLE IF EXISTS Recipe_Out''')
-    #c.execute('''CREATE TABLE Recipe_Out (Recipe_ID INT, Item_ID INT, Quantity INT, FOREIGN KEY (Recipe_ID) REFERENCES Recipe (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID)''')    
+    #c.execute('''CREATE TABLE Recipe_Out (Recipe_ID INT, Item_ID INT, Quantity INT, FOREIGN KEY (Recipe_ID) REFERENCES Recipe (ID), FOREIGN KEY (Item_ID) REFERENCES Item (ID))''')    
     db.commit()
     db.close()        
     
