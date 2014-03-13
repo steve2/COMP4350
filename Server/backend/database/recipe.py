@@ -81,9 +81,8 @@ def get_craftable_items():
 def get_recipe_in(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT Item.name, Quantity 
+    qry = '''SELECT Item.ID, Quantity 
                 FROM Recipe_In 
-                    JOIN Item ON (recipe.Item_ID = Item.ID) 
                     WHERE Recipe_ID='''+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
@@ -95,9 +94,8 @@ def get_recipe_in(recipe_id):
 def get_recipe_out(recipe_id):
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT Item.name, Quantity 
+    qry = '''SELECT Item.ID, Quantity 
                 FROM Recipe_Out 
-                    JOIN Item ON (recipe.Item_ID = Item.ID) 
                     WHERE Recipe_ID='''+database.INSERT_SYM
     c.execute(qry, (recipe_id))
     result = []
