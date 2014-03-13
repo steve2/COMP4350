@@ -26,7 +26,7 @@ def print_missions():
 def get_missions():
     db = database.db_connect()
     c = db.cursor()
-    c.execute("SELECT M.ID, MT.Name As MissionType FROM Mission M JOIN Mission_Type MT on M.Mission_Type_ID = MT.ID")
+    c.execute("SELECT M.ID, MT.Name As MissionType, Reward_ID FROM Mission M JOIN Mission_Type MT on M.Mission_Type_ID = MT.ID")
     result = []
     for row in c:
         result.append(row)
@@ -58,7 +58,7 @@ def reset_mission():
     db = database.db_connect()
     c = db.cursor()
     c.execute("DROP TABLE IF EXISTS Mission")
-    c.execute("CREATE TABLE Mission (ID INT PRIMARY KEY NOT NULL, Mission_Type_ID INT NOT NULL)")
+    c.execute("CREATE TABLE Mission (ID INT PRIMARY KEY NOT NULL, Mission_Type_ID INT NOT NULL, Reward_ID INT NOT NULL)")
     db.commit()
 	
 if __name__ == '__main__':

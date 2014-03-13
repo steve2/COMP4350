@@ -22,6 +22,32 @@ def print_rewards():
         result = c.fetchone()
     print "----\n"
 
+def get_reward_exp(rewardID)
+   db = database.db_connect()
+    c = db.cursor()
+	    qry = '''SELECT * 
+				FROM Reward 
+					WHERE ID ='''+database.INSERT_SYM;
+    c.execute(qry, (rewardID,))
+    c.execute("SELECT * FROM Reward WHERE ID =")
+    result = []
+    for row in c:
+        result.append(row)
+    return result
+
+def get_reward_items(rewardID)
+   db = database.db_connect()
+    c = db.cursor()
+	    qry = '''SELECT Name AS ItemName, Quantity 
+				FROM Reward_Item 
+					JOIN Item ON Item_ID = ID 
+						WHERE Reward_ID='''+database.INSERT_SYM;
+    c.execute(qry, (rewardID,))
+    result = []
+    for row in c:
+        result.append(row)
+    return result
+
 def reset_tables():
 	print "> Reset Reward Item Table"
 	reset_reward_item()

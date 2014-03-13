@@ -16,6 +16,10 @@
     <div class="container">
       <form class="form-signin" id="shop-form" role="form" method="post">
       <h1 class="text-center">Shop</a></h6>
+
+      <select id = "characters">
+      </select>
+
       <table class="table table-bordered" id = "purchasables" cellpadding="10">
       <tr name="data" >
         <th>Item Name</th>
@@ -30,57 +34,82 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-			request("/getPurchasables", {}, function(data, _1, _2)
-			{
-					var items = new Array();
-					for (var i in data.rows) {
-							var item = new Object();
-							item.quantity =  data['purchasables'][i][0];
-							item.recipe = data['purchasables'][i][1];
-							item.name = data['purchasables'][i][2];
+      //populates the character datalist
 
-							items.push(item);
-					}
-			}).done(function()
-			{
-				var row;
-				for (var i = 0; i < items.length; i++)
-				{
-						row += '<tr id="' + i + '">';
-						row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
-						row += '<td>' + items[i].recipe + '</td>';
-						row += '<td>' + items[i].name + '</td>';
-						row += '</tr>';
-				}
-				$(row).appendTo("#purchasables");
+      var characters = new Array();
+      request("/character/getAll", {}, function(data, _1, _2)
+      {
+          for (var i=0; i < data['characters'].length; i++)
+          {
+              var character = new Object();
+              character.id   = data['characters'][i][0];
+              character.name = data['characters'][i][2];
 
-				//takes the index of the row clicked and sends the appropriate recipe request
+              characters.push(character);
+          }
+      }).done(function()
+      {
+        var options;
+        for (var i = 0; i < characters.length; i++)
+        {
+            options += '<option value = ' + characters[i].id + '>' + character[i].name + '</option>';
+        }
+        $(options).appendTo("#character");
+      });
 
-				$("#purchasables" ).on('click', '#purchasebtn', function(event) {
-						event.preventDefault();
-						var i = $(this).parent().parent().index();
+      request("/getPurchasables", {}, function(data, _1, _2)
+      {
+          var items = new Array();
+          for (var i in data.rows) {
+              var item = new Object();
+              item.quantity =  data['purchasables'][i][0];
+              item.recipe = data['purchasables'][i][1];
+              item.name = data['purchasables'][i][2];
 
-						var jsonArg = new Object();
-						jsonArg.recipe = items[i].recipe;
+              items.push(item);
+          }
+      }).done(function()
+      {
+        var row;
+        for (var i = 0; i < items.length; i++)
+        {
+            row += '<tr id="' + i + '">';
+            row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
+            row += '<td>' + items[i].recipe + '</td>';
+            row += '<td>' + items[i].name + '</td>';
+            row += '</tr>';
+        }
+        $(row).appendTo("#purchasables");
 
-						//Should be using the util.js function "request".
-						
-						$.ajax({
-								type: "POST",
-								url: "/use_recipe",
-								data: JSON.stringify(jsonArg),
-								success: function(data, _1, _2) {
-										if(data.result) {
-												window.location.replace("/");
-										} else {
-												window.location.replace("/failpurchase");
-										}
-								},
-								contentType: 'application/json',
-								dataType: "json"
-						});
-				});
-			});
+        //takes the index of the row clicked and sends the appropriate recipe request
+
+        $("#purchasables" ).on('click', '#purchasebtn', function(event) {
+            event.preventDefault();
+            var i = $(this).parent().parent().index();
+            var selectedChar = document.getElementId('characters');
+
+            var jsonArg = new Object();
+            jsonArg.recipe = items[i].recipe;
+            jsonArg.charid = selectedChar;
+
+            //Should be using the util.js function "request".
+
+            $.ajax({
+                type: "POST",
+                url: "/use_recipe",
+                data: JSON.stringify(jsonArg),
+                success: function(data, _1, _2) {
+                    if(data.result) {
+                        window.location.replace("/");
+                    } else {
+                        window.location.replace("/failpurchase");
+                    }
+                },
+                contentType: 'application/json',
+                dataType: "json"
+            });
+        });
+      });
     </script>
   </body>
 </html>

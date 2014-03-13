@@ -26,6 +26,26 @@ def handle_is_alive():
     response = {"result" : "1"}
     return jsonify(response)
 
+@app.route('/addCookie', methods = ['POST', 'GET'])
+def handle_add_cookie():
+    print "Adding cookie to session:"
+    session["cookie"] = "cookie"
+    response = {"result" : "1"}
+    print "Cookie added"
+    return jsonify(response)
+
+@app.route('/hasCookie', methods = ['POST', 'GET'])
+def handle_has_cookie():
+    if 'cookie' in session:
+        cookie = session["cookie"]
+        print "Found cookie:", cookie
+        present = cookie == "cookie"
+        response = {"result" : present}
+    else:
+        print "Cookie not present"
+        response = {"result" : False}
+    return jsonify(response)
+
 #===========================================================================================
 #
 # PLAYER DATA 
@@ -151,10 +171,10 @@ def handle_use_recipe():
     data = request.json
     if 'username' not in session:
     	result = {'recipemade' :None, 'BadRequest':True}
-    else:
-        charid = session['username']    	
+    else: 	
         try:
                 database.db_connect()
+                charid = data['charid']   
                 recipe = data['recipe']
                 success = exec_recipe(recipe, charid, character.SHOP)
                 result = { 'result' : success }
