@@ -20,7 +20,7 @@ public class CharacterSelection : GameComponent {
 		// Load character list for selection
 		foreach (Character character in Game.Characters) 
 		{
-			if (GUILayout.Button ("character name: " + character.Name)) 
+			if (GUILayout.Button (character.Name)) 
 			{
 				base.Game.character = character;
 				InvokeOnMainThread(() => Application.LoadLevel("MissionMenu"));
