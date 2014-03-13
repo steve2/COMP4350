@@ -72,7 +72,7 @@ namespace Assets.Code.Controller
 	    protected virtual JSONNode Send(String path, JSONClass json) 
         {
             var location = this.url + SERVER_PORT + "/" + path;
-            var uri = new Uri("http://" + location); // No need to build this every time
+            var uri = new Uri(location); // No need to build this every time
 
             var client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-Type"] = "application/json";
@@ -105,9 +105,19 @@ namespace Assets.Code.Controller
 			AsyncSend (CHARACTERS_PATH, characters, (j) =>
 				{
 				//TODO: verify response contains all characters, parse into Character Objects, return list
-					Debug.Log("------Characters----" + j.ToString());
-//					asyncReturn (j);
-				throw new NotImplementedException();
+				List<Character> ownedCharacters = new List<Character>();
+
+				for (int currCharacter = 0; currCharacter < j["characters"].Count; currCharacter++) {
+					ownedCharacters.Add (new Character(
+						j["characters"].AsArray[currCharacter][2].ToString(),
+						j["characters"].AsArray[currCharacter][3].AsInt,
+						j["characters"].AsArray[currCharacter][4].AsInt));
+				}
+
+//				foreach (Character character in ownedCharacters){
+//					Debug.Log(character.ToString());
+//				}
+					asyncReturn (ownedCharacters);
 				});
 		}
 

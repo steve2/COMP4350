@@ -16,17 +16,35 @@ namespace Assets.Code.Components
 
         public bool Contains(Item item)
         {
-            return items.Contains(item);
+			if (item != null)
+			{
+            	return items.Contains(item);
+			}
+			else
+			{
+				return false;
+			}
+
         }
 
         public bool Remove(Item item)
         {
-            return items.Remove(item);
+            if (item != null) 
+			{
+				return items.Remove(item);
+			}
+			else
+			{
+				return false;
+			}
         } 
 
         public void Add(Item item)
         {
-            items.Add(item);
+			if (item != null) 
+			{
+				items.Add (item);
+			}
         }
 
 		public void Print()

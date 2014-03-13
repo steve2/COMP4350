@@ -3,6 +3,7 @@ using System.Collections;
 using Assets.Code.Model;
 using System.Collections.Generic;
 using Assets.Code.Components.Actions;
+using Assets.Code.Controller;
 
 namespace Assets.Code.Components
 {
@@ -14,6 +15,8 @@ namespace Assets.Code.Components
         private AttributeManager attributeMngr;
         private GameActionManager actionMgr;
         private Equipment equipment;
+		private ItemTypeSlotChecker slotPermissions;
+
         [SerializeField]
         private List<Item> defaultEquipment; //Loaded from the editor
         private Inventory inventory;
@@ -25,6 +28,12 @@ namespace Assets.Code.Components
             inventory = GetComponent<Inventory>();
             attributeMngr = GetComponent<AttributeManager>();
             actionMgr = GetComponent<GameActionManager>();
+			slotPermissions = new ItemTypeSlotChecker();
+			
+			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.RightHand);
+			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.LeftHand);
+			slotPermissions.AddSlotToType(ItemType.Chest, Slot.Chest);
+			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
 
 			Invoke ("DefaultEquipmentHACK", 0.5f);
         }
@@ -74,7 +83,7 @@ namespace Assets.Code.Components
             {
                 return false;
             }
-			if (toEquip.Type.IsSlotAllowed (whatSlot)) //TODO: THIS WILL BREAK
+			if (slotPermissions.CheckSlotPermission(toEquip.Type, whatSlot)) //TODO: THIS WILL BREAK
 			{
             	Dequip(whatSlot);
                 Item actualItem = InitPrefab(toEquip);
