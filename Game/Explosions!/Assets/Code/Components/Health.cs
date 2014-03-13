@@ -14,11 +14,11 @@ public class Health : MonoBehaviour {
 
 	private AttributeManager attributeMngr;
 
+	// This constructor will be used for testing
 	public Health()
 	{
-		attributeMngr = GetComponent<AttributeManager>(); 
 		health = 100;
-		maxHealth = attributeMngr.GetAttributeValue (AttributeType.Health);
+		maxHealth = 100;
 	}
 
 	// Use this for initialization
