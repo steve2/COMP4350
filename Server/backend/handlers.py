@@ -364,4 +364,50 @@ def handle_get_all_missions():
         database.db_close()
         
     return jsonify(result)
-
+	
+#===========================================================================================
+#
+# Reward Data
+#
+#===========================================================================================
+@app.route('/reward/exp', methods = ['POST', 'GET'])
+def handle_get_reward_exp():
+	data = request.json
+	
+	if 'rewardid' not in data:
+		result = {"rewards": None, "BadRequest": True}
+	else:
+		rewardid = data['rewardid']
+		
+		try:
+			database.db_connect()
+			rewards = reward.get_reward_exp(rewardid)
+			result = {"rewards": rewards}
+		except Exception, e:
+			print e
+			result = {"rewards": None}
+		finally:
+			database.db_close()
+        
+    return jsonify(result)
+	
+@app.route('/reward/items', methods = ['POST', 'GET'])
+def handle_get_reward_items():
+	data = request.json
+	
+	if 'rewardid' not in data:
+		result = {"rewards": None, "BadRequest": True}
+	else:
+		rewardid = data['rewardid']
+		
+		try:
+			database.db_connect()
+			rewards = reward.get_reward_items(rewardid)
+			result = {"rewards": rewards}
+		except Exception, e:
+			print e
+			result = {"rewards": None}
+		finally:
+			database.db_close()
+        
+    return jsonify(result)
