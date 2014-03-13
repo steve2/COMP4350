@@ -8,7 +8,6 @@ using SimpleJSON;
 using Assets.Code.Model;
 using Assets.Code.Components;
 
-
 namespace Assets.Code.Controller
 {
     /// <summary>
@@ -21,16 +20,20 @@ namespace Assets.Code.Controller
         public const string XEFIER_URL = "http://54.213.248.49/";
 	    public const string BRAHMDEEP_URL = "http://50.112.181.140";
 	    public const string LOCAL_HOST = "localhost";
+        public const string SERVER_PORT = ":80";
     
 	    private const string IS_ALIVE_PATH = "isAlive";
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
 		private const string CHARACTERS_PATH = "character/getAll";
+        private const string ADD_COOKIE_PATH = "addCookie";
+        private const string HAS_COOKIE_PATH = "hasCookie";
 
 	    public const int DEFAULT_TIMEOUT = 10000;
 
         //TODO: Thread pool?
         //private ThreadPool threads;
         private String url;
+        private CookieContainer Cookies;
         private Dictionary<Character, int> characterIDs;
         private Dictionary<Recipe, int> recipeIDs;
 
@@ -38,9 +41,10 @@ namespace Assets.Code.Controller
         public Server(String url) 
         {
             this.url = url;
-            characterIDs = new Dictionary<Character, int>();
+            this.Cookies = new CookieContainer();
+            this.characterIDs = new Dictionary<Character, int>();
             //characterIDs.Add(Character.SHOP, -1);
-            recipeIDs = new Dictionary<Recipe, int>();
+            this.recipeIDs = new Dictionary<Recipe, int>();
         }
 
         /// <summary>
@@ -67,10 +71,13 @@ namespace Assets.Code.Controller
         /// <returns></returns>
 	    protected virtual JSONNode Send(String path, JSONClass json) 
         {
-            var location = this.url + "/" + path;
-            var client = new WebClient();
+            var location = this.url + SERVER_PORT + "/" + path;
+            var uri = new Uri("http://" + location); // No need to build this every time
+
+            var client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-Type"] = "application/json";
-            string response = client.UploadString(location, json.ToString());
+            string response = client.UploadString(uri, json.ToString());
+
 			Debug.Log ("sending... " + path + " " + json.ToString());
 			Debug.Log ("" + response);
 		    return JSON.Parse(response);
@@ -162,6 +169,44 @@ namespace Assets.Code.Controller
         }
 
         //TODO: Get Characters
+
+        public void AddCookie(Action<bool> asyncReturn)
+        {
+		    //Empty JSON Request
+            AsyncSend(ADD_COOKIE_PATH, new JSONClass(), (j) =>
+                {
+                    asyncReturn(j["result"].Value == "1");
+                });
+        }
+
+        public void HasCookie(Action<bool> asyncReturn)
+        {
+		    //Empty JSON Request
+            AsyncSend(HAS_COOKIE_PATH, new JSONClass(), (j) =>
+                {
+                    asyncReturn(j["result"].Value == "true");
+                });
+        }
     }
 
+    // From Stack Overflow: http://stackoverflow.com/a/1777246
+    class CookieAwareWebClient : WebClient
+    {
+        public readonly CookieContainer Cookies;
+
+        public CookieAwareWebClient(CookieContainer cookies) {
+            this.Cookies = cookies;
+        }
+
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            WebRequest request = base.GetWebRequest(address);
+            HttpWebRequest webRequest = request as HttpWebRequest;
+            if (webRequest != null)
+            {
+                webRequest.CookieContainer = Cookies;
+            }
+            return request;
+        }
+    }
 }

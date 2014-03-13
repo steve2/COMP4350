@@ -26,6 +26,26 @@ def handle_is_alive():
     response = {"result" : "1"}
     return jsonify(response)
 
+@app.route('/addCookie', methods = ['POST', 'GET'])
+def handle_add_cookie():
+    print "Adding cookie to session:"
+    session["cookie"] = "cookie"
+    response = {"result" : "1"}
+    print "Cookie added"
+    return jsonify(response)
+
+@app.route('/hasCookie', methods = ['POST', 'GET'])
+def handle_has_cookie():
+    if 'cookie' in session:
+        cookie = session["cookie"]
+        print "Found cookie:", cookie
+        present = cookie == "cookie"
+        response = {"result" : present}
+    else:
+        print "Cookie not present"
+        response = {"result" : False}
+    return jsonify(response)
+
 #===========================================================================================
 #
 # PLAYER DATA 
