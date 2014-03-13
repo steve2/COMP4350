@@ -15,7 +15,6 @@ namespace Assets.Code.Editor.Tests.Components
     {
 		private GameObject testGameObject;
 		private Item[] testItems;
-        private ItemType[] testItemTypes;
 		private GameAttribute[] testAttributes;
 
         //TODO: Create IntegrationTests that actually Create/Destroy prefabs 
@@ -26,7 +25,6 @@ namespace Assets.Code.Editor.Tests.Components
 			//Setup Game Object and necessary Components for EquipmentManagerStub.
 			testGameObject = new GameObject();
 			testItems = new Item[4];
-            testItemTypes = new ItemType[2];
 			testAttributes = new GameAttribute[4];
 
             GameActionManager actionMgr = testGameObject.AddComponent<GameActionManager>();
@@ -40,27 +38,22 @@ namespace Assets.Code.Editor.Tests.Components
 			testItems[0] = testGameObject.AddComponent<Item>();
 			testItems[0].Awake ();
 			testItems[0].name = "Item 01";
+			testItems[0].Type = ItemType.Weapon;
+
 			testItems[1] = testGameObject.AddComponent<Item>();
 			testItems[1].Awake ();
 			testItems[1].name = "Item 02";
+			testItems[1].Type = ItemType.Chest;
+
 			testItems[2] = testGameObject.AddComponent<Item>();
 			testItems[2].Awake ();
 			testItems[2].name = "Item 03";
+			testItems[2].Type = ItemType.Legs;
+
 			testItems[3] = testGameObject.AddComponent<Item>();
 			testItems[3].Awake ();
-			testItems[3].name = "Item 04";
-
-            //Setup Item Types for more thorough testing.
-            testItemTypes[0] = testGameObject.AddComponent<ItemType>();
-            testItemTypes[0].Start();
-            testItemTypes[0].SetTypeInfo(1, "Weapon");
-            testItemTypes[0].AddSlot(Slot.RightHand);
-            testItemTypes[0].AddSlot(Slot.LeftHand);
-
-            testItemTypes[1] = testGameObject.AddComponent<ItemType>();
-            testItemTypes[1].Start();
-            testItemTypes[1].SetTypeInfo(2, "Body Armor");
-            testItemTypes[1].AddSlot(Slot.Chest);
+			testItems[3].name = "Zap Cannon";
+			testItems[3].Type = ItemType.Weapon;
 
 			//Setup Item Attributes for more thorough testing.
 			testAttributes[0] = new GameAttribute(AttributeType.Range, 5);
@@ -73,8 +66,6 @@ namespace Assets.Code.Editor.Tests.Components
 			{
 				testItems[i].AddAttribute(testAttributes[i]);
 			}
-            testItems[0].Type = testItemTypes[0];
-            testItems[1].Type = testItemTypes[1];
 		}
 
 		[Test]
@@ -168,7 +159,7 @@ namespace Assets.Code.Editor.Tests.Components
             Inventory inventory = testGameObject.GetComponent<Inventory>();
             GameActionManager actMgr = testGameObject.GetComponent<GameActionManager>();
             Item item = CreateActionItem("test");
-            item.Type = testItemTypes[0]; //TODO: Why is ItemType a component?
+			item.Type = ItemType.Weapon;
             inventory.Add(item);
 
             Assert.AreEqual(0, actMgr.Count);
