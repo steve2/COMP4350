@@ -45,7 +45,7 @@ def exec_recipe(recipe, inChar, outChar):
 def get_purchasable_items():
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT in.Quantity, in.Recipe_ID, Item.Name 
+    qry = '''SELECT Recipe_In.Quantity, Recipe_In.Recipe_ID, Item.Name 
                 FROM ((Recipe_In INNER JOIN Recipe_Out Recipe_In.Recipe_ID = Recipe_out.Recipe_ID)
                 INNER JOIN Item Item.ID = Recipe_out.Item_ID)
                 WHERE Item.Name = "Gold" 
@@ -62,11 +62,11 @@ def get_craftable_items():
     db = database.db_connect()
     c = db.cursor()
     qry = '''Select in.Recipe_ID
-    					From ((Recipe_In in INNER JOIN Recipe_Out out ON in.Recipe_ID = out.Recipe_ID)
+    					From ((Recipe_In AS in INNER JOIN Recipe_Out AS out ON in.Recipe_ID = out.Recipe_ID)
                 INNER JOIN Item ON Item.ID = out.Item_ID)
                 WHERE in.Recipe_ID NOT IN (SELECT inB.Recipe_ID
-                FROM ((Recipe_In inB INNER JOIN Recipe_Out outB ON inB.Recipe_ID = outB.Recipe_ID)
-                INNER JOIN Item it ON it.ID = outB.Item_ID)
+                FROM ((Recipe_In AS inB INNER JOIN Recipe_Out AS outB ON inB.Recipe_ID = outB.Recipe_ID)
+                INNER JOIN Item AS it ON it.ID = outB.Item_ID)
                 WHERE itB.Name = "Gold" 
                 GROUP BY inB.Recipe_ID 
                 HAVING COUNT(inB.Recipe_ID) = 1)

@@ -151,10 +151,10 @@ def handle_use_recipe():
     data = request.json
     if 'username' not in session:
     	result = {'recipemade' :None, 'BadRequest':True}
-    else:
-        charid = session['username']    	
+    else: 	
         try:
                 database.db_connect()
+                charid = data['charid']   
                 recipe = data['recipe']
                 success = exec_recipe(recipe, charid, character.SHOP)
                 result = { 'result' : success }
