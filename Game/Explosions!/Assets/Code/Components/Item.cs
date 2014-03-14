@@ -91,9 +91,13 @@ namespace Assets.Code.Components
         //TODO: Check if name is null?
         public int CompareTo(Item other)
         {
-            if (other == null)
+            if (other == null || other.name == null)
             {
                 return 1;
+            }
+            if (this.name == null)
+            {
+                return -1;
             }
             return this.name.CompareTo(other.name);
         }

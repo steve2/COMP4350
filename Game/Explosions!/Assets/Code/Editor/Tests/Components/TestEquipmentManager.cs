@@ -11,7 +11,7 @@ using Assets.Code.Editor.Stubs;
 namespace Assets.Code.Editor.Tests.Components
 {
     [ExecuteInEditMode]
-    class TestEquipmentManagerStub
+    class TestEquipmentManager
     {
 		private GameObject testGameObject;
 		private Item[] testItems;
@@ -32,7 +32,7 @@ namespace Assets.Code.Editor.Tests.Components
             actionMgr.Start();
 			testGameObject.AddComponent<AttributeManager>().Start ();
 			testGameObject.AddComponent<Inventory>().Start ();
-			testGameObject.AddComponent<EquipmentManagerStub>().Start ();
+            testGameObject.AddComponent<EquipmentManagerStub>().Start();
 
 			//Setup Items that can be used to Equip/Unequip.
 			testItems[0] = testGameObject.AddComponent<Item>();
@@ -52,7 +52,7 @@ namespace Assets.Code.Editor.Tests.Components
 
 			testItems[3] = testGameObject.AddComponent<Item>();
 			testItems[3].Awake ();
-			testItems[3].name = "Zap Cannon";
+			testItems[3].name = "Zapp Cannon";
 			testItems[3].Type = ItemType.Weapon;
 
 			//Setup Item Attributes for more thorough testing.
@@ -68,44 +68,38 @@ namespace Assets.Code.Editor.Tests.Components
 			}
 		}
 
-		[Test]
-		public void TestEquipping()
-		{
-			Setup ();
-
+        private void TestEquippingImpl()
+        {
             EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
             Inventory inventory = testGameObject.GetComponent<Inventory>();
 
             inventory.Add(testItems[0]);
             inventory.Add(testItems[0]); //2 of this item in inventory
             inventory.Add(testItems[1]);
-            
-			//Cannot equip a NULL item.
-			Assert.False (equipMgr.Equip ((Item) null, Slot.Head));
 
-			Assert.True(equipMgr.Equip(testItems[0], Slot.RightHand));
+            //Cannot equip a NULL item.
+            Assert.False(equipMgr.Equip((Item)null, Slot.Head));
+
+            Assert.True(equipMgr.Equip(testItems[0], Slot.RightHand));
 
             //Try to Equip to wrong Slot:
             Assert.False(equipMgr.Equip(testItems[0], Slot.Chest));
             Assert.False(equipMgr.Equip(testItems[0], Slot.Head));
             Assert.False(equipMgr.Equip(testItems[1], Slot.RightHand));
-			Assert.False(equipMgr.Equip(testItems[1], Slot.LeftHand));
+            Assert.False(equipMgr.Equip(testItems[1], Slot.LeftHand));
 
-			Assert.True(equipMgr.Equip(testItems[0], Slot.LeftHand));
-		
+            Assert.True(equipMgr.Equip(testItems[0], Slot.LeftHand));
+
             //No longer has any "item[0]" in Inventory so cannot Equip again.
             Assert.False(inventory.Contains(testItems[0]));
             Assert.False(equipMgr.Equip(testItems[0], Slot.RightHand));
 
             Assert.True(equipMgr.Equip(testItems[1], Slot.Chest));
             Assert.False(inventory.Contains(testItems[1]));
-		}
+        }
 
-		[Test]
-		public void TestDequipping()
-		{
-			Setup ();
-
+        private void TestDequippingImpl()
+        {
             EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
             Inventory inventory = testGameObject.GetComponent<Inventory>();
 
@@ -113,15 +107,15 @@ namespace Assets.Code.Editor.Tests.Components
             inventory.Add(testItems[0]);
             inventory.Add(testItems[1]);
 
-			Assert.True (equipMgr.Equip(testItems[0], Slot.RightHand));
-			Assert.True (equipMgr.Equip(testItems[0], Slot.LeftHand));
-			Assert.True (equipMgr.Equip(testItems[1], Slot.Chest));
+            Assert.True(equipMgr.Equip(testItems[0], Slot.RightHand));
+            Assert.True(equipMgr.Equip(testItems[0], Slot.LeftHand));
+            Assert.True(equipMgr.Equip(testItems[1], Slot.Chest));
 
             Assert.False(inventory.Contains(testItems[0]));
             Assert.False(inventory.Contains(testItems[1]));
 
             Assert.True(equipMgr.Dequip(Slot.RightHand));
-			Assert.True(inventory.Contains(testItems[0]));
+            Assert.True(inventory.Contains(testItems[0]));
 
             Assert.True(equipMgr.Dequip(Slot.Chest));
             Assert.True(inventory.Contains(testItems[1]));
@@ -132,14 +126,29 @@ namespace Assets.Code.Editor.Tests.Components
             Assert.False(equipMgr.Dequip(Slot.Legs));
 
             Assert.True(equipMgr.Dequip(Slot.LeftHand));
+        }
+
+		[Test]
+		public void TestEquipping()
+		{
+            Setup();
+            TestEquippingImpl();
 
 		}
 
+		[Test]
+		public void TestDequipping()
+		{
+            Setup();
+            TestDequippingImpl();
+		}
+
         //TODO:
-        private Item CreateActionItem(params string[] actionNames)
+        private Item CreateActionItem(string itemName, params string[] actionNames)
         {
             GameObject itemgo = new GameObject();
             Item item = itemgo.AddComponent<Item>();
+            item.name = itemName;
             foreach (string name in actionNames)
             {
                 GameActionStub action = itemgo.AddComponent<GameActionStub>();
@@ -158,7 +167,7 @@ namespace Assets.Code.Editor.Tests.Components
             EquipmentManagerStub equipMgr = testGameObject.GetComponent<EquipmentManagerStub>();
             Inventory inventory = testGameObject.GetComponent<Inventory>();
             GameActionManager actMgr = testGameObject.GetComponent<GameActionManager>();
-            Item item = CreateActionItem("test");
+            Item item = CreateActionItem("item1", "test");
 			item.Type = ItemType.Weapon;
             inventory.Add(item);
 
