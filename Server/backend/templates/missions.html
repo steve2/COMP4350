@@ -49,11 +49,9 @@
 				// Get the Reward data for each mission				
 				for (var j = 0; j < missions.length; j++) {
 					var rewardItems = new Array();
-					var jsonArg = new Object();
 					var currMission = missions[j];
-					jsonArg.rewardid = currMission.RewardID
 					
-					request("/reward/get", jsonArg, function(rewarddata, _1, _2)
+					request("/reward/get", {rewardid: currMission.RewardID}, function(rewarddata, _1, _2)
 					{
 						for (var k = 0; k < rewarddata['rewarditems'].length; k++) {
 							var rewarditem = new Object();
