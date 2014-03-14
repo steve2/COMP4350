@@ -66,7 +66,6 @@ def get_item_slots_equippable(itemname):
     result = []
     for row in c:
         result.append(row)
-    print "Got item:", result
     return result
 
 # NB: Only for tests, write a script to put in your own items
