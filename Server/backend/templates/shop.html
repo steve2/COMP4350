@@ -54,7 +54,7 @@
         {
             options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
         }
-        $(options).appendTo("#character");
+        $(options).appendTo("#characters");
       });
 
       request("/getPurchasables", {}, function(data, _1, _2)

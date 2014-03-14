@@ -31,9 +31,6 @@ public class MainMenu : GameComponent {
 			Application.LoadLevel("PlayerLogin"); // Load the Mission List
 		}
 
-		// TODO
-		GUILayout.Button ("Multiplayer", GUILayout.Height(40));
-
 		if (GUILayout.Button ("Play Demo", GUILayout.Height(40))) {
 			Application.LoadLevel("Demo"); // Play the Demo 
 		}
