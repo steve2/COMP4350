@@ -7,53 +7,75 @@ namespace Assets.Code.Components
     public class Inventory : MonoBehaviour, IEnumerable<Item>
     {
         [SerializeField]
-        private List<Item> items;
+        private List<Item> editorItems;
+        private Dictionary<Item, int> items;
+        //private List<Item> items; //TODO: Do Item, Quantity pairs where the Item is the prefab and instances increment/decrement count
 
         public void Start()
         {
-			if(items == null)
+            items = new Dictionary<Item, int>();
+            if (editorItems != null)
+            {
+                foreach (Item item in editorItems)
+                {
+                    items.Add(item, 1);
+                }
+            }
+        }
+
+        public int GetQuantity(Item item)
+        {
+            int quantity = 0;
+
+			if (item != null)
 			{
-				items = new List<Item>();
-			}
+                items.TryGetValue(item, out quantity);
+            }
+
+            return quantity;
         }
 
         public bool Contains(Item item)
         {
-			if (item != null)
-			{
-            	return items.Contains(item);
-			}
-			else
-			{
-				return false;
-			}
-
+                return GetQuantity(item) > 0;
         }
 
-        public bool Remove(Item item)
+        public bool Remove(Item item, int quantity = 1)
         {
+            bool success = false;
+            int current;
             if (item != null) 
 			{
-				return items.Remove(item);
+                if (items.TryGetValue(item, out current) && current > 0)
+                {
+                    items[item] =  current - 1;
+                    success = true;
+                }
 			}
-			else
-			{
-				return false;
-			}
+
+            return success;
         } 
 
-        public void Add(Item item)
+        public void Add(Item item, int quantity = 1)
         {
+            int current;
 			if (item != null) 
 			{
-				items.Add (item);
+                if (items.TryGetValue(item, out current))
+                {
+                    items[item] = current + quantity;
+                }
+                else
+                {
+                    items.Add(item, 1);
+                }
 			}
         }
 
 		public void Print()
 		{
 			string toPrint = "";
-			foreach (Item item in items)
+			foreach (Item item in items.Keys)
 			{
 				toPrint += item.name + " | ";
 			}
@@ -62,7 +84,7 @@ namespace Assets.Code.Components
 
         public IEnumerator<Item> GetEnumerator()
         {
-            return items.GetEnumerator();
+            return items.Keys.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -86,8 +86,8 @@ namespace Assets.Code.Components
 			if (slotPermissions.CheckSlotPermission(toEquip.Type, whatSlot)) //TODO: THIS WILL BREAK
 			{
                 Dequip(whatSlot);
-                inventory.Remove(toEquip);
                 Item actualItem = InitPrefab(toEquip);
+                inventory.Remove(actualItem);
                 equipment.SetSlot(whatSlot, actualItem);
 				attributeMngr.AddAttributes(actualItem);
                 actionMgr.AddActions(actualItem.Actions);

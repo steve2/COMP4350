@@ -42,7 +42,7 @@ public class EquipmentMenu : MonoBehaviour {
         {
             Item item = equip.Value;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("\t" + item.ToString()); //TODO: Do we want name? Or more info from ToString
+            GUILayout.Label("\t" + item.ToString()); 
             if (GUILayout.Button("Dequip", GUILayout.Height(HEIGHT)))
             {
                 equipment.Dequip(equip.Key);
@@ -54,11 +54,11 @@ public class EquipmentMenu : MonoBehaviour {
         foreach (Item item in inventory)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("\t" + item.ToString()); //TODO: Do we want name? Or more info from ToString
+            GUILayout.Label("\t" + item.Name + "\t(x" + inventory.GetQuantity(item) + ")");
             //TODO: Drop down list
             if (GUILayout.Button("Equip", GUILayout.Height(HEIGHT)))
             {
-                equipment.Equip(item, Slot.Chest);
+                equipment.Equip(item, Slot.RightHand);
                 break;
             }
             GUILayout.EndHorizontal();
