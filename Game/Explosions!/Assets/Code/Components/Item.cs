@@ -10,15 +10,16 @@ namespace Assets.Code.Components
     public class Item : MonoBehaviour, 
         IEnumerable<GameAttribute>, IComparable<Item>, IEquatable<Item> 
     {
-		public string name; //TODO: This shouldn't be private
+		public string name; //TODO: Fields shouldn't be public
 
         #region Editor Fields
         //Note: Use the built in name
         [SerializeField]
-        private string description; 
+        private string description;
+        [SerializeField]
+        private List<GameAttribute> itemAttributes; //The attribute list
         #endregion
 
-        private List<GameAttribute> itemAttributes; //The "REAL" attribute list
         private IEnumerable<GameAction> actions; //The actions to perform when used
         [SerializeField]
 		private ItemType itemtype;
