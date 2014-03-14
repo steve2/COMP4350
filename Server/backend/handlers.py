@@ -311,39 +311,50 @@ def handle_get_equipped_character_equipment():
 #
 #===========================================================================================
     
+def getJSONItemAttrs(itemname):
+    attributes = item.get_item_attributes(itemname)
+    result = []
+    for attribute in attributes:
+        result.append( {"name":attribute[0], "value":attribute[1]} )
+    return result
+    
+def getJSONItemSlots(itemname):
+    slots = item.get_item_slots_equippable(itemname)
+    result = []
+    for slot in slots:
+        result.append( {"name":slot[0]} )
+    return result
+    
+_ITEM_NAME_SPOT = 0
+_ITEM_DESC_SPOT = 1
+_ITEM_TYPE_SPOT = 2
+    
 @app.route('/item/getAll', methods = ['POST', 'GET'])
-def handle_get_all_character_equipment():
+def handle_get_items():
     try:
         database.db_connect()
         items = item.get_items()
-        result = {"equipment": items}
+        result = { "items" : [] }
+        
+        for itemInList in items:
+            iname = itemInList[_ITEM_NAME_SPOT]
+            idesc = itemInList[_ITEM_DESC_SPOT]
+            itype = itemInList[_ITEM_TYPE_SPOT]
+            attrs = None
+            #attrs = getJSONItemAttrs(iname)
+            slots = getJSONItemSlots(iname)
+            result['items'].append({"name":iname, "type":itype, "desc":idesc, "attributes":attrs, "slots":slots})
+            
     except Exception, e:
         print "Error in /item/getAll:", e
-        result = {"equipment": None}
+        result = { "items": None }
     finally:
         database.db_close()
         
-    return jsonify(result)
-
-@app.route('/item/get', methods = ['POST', 'GET'])
-def handle_get_character_equipment():
-    data = request.json
-
-    if 'itemid' not in data:
-        result = {"equipment": None, "BadRequest": True}
-    else:
-        itemid = data['itemid']
-
-        try:
-            database.db_connect()
-            item = item.get_item(itemId)
-            result = {"equipment": item}
-        except Exception, e:
-            print e
-            result = {"equipment": None}
-        finally:
-            database.db_close()
-
+    print "Get All Item Request\nResult: "
+    for itemInList in result['items']:
+        print itemInList
+    print "\n"
     return jsonify(result)
 
 #===========================================================================================

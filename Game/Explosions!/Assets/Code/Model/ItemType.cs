@@ -12,6 +12,7 @@ namespace Assets.Code.Model
 	{
 		Weapon	= 1,
 		Chest	= 2,
-		Legs	= 3
+		Legs	= 3,
+		Misc	= 4
 	}
 }

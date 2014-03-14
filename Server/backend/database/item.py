@@ -12,33 +12,56 @@
 import database
 import sys
 
+#
+# Get Items (All)
+# ----
+# Returns List of item tuples. Each tuple contains:
+#   (Item Name // Item Description // Item Type Name)
+#
 def get_items():
-    db = database.db_connect();
+    db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT Item.Name, Slot.Name, Description, Attribute.Text, Value, Item_Type.Name 
-                FROM Item 
-                    JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) 
-                    JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) 
-                    JOIN Attribute ON (Attribute.ID=Attribute_ID) 
-                    JOIN Item_Slot ON (Item_Slot.Item_Type_ID=Item.Item_Type_ID)
-                    JOIN Slot ON (Slot.ID=Item_Slot.Slot_ID)''';
+    qry = '''SELECT Item.Name, Description, Item_Type.Name 
+                FROM Item JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID)'''
     c.execute(qry)
     result = []
     for row in c:
         result.append(row)
     return result
-    
-def get_item(itemname):
+ 
+#
+# Get Item's Attributes
+# ----
+# Returns List of tuples with the attribute name/text and the value of that attribute.
+#
+def get_item_attributes(itemname):
     db = database.db_connect()
     c = db.cursor()
-    qry = '''SELECT Item.Name, Slot.Name, Description, Attribute.Text, Value, Item_Type.Name 
-                FROM Item 
-                    JOIN Item_Attributes ON (Item.ID=Item_Attributes.Item_ID) 
-                    JOIN Item_Type ON (Item.Item_Type_ID=Item_Type.ID) 
-                    JOIN Attribute ON (Attribute.ID=Attribute_ID) 
-                    JOIN Item_Slot ON (Item_Slot.Item_Type_ID=Item.Item_Type_ID)
-                    JOIN Slot ON (Slot.ID=Item_Slot.Slot_ID)
-                        WHERE Item.Name='''+database.INSERT_SYM;
+    qry = '''SELECT Attribute.Text, Item_Attributes.Value 
+                FROM Item_Attributes 
+                    JOIN Attribute ON Item_Attributes.Attribute_ID=Attribute.ID 
+                    JOIN Item ON Item.ID=Item_ID 
+                WHERE Item.ID='''+database.INSERT_SYM
+    c.execute(qry, (itemname,))
+    result = []
+    for row in c:
+        result.append(row)
+    return result
+    
+#
+# Get Item's Equipment Slots
+# ----
+# Returns List of Slot names that this Item can be equipped to.
+#    
+def get_item_slots_equippable(itemname):
+    db = database.db_connect()
+    c = db.cursor()
+    qry = '''SELECT Slot.Name 
+                FROM Item_Slot 
+                    JOIN Slot ON Item_Slot.Slot_ID=Slot.ID 
+                    JOIN Item_Type ON Item_Slot.Item_Type_ID=Item_Type.ID 
+                    JOIN Item ON Item_Type.ID=Item.Item_Type_ID 
+                WHERE Item.Name='''+database.INSERT_SYM
     c.execute(qry, (itemname,))
     result = []
     for row in c:

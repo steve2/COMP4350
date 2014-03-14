@@ -22,9 +22,7 @@ $(function()
 	request("/item/getAll", {}, function(data, _1, _2)
 	{
 		items = data['equipment'];
-	}).done(function()
-	{
-		fillTable("#items", items); //TODO: Does this need to be in .done?
+		fillTable("#items", items);
 	});
 });
 </script>
