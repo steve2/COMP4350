@@ -25,6 +25,12 @@ $(function()
 		items = data['items'];
 		print = "";
 		
+		if (items == null)
+		{
+			console.log("Get All Items -- Returned NULL");
+			return;
+		}
+		
 		for (var i = 0; i < items.length; i++)
 		{
 			print += items[i].name + ", " + items[i].type + ", " + items[i].desc + "<br>";
