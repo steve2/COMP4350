@@ -53,15 +53,19 @@ public class EquipmentMenu : MonoBehaviour {
         GUILayout.Label("Inventory");
         foreach (Item item in inventory)
         {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("\t" + item.Name + "\t(x" + inventory.GetQuantity(item) + ")");
-            //TODO: Drop down list
-            if (GUILayout.Button("Equip", GUILayout.Height(HEIGHT)))
+            int quantity = inventory.GetQuantity(item);
+            if (quantity > 0)
             {
-                equipment.Equip(item, Slot.RightHand);
-                break;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("\t" + item.Name + "\t(x" + quantity +")");
+                //TODO: Drop down list
+                if (GUILayout.Button("Equip", GUILayout.Height(HEIGHT)))
+                {
+                    equipment.Equip(item, Slot.RightHand);
+                    break;
+                }
+                GUILayout.EndHorizontal();
             }
-            GUILayout.EndHorizontal();
         }
     }
 }
