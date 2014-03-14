@@ -30,7 +30,7 @@ namespace Assets.Code.Editor.Tests.Components
             GameActionManager actionMgr = testGameObject.AddComponent<GameActionManager>();
             actionMgr.Awake();
             actionMgr.Start();
-			testGameObject.AddComponent<AttributeManager>().Start ();
+			testGameObject.AddComponent<AttributeManager>().Awake ();
 			testGameObject.AddComponent<Inventory>().Start ();
             testGameObject.AddComponent<EquipmentManagerStub>().Start();
 

@@ -17,7 +17,7 @@ namespace Assets.Code.Editor.Tests.Components
             go.AddComponent<AttributeManager>();
             AttributeManager ret = go.GetComponent<AttributeManager>();
             //TODO: Find a way to get Unity to fully initialize this component
-            ret.Start();
+            ret.Awake();
             return ret;
         }
 
