@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Laser Weapon
   description: A weapon that fires a laser
-  itemtype: {fileID: 0}
+  itemtype: 1
   attributes:
     damage: 1
     speed: 0
