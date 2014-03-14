@@ -49,37 +49,30 @@
           }
       }).done(function()
       {
-        var options;
+        /*var options;
         for (var i = 0; i < characters.length; i++)
         {
             options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
         }
-        $(options).appendTo("#characters");
+        $(options).appendTo("#characters");*/
       });
 
       request("/getPurchasables", {}, function(data, _1, _2)
       {
-          var items = new Array();
-          for (var i in data.rows) {
-              var item = new Object();
-              item.quantity =  data['purchasables'][i][0];
-              item.recipe = data['purchasables'][i][1];
-              item.name = data['purchasables'][i][2];
-
-              items.push(item);
-          }
-      }).done(function()
-      {
-        var row;
+		  var items = data['purchasables'];
+		var table = $("#purchasables");
         for (var i = 0; i < items.length; i++)
         {
-            row += '<tr id="' + i + '">';
-            row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
-            row += '<td>' + items[i].recipe + '</td>';
-            row += '<td>' + items[i].name + '</td>';
-            row += '</tr>';
+			var item = items[i];
+			var row = insertRow(table);
+			row.attr('id', i);
+			insertCell(row).append(item.name);
+			insertCell(row).append(item.cost);
+			var btnCell = insertCell(row);
+			var btn = insert(btnCell, 'button');
+			btn.attr('id', 'purchasebtn');
+			//TODO: USE RECIPE ID for purchasing
         }
-        $(row).appendTo("#purchasables");
 
         //takes the index of the row clicked and sends the appropriate recipe request
 
@@ -109,6 +102,9 @@
                 dataType: "json"
             });
         });
+      }).done(function()
+      {
+        
       });
     </script>
   </body>

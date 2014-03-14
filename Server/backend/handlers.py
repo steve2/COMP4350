@@ -159,10 +159,21 @@ def handle_get_all_player_achievements():
 #
 #===========================================================================================
 
+_PUR_COST_SPOT = 0
+_PUR_ID_SPOT = 1
+_PUR_NAME_SPOT = 2
+
 @app.route('/getPurchasables', methods = ['POST', 'GET'])
 def get_purchasable_item_request():
     purchasables = recipe.get_purchasable_items();
-    result = { 'purchasables' : purchasables }
+    
+    result = { 'purchasables' : [] }
+
+    for p in purchasables:
+        name = p[_PUR_NAME_SPOT];
+        cost = p[_PUR_COST_SPOT];
+        rid = p[_PUR_ID_SPOT];
+        result['purchasables'].append({"name":name, "cost":cost, "id":rid})
     return jsonify(result)
     
 #Buy/Craft
@@ -352,15 +363,15 @@ def handle_get_items():
             result['items'].append({"name":iname, "type":itype, "desc":idesc, "attributes":attrs, "slots":slots})
             
     except Exception, e:
-        print "Error in /item/getAll:", e
+        #print "Error in /item/getAll:", e
         result = { "items": None }
     finally:
         database.db_close()
         
-    print "Get All Item Request\nResult: "
-    for itemInList in result['items']:
-        print itemInList
-    print "\n"
+    #print "Get All Item Request\nResult: "
+    #for itemInList in result['items']:
+    #    print itemInList
+    #print "\n"
     return jsonify(result)
 
 #===========================================================================================
