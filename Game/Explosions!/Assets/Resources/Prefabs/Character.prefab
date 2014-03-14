@@ -2006,6 +2006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   editorItems:
   - {fileID: 11400000, guid: 17391193eff67ef44a9cb6bbf061c78b, type: 2}
+  - {fileID: 11400000, guid: e49e6546736b3b64488bef01849bc5d1, type: 2}
 --- !u!114 &11400032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2036,6 +2037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Laser Weapon
   description: A weapon that fires a laser
+  itemAttributes: []
   itemtype: 0
   attributes:
     damage: 0
