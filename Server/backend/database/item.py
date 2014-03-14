@@ -41,7 +41,7 @@ def get_item_attributes(itemname):
                 FROM Item_Attributes 
                     JOIN Attribute ON Item_Attributes.Attribute_ID=Attribute.ID 
                     JOIN Item ON Item.ID=Item_ID 
-                WHERE Item.ID='''+database.INSERT_SYM
+                WHERE Item.Name='''+database.INSERT_SYM
     c.execute(qry, (itemname,))
     result = []
     for row in c:

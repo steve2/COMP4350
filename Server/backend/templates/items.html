@@ -15,14 +15,48 @@
         <th>Attr Value</th>
         <th>Type</th>
 </table>
+<div id="content"> </div>
 <script>
 $(function()
 {
-	var items = new Array();
+	var items;
 	request("/item/getAll", {}, function(data, _1, _2)
 	{
-		items = data['equipment'];
-		fillTable("#items", items);
+		items = data['items'];
+		print = "";
+		
+		for (var i = 0; i < items.length; i++)
+		{
+			print += items[i].name + ", " + items[i].type + ", " + items[i].desc + "<br>";
+			for (var s = 0; s < items[i].slots.length; s++)
+			{
+				print += items[i].slots[s].name;
+				if (s < items[i].slots.length - 1)
+				{
+					print += ", ";
+				}
+				else
+				{
+					print += "<br>";
+				}
+			}
+			
+			for (var a = 0; a < items[i].attributes.length; a++)
+			{
+				print += items[i].attributes[a].name;
+				if (a < items[i].attributes.length - 1)
+				{
+					print += ", ";
+				}
+				else
+				{
+					print += "<br>"
+				}
+			}
+		}
+		
+		document.getElementById("content").innerHTML = print;
+		//fillTable("#items", items);
 	});
 });
 </script>

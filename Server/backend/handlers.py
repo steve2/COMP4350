@@ -254,13 +254,15 @@ def handle_get_character_inventory():
         try:
             database.db_connect()
             inv = inventory.get_inventory(charid)
-            result = {"inventory": inv}
+            result = { "inventory" : [] }
+            for entry in inv:
+                result['inventory'].append( {"name":entry[0], "quantity":entry[1]} )
         except Exception, e:
             print e
             result = {"inventory": None}
         finally:
             database.db_close()
-    
+     
     return jsonify(result)
 
 @app.route('/character/inventory/add', methods = ['POST', 'GET'])
@@ -311,18 +313,23 @@ def handle_get_equipped_character_equipment():
 #
 #===========================================================================================
     
+_ATTR_NAME_SPOT = 0
+_ATTR_VALUE_SPOT = 1
+    
 def getJSONItemAttrs(itemname):
     attributes = item.get_item_attributes(itemname)
     result = []
     for attribute in attributes:
-        result.append( {"name":attribute[0], "value":attribute[1]} )
+        result.append( {"name":attribute[_ATTR_NAME_SPOT], "value":attribute[_ATTR_VALUE_SPOT]} )
     return result
+    
+_SLOT_NAME_SPOT = 0
     
 def getJSONItemSlots(itemname):
     slots = item.get_item_slots_equippable(itemname)
     result = []
     for slot in slots:
-        result.append( {"name":slot[0]} )
+        result.append( {"name":slot[_SLOT_NAME_SPOT]} )
     return result
     
 _ITEM_NAME_SPOT = 0
@@ -340,8 +347,7 @@ def handle_get_items():
             iname = itemInList[_ITEM_NAME_SPOT]
             idesc = itemInList[_ITEM_DESC_SPOT]
             itype = itemInList[_ITEM_TYPE_SPOT]
-            attrs = None
-            #attrs = getJSONItemAttrs(iname)
+            attrs = getJSONItemAttrs(iname)
             slots = getJSONItemSlots(iname)
             result['items'].append({"name":iname, "type":itype, "desc":idesc, "attributes":attrs, "slots":slots})
             
