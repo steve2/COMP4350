@@ -33,17 +33,16 @@ public class EquipmentMenu : MonoBehaviour {
         }
     }
 
+    private static readonly GUILayoutOption[] EQUIP = { GUILayout.Height(30), GUILayout.Width(60) };
     private void ShowEquipment(int id)
     {
-        const int HEIGHT = 30;
-
         GUILayout.Label("Equipped");
         foreach (var equip in equipment)
         {
             Item item = equip.Value;
             GUILayout.BeginHorizontal();
-            GUILayout.Label("\t" + item.ToString()); 
-            if (GUILayout.Button("Dequip", GUILayout.Height(HEIGHT)))
+            GUILayout.Label("\t" + item.ToString() + "\t(" + equip.Key + ")" ); 
+            if (GUILayout.Button("Dequip", EQUIP))
             {
                 equipment.Dequip(equip.Key);
                 break;
@@ -58,14 +57,42 @@ public class EquipmentMenu : MonoBehaviour {
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("\t" + item.Name + "\t(x" + quantity +")");
-                //TODO: Drop down list
-                if (GUILayout.Button("Equip", GUILayout.Height(HEIGHT)))
+				ShowSlots (item);
+                if (GUILayout.Button("Equip", EQUIP))
                 {
-                    equipment.Equip(item, Slot.RightHand);
+                    equipment.Equip(item, GetSlot (item)); //TODO: Assign slot properly...
                     break;
                 }
                 GUILayout.EndHorizontal();
             }
+        }
+    }
+
+	private Slot GetSlot(Item item)
+	{
+		//TODO: What if this fails?
+		return equipment.GetSlots(item.Type)[slotIdx[item.Name]];
+	}
+
+    private static readonly GUILayoutOption[] SLOT = { GUILayout.Height(30), GUILayout.Width(180) };
+    private Dictionary<string, int> slotIdx = new Dictionary<string, int>();
+    private void ShowSlots(Item item)
+    {
+        //TODO: Try to reduce the number of array copies
+        IEnumerable<Slot> slots = equipment.GetSlots(item.Type);
+        List<string> slotStrs = new List<string>();
+        foreach (Slot s in slots)
+        {
+            slotStrs.Add(s.ToString());
+        }
+
+        if(slotIdx.ContainsKey(item.Name))
+        {
+            slotIdx[item.Name] = GUILayout.Toolbar(slotIdx[item.Name], slotStrs.ToArray(), SLOT);
+        }
+        else
+        {
+            slotIdx.Add(item.Name, GUILayout.Toolbar(0, slotStrs.ToArray(), SLOT));
         }
     }
 }

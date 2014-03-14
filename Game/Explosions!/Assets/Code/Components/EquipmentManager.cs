@@ -36,6 +36,11 @@ namespace Assets.Code.Components
 			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
         }
 
+        public List<Slot> GetSlots(ItemType type)
+        {
+            return slotPermissions.GetSlots(type);
+        }
+
         /**
          * bool Dequip ()
          *  @ whatSlot: What slot to unequip from?
