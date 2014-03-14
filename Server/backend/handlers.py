@@ -356,11 +356,7 @@ def handle_get_items():
         result = { "items": None }
     finally:
         database.db_close()
-        
-    print "Get All Item Request\nResult: "
-    for itemInList in result['items']:
-        print itemInList
-    print "\n"
+
     return jsonify(result)
 
 #===========================================================================================
