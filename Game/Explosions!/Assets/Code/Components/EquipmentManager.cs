@@ -34,8 +34,6 @@ namespace Assets.Code.Components
 			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.LeftHand);
 			slotPermissions.AddSlotToType(ItemType.Chest, Slot.Chest);
 			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
-
-			Invoke ("DefaultEquipmentHACK", 0.5f);
         }
 
         /**
@@ -107,21 +105,6 @@ namespace Assets.Code.Components
         {
             Destroy(instance);
         }
-
-		private void DefaultEquipmentHACK()
-		{
-			//HACK: REMOVE THIS when loading is complete (Use the injected server instead)
-			//Load in some default items from editor without contacting server (Ex: Demo)
-			if (defaultEquipment != null)
-			{
-				foreach(Item item in defaultEquipment)
-				{
-                    Item actualItem = InitPrefab(item);
-                    attributeMngr.AddAttributes(actualItem);
-					actionMgr.AddActions(actualItem.Actions);
-				}
-			}
-		}
 
         IEnumerator<KeyValuePair<Slot, Item>> IEnumerable<KeyValuePair<Slot, Item>>.GetEnumerator()
         {
