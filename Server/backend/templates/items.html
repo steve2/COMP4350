@@ -9,11 +9,9 @@
 <table class="table table-bordered" id = "items" cellpadding="10">
       <tr name="columns" >
         <th>Name</th>
-        <th>Slot</th>
-        <th>Desc</th>
-        <th>Attr Name</th>
-        <th>Attr Value</th>
         <th>Type</th>
+        <th>Attributes</th>
+        <th>Desc</th>
 </table>
 <div id="content"> </div>
 <script>
@@ -25,38 +23,31 @@ $(function()
 		items = data['items'];
 		print = "";
 		
+		var table = $("#items").find('tbody');
 		for (var i = 0; i < items.length; i++)
 		{
-			print += items[i].name + ", " + items[i].type + ", " + items[i].desc + "<br>";
-			for (var s = 0; s < items[i].slots.length; s++)
-			{
-				print += items[i].slots[s].name;
-				if (s < items[i].slots.length - 1)
-				{
-					print += ", ";
-				}
-				else
-				{
-					print += "<br>";
-				}
-			}
+			var item = items[i];
+			var tr = insertRow(table);
+			//Name
+			insertCell(tr).append(item.name);
+			//Type
+			insertCell(tr).append(item.type);
 			
+			//Attribute inner table
+			var attrTable = insertTable(insertCell(tr));
+			attrTable.addClass('table table-bordered');
+			attrTable.css('margin', '0px');
 			for (var a = 0; a < items[i].attributes.length; a++)
 			{
-				print += items[i].attributes[a].name;
-				if (a < items[i].attributes.length - 1)
-				{
-					print += ", ";
-				}
-				else
-				{
-					print += "<br>"
-				}
+				var attr = item.attributes[a];
+				var attrRow = insertRow(attrTable);
+				insertCell(attrRow).append(attr.name);
+				insertCell(attrRow).append(attr.value);
 			}
+			
+			//Desc
+			insertCell(tr).append(item.desc);
 		}
-		
-		document.getElementById("content").innerHTML = print;
-		//fillTable("#items", items);
 	});
 });
 </script>
