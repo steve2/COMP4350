@@ -25,6 +25,7 @@ namespace Assets.Code.Controller
 	    private const string IS_ALIVE_PATH = "isAlive";
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
 		private const string CHARACTERS_PATH = "character/getAll";
+		private const string MISSIONS_PATH = "mission/getAll";
         private const string ADD_COOKIE_PATH = "addCookie";
         private const string HAS_COOKIE_PATH = "hasCookie";
 
@@ -159,12 +160,19 @@ namespace Assets.Code.Controller
             throw new NotImplementedException();
         }
 
-	    public virtual void GetMissions(Character character, Action<IEnumerable<Mission>> missions)
+	    public virtual void GetMissions(Character character, Action<IEnumerable<Mission>> asyncReturn)
 	    {
-		    //TODO: Query server for this data
-		    //This method is actually being called, don't throw an exception
-		
-		    //AsyncSend ("test", "test", null);
+			JSONClass missions = new JSONClass ();
+
+			AsyncSend (MISSIONS_PATH, missions, (j) =>
+			    {
+					List<Mission> missionsList = new List<Mission>();
+					
+					for (int currMission = 0; currMission < j["missions"].Count; currMission++) {
+						missionsList.Add (new Mission(j["missions"].AsArray[currMission][0].AsInt));
+					}
+					asyncReturn (missionsList);
+				});
 	    }
 
         public virtual void GetInventory(Character character, Action<IEnumerable<Item>> asyncReturn)

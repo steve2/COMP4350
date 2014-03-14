@@ -42,6 +42,7 @@ def post(app, url, data, debugPrint = False):
     resp = app.post(url, data=json.dumps(data), content_type='application/json')
     if debugPrint:
         print resp.data
+    database.db_connect_test() # reconnect the DB to the mock
     return json.loads(resp.data)
 
 class HandlerTestCase(unittest.TestCase):
@@ -89,6 +90,7 @@ class CharacterHandlerTestCase(unittest.TestCase):
         item.reset_items()
         item.reset_item_types()
         item.reset_item_attributes()
+        item.reset_attributes()
         equipment.reset_equipment()
         equipment.reset_slots()
         player.create_player("UserJoe", "test")
@@ -118,7 +120,6 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterBob"}
         data = post(self.app, '/character/create', header)
-        database.db_connect_test() # reconnect the DB to the mock
 
         assert data["result"]
 
@@ -137,18 +138,47 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterFred"}
         post(self.app, '/character/create', header)
-        database.db_connect_test() # reconnect the DB to the mock
 
         data = post(self.app, '/character/getAll', {})
-        database.db_connect_test() # reconnect the DB to the mock
 
         assert len(data) == 1 # Make sure we got a character
 
         header = {"charid": data["characters"][0][0]}
-        data = post(self.app, '/character/inventory', header)
+        data = post(self.app, '/character/inventory/get', header)
 
         inventory = data["inventory"]
         assert len(inventory) == 0
+
+    def test_add_inventory(self):
+        with self.app.session_transaction() as sess:
+            sess['username'] = 'UserJoe'
+
+        header = {"charname": "CharacterFred"}
+        post(self.app, '/character/create', header)
+
+        data = post(self.app, '/character/getAll', {})
+
+        assert len(data) == 1 # Make sure we got a character
+
+        itemname = "Vorpal Sword"
+        ids = item.add_item_type(itemname, "Weapon", 7, "Arm", "Snicker snack")
+        itemid = ids[0]
+
+        charId = data["characters"][0][0]
+        header = {"charid": charId, "itemid": itemid, "quantity": 1}
+        data = post(self.app, '/character/inventory/add', header)
+
+        assert data["result"]
+
+        header = {"charid": charId}
+        data = post(self.app, '/character/inventory/get', header)
+
+        inventory = data["inventory"]
+        assert len(inventory) == 1
+
+        curr_item = inventory[0]
+        assert curr_item[0] == itemname
+        assert curr_item[1] == 1
 
     def test_get_empty_equipped(self):
         with self.app.session_transaction() as sess:
@@ -156,10 +186,8 @@ class CharacterHandlerTestCase(unittest.TestCase):
 
         header = {"charname": "CharacterFred"}
         post(self.app, '/character/create', header)
-        database.db_connect_test() # reconnect the DB to the mock
 
         data = post(self.app, '/character/getAll', {})
-        database.db_connect_test() # reconnect the DB to the mock
 
         assert len(data) == 1 # Make sure we got a character
 
@@ -177,23 +205,47 @@ class ItemHandlerTestCase(unittest.TestCase):
 
         player.reset_players()
         character.reset_characters()
+        equipment.reset_slots()
         inventory.reset_inventory()
         item.reset_items()
         item.reset_item_types()
         item.reset_item_attributes()
+        item.reset_attributes()
+        item.reset_item_slots()
 
         player.create_player("UserJoe", "test")
 
     def tearDown(self):
         pass
 
-    def test_get_all_items(self):
-        #data = post(self.app, '/item/getAll', header)
-        pass
+    def test_get_all_items_empty(self):
+        data = post(self.app, '/item/getAll', {})
+        assert len(data["equipment"]) == 0
 
     def test_get_item(self):
         #data = post(self.app, '/item/get', header)
         pass
+
+    def test_add_item(self):
+        name = "Adamantium Claw"
+        attrib = "Weapon"
+        value = 3
+        slotname = "Right Hand"
+        description = "It's a claw"
+
+        item.add_item_type(name, attrib, value, slotname, description)
+
+        data = post(self.app, '/item/getAll', {})
+        items = data["equipment"]
+
+        assert len(items) == 1
+
+        it = items[0]
+        assert name == it[0]
+        assert slotname == it[1]
+        assert description == it[2]
+        assert attrib == it[3]
+        assert value == it[4]
 
 #TODO: Test recipes once the API has settled
 class RecipeHandlerTestCase(unittest.TestCase):

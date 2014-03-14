@@ -80,7 +80,9 @@ def remove_item(charid, itemid, quantity):
 
 def add_items(charid, rows):
     for row in rows:
-        add_item(charid, row[0], row[1]) #0 = itemid, 1 = quantity
+        itemid = row[0]
+        quantity = row[1]
+        add_item(charid, itemid, quantity)
         
 def add_item(charid, itemid, quantity):
     db = database.db_connect()

@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Code.Components;
+using Assets.Code.Model;
 
 // For use with the Health bar in the HUD
+[RequireComponent(typeof(AttributeManager))]
 public class Health : MonoBehaviour {
 
     [SerializeField]
-	private int health = 100; //Default
-    [SerializeField] //TODO: Load maxHealth from AttributeManager
-    private int maxHealth = 100; //Default 
+	private int health;
+    [SerializeField] 
+	private int maxHealth;
 
+	private AttributeManager attributeMngr;
+
+	// This constructor will be used for testing
 	public Health()
 	{
 		health = 100;
@@ -17,7 +23,10 @@ public class Health : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// Start with full health
+		attributeMngr = GetComponent<AttributeManager>();
+
+		// Get max health from the attribute manager
+		maxHealth = attributeMngr.GetAttributeValue (AttributeType.Health);
         health = maxHealth;
 	}
 	
