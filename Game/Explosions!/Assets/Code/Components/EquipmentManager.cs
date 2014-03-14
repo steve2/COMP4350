@@ -10,7 +10,7 @@ namespace Assets.Code.Components
     [RequireComponent(typeof(AttributeManager))]
     [RequireComponent(typeof(GameActionManager))]
     [RequireComponent(typeof(Inventory))]
-    public class EquipmentManager : MonoBehaviour
+    public class EquipmentManager : MonoBehaviour, IEnumerable<KeyValuePair<Slot, Item>>
     {
         private AttributeManager attributeMngr;
         private GameActionManager actionMgr;
@@ -34,8 +34,11 @@ namespace Assets.Code.Components
 			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.LeftHand);
 			slotPermissions.AddSlotToType(ItemType.Chest, Slot.Chest);
 			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
+        }
 
-			Invoke ("DefaultEquipmentHACK", 0.5f);
+        public List<Slot> GetSlots(ItemType type)
+        {
+            return slotPermissions.GetSlots(type);
         }
 
         /**
@@ -54,7 +57,7 @@ namespace Assets.Code.Components
             if (equipped != null)
             {
 				inventory.Add(equipped);
-				equipment.SetSlot(whatSlot, null);
+				equipment.ClearSlot(whatSlot);
                 attributeMngr.SubtractAttributes(equipped);
                 actionMgr.RemoveActions(equipped.Actions);
                 DestroyPrefab(equipped);
@@ -85,10 +88,10 @@ namespace Assets.Code.Components
             }
 			if (slotPermissions.CheckSlotPermission(toEquip.Type, whatSlot)) //TODO: THIS WILL BREAK
 			{
-            	Dequip(whatSlot);
+                Dequip(whatSlot);
                 Item actualItem = InitPrefab(toEquip);
-				equipment.SetSlot(whatSlot, actualItem);
-				inventory.Remove (actualItem);
+                inventory.Remove(actualItem);
+                equipment.SetSlot(whatSlot, actualItem);
 				attributeMngr.AddAttributes(actualItem);
                 actionMgr.AddActions(actualItem.Actions);
 				return true;
@@ -108,19 +111,14 @@ namespace Assets.Code.Components
             Destroy(instance);
         }
 
-		private void DefaultEquipmentHACK()
-		{
-			//HACK: REMOVE THIS when loading is complete (Use the injected server instead)
-			//Load in some default items from editor without contacting server (Ex: Demo)
-			if (defaultEquipment != null)
-			{
-				foreach(Item item in defaultEquipment)
-				{
-                    Item actualItem = InitPrefab(item);
-                    attributeMngr.AddAttributes(actualItem);
-					actionMgr.AddActions(actualItem.Actions);
-				}
-			}
-		}
-	}
+        IEnumerator<KeyValuePair<Slot, Item>> IEnumerable<KeyValuePair<Slot, Item>>.GetEnumerator()
+        {
+            return equipment.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return equipment.GetEnumerator();
+        }
+    }
 }

@@ -6,33 +6,56 @@ using System.Collections.Generic;
 
 namespace Assets.Code.Components
 {
-    public class Equipment
+    public class Equipment : IEnumerable<KeyValuePair<Slot, Item>>
     {
         /** Constant Definitions **/
         public static int EQUIP_SLOTS = Enum.GetValues(typeof(Slot)).Length;
 
         /** Class Members **/
-        private Item[] equippedItems; //initialized to NULL entries
+        private Dictionary<Slot, Item> equippedItems;
 
         /** Initialization **/
         public Equipment()
         {
-            equippedItems = new Item[EQUIP_SLOTS];
-            for (int i = 0; i < EQUIP_SLOTS; i++)
-            {
-                equippedItems[i] = null;
-            }
+            equippedItems = new Dictionary<Slot, Item>(EQUIP_SLOTS);
         }
 
         /** Get/Set Slot Item **/
         public Item GetSlot(Slot whichSlot)
         {
-			return equippedItems[(int) whichSlot - 1];	
+            Item ret = null;
+            equippedItems.TryGetValue(whichSlot, out ret);
+            return ret;
         }
 
         public void SetSlot(Slot whichSlot, Item setTo)
         {
-			equippedItems[(int)whichSlot - 1] = setTo;
+            if (equippedItems.ContainsKey(whichSlot))
+            {
+                equippedItems[whichSlot] = setTo;
+            }
+            else
+            {
+                equippedItems.Add(whichSlot, setTo);
+            }
+        }
+
+        public void ClearSlot(Slot whichSlot)
+        {
+            if (equippedItems.ContainsKey(whichSlot))
+            {
+                equippedItems.Remove(whichSlot);
+            }
+        }
+
+        public IEnumerator<KeyValuePair<Slot, Item>> GetEnumerator()
+        {
+            return equippedItems.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return equippedItems.GetEnumerator();
         }
     }
 }

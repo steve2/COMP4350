@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,17 @@ namespace Assets.Code.Controller
 				slotPermissionsArray[i] = new List<Slot>();
 			}
         }
+        
+        //TODO: Try to make this public interface IEnumerable<Slot>
+        public List<Slot> GetSlots(ItemType type)
+        {
+            return Get(type);
+        }
+
+        private List<Slot> Get(ItemType type)
+        {
+            return slotPermissionsArray[(int)type - 1];
+        }
 
 		/**
 		 * Adds a Slot permission to the necessary List.
@@ -32,9 +44,9 @@ namespace Assets.Code.Controller
 		 */
         public bool AddSlotToType(ItemType type, Slot add)
         {
-			if (!slotPermissionsArray[(int) type - 1].Contains (add))
+			if (!Get(type).Contains (add))
 			{
-				slotPermissionsArray[(int) type - 1].Add (add);
+                Get(type).Add(add);
 				return true;
 			}
 			return false;
@@ -42,7 +54,7 @@ namespace Assets.Code.Controller
 
 		public bool CheckSlotPermission(ItemType type, Slot check)
 		{
-			return slotPermissionsArray[(int) type - 1].Contains (check);
+			return Get(type).Contains (check);
 		}
     }
 

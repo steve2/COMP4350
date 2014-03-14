@@ -15,6 +15,7 @@ namespace Assets.Code.Editor.Tests.Components
 		private Item[] testItems;
 		private Inventory testInventory;
 
+        [SetUp]
 		public void Setup()
 		{
 			testGameObj = new GameObject();
@@ -36,11 +37,18 @@ namespace Assets.Code.Editor.Tests.Components
 			testItems[2].name = "Item 02";
 		}
 
+        private Item CreateItem(string name)
+        {
+            GameObject go = new GameObject();
+            Item ret = go.AddComponent<Item>();
+            ret.Awake();
+            ret.name = name;
+            return ret;
+        }
+
 		[Test]
 		public void TestInventoryNullInput()
 		{
-			Setup ();
-
 			Assert.False (testInventory.Contains ((Item) null));
 			testInventory.Add ((Item) null);
 			testInventory.Add ((Item) null);
@@ -52,8 +60,6 @@ namespace Assets.Code.Editor.Tests.Components
 		[Test]
 		public void TestInventoryUsage()
 		{
-			Setup ();
-
 			testInventory.Add (testItems[0]);
 			testInventory.Add (testItems[1]);
 			testInventory.Add (testItems[2]);
@@ -76,6 +82,99 @@ namespace Assets.Code.Editor.Tests.Components
 			Assert.True (testInventory.Remove (testItems[0]));
 			Assert.True (testInventory.Contains(testItems[0]));
 		}
+
+        public void TestGetQuantityZero()
+        {
+            Assert.AreEqual(0, testInventory.GetQuantity(testItems[0]));
+        }
+
+        public void TestGetQuantityDiffName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item1b = CreateItem("Item 011");
+            Assert.AreEqual(0, testInventory.GetQuantity(item1b));
+        }
+
+        [Test]
+        public void TestGetQuantitySameGo()
+        {
+            testInventory.Add(testItems[0]);
+            Assert.AreEqual(1, testInventory.GetQuantity(testItems[0]));
+        }
+
+        [Test]
+        public void TestGetQuantitySameName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item1b = CreateItem("Item 01");
+            Assert.AreEqual(1, testInventory.GetQuantity(item1b));
+        }
+
+        [Test]
+        public void TestAdd_SameGo()
+        {
+            testInventory.Add(testItems[0]);
+            testInventory.Add(testItems[0]);
+            Assert.AreEqual(2, testInventory.GetQuantity(testItems[0]));
+        }
+
+        [Test]
+        public void TestAdd_SameName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item1b = CreateItem("Item 01");
+            testInventory.Add(item1b);
+            Assert.AreEqual(2, testInventory.GetQuantity(testItems[0]));
+            Assert.AreEqual(2, testInventory.GetQuantity(item1b));
+        }
+
+        [Test]
+        public void TestAdd_DiffName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item2 = CreateItem("Item 012");
+            testInventory.Add(item2);
+            Assert.AreEqual(1, testInventory.GetQuantity(testItems[0]));
+            Assert.AreEqual(1, testInventory.GetQuantity(item2));
+        }
+
+        [Test]
+        public void TestRemove_SameGo()
+        {
+            testInventory.Add(testItems[0]);
+            Assert.True(testInventory.Remove(testItems[0]));
+            Assert.AreEqual(0, testInventory.GetQuantity(testItems[0]));
+        }
+
+        [Test]
+        public void TestRemove_SameName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item1b = CreateItem("Item 01");
+            Assert.True(testInventory.Remove(item1b));
+            Assert.AreEqual(0, testInventory.GetQuantity(testItems[0]));
+            Assert.AreEqual(0, testInventory.GetQuantity(item1b));
+        }
+
+        [Test]
+        public void TestRemove_DiffName()
+        {
+            testInventory.Add(testItems[0]);
+            Item item2 = CreateItem("Item 02");
+            Assert.False(testInventory.Remove(item2));
+            Assert.AreEqual(1, testInventory.GetQuantity(testItems[0]));
+            Assert.AreEqual(0, testInventory.GetQuantity(item2));
+        }
+
+        [Test]
+        public void TestRemove_Negative()
+        {
+            testInventory.Add(testItems[0]);
+            testInventory.Remove(testItems[0]);
+            Assert.AreEqual(0, testInventory.GetQuantity(testItems[0]));
+            testInventory.Remove(testItems[0]);
+            Assert.AreEqual(0, testInventory.GetQuantity(testItems[0]));
+        }
     }
 }
 #endif

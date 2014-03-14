@@ -32,6 +32,10 @@ namespace Assets.Plugins
         {
             switch (align)
             {
+                case GUIAlign.Right:
+                case GUIAlign.BottomRight:
+                    return Screen.width - width;
+                case GUIAlign.Center:
                 case GUIAlign.Bottom:
                     return (Screen.width - width) / 2;
                 default:
@@ -44,7 +48,10 @@ namespace Assets.Plugins
             switch (align)
             {
                 case GUIAlign.Bottom:
+                case GUIAlign.BottomRight:
                     return Screen.height - height;
+                case GUIAlign.Center:
+                    return (Screen.height - height) / 2;
                 default:
                     return 0;
             }
