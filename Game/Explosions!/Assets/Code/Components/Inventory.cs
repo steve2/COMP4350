@@ -9,8 +9,7 @@ namespace Assets.Code.Components
         [SerializeField]
         private List<Item> editorItems;
         private Dictionary<Item, int> items;
-        //private List<Item> items; //TODO: Do Item, Quantity pairs where the Item is the prefab and instances increment/decrement count
-
+      
         public void Start()
         {
             items = new Dictionary<Item, int>();
@@ -40,7 +39,11 @@ namespace Assets.Code.Components
                 return GetQuantity(item) > 0;
         }
 
-        public bool Remove(Item item, int quantity = 1)
+        public bool Remove(Item item)
+        {
+            return Remove(item, 1);
+        }
+        public bool Remove(Item item, int quantity)
         {
             bool success = false;
             int current;
@@ -54,9 +57,13 @@ namespace Assets.Code.Components
 			}
 
             return success;
-        } 
+        }
 
-        public void Add(Item item, int quantity = 1)
+        public void Add(Item item)
+        {
+            Add(item, 1);
+        }
+        public void Add(Item item, int quantity)
         {
             int current;
 			if (item != null) 
