@@ -8,9 +8,9 @@ namespace Assets.Code.Components
 {
     //TODO: Override Comparison to compare by name?
     public class Item : MonoBehaviour, 
-        IEnumerable<GameAttribute> //, IComparable<Item>, IEquatable<Item> 
+        IEnumerable<GameAttribute>, IComparable<Item>, IEquatable<Item> 
     {
-		public string name;
+		public string name; //TODO: This shouldn't be private
 
         #region Editor Fields
         //Note: Use the built in name
@@ -61,7 +61,7 @@ namespace Assets.Code.Components
             itemAttributes.Add(attr);
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return name; //TODO: Could put in more info here
         }
@@ -76,23 +76,36 @@ namespace Assets.Code.Components
             return GetEnumerator();
         }
 
-        //public int CompareTo(Item other)
-        //{
-        //    if (other == null)
-        //    {
-        //        return 1;
-        //    }
-        //    return this.name.CompareTo(other.name);
-        //}
+        public override int GetHashCode()
+        {
+            if (name == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return name.GetHashCode();
+            }
+        }
 
-        //public bool Equals(Item other)
-        //{
-        //    if (other == null)
-        //    {
-        //        return false;
-        //    }
-            
-        //    return this.CompareTo(other) == 0;
-        //}
+        //TODO: Check if name is null?
+        public int CompareTo(Item other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            return this.name.CompareTo(other.name);
+        }
+
+        public bool Equals(Item other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return this.CompareTo(other) == 0;
+        }
     }
 }
