@@ -4,14 +4,17 @@ using System.Collections.Generic;
 
 namespace Assets.Code.Components
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, IEnumerable<Item>
     {
         [SerializeField]
         private List<Item> items;
 
         public void Start()
         {
-            items = new List<Item>();
+			if(items == null)
+			{
+				items = new List<Item>();
+			}
         }
 
         public bool Contains(Item item)
@@ -56,5 +59,15 @@ namespace Assets.Code.Components
 			}
 			Debug.Log (toPrint);
 		}
+
+        public IEnumerator<Item> GetEnumerator()
+        {
+            return items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

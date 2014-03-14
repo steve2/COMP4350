@@ -10,7 +10,7 @@ namespace Assets.Code.Components
     [RequireComponent(typeof(AttributeManager))]
     [RequireComponent(typeof(GameActionManager))]
     [RequireComponent(typeof(Inventory))]
-    public class EquipmentManager : MonoBehaviour
+    public class EquipmentManager : MonoBehaviour, IEnumerable<KeyValuePair<Slot, Item>>
     {
         private AttributeManager attributeMngr;
         private GameActionManager actionMgr;
@@ -54,7 +54,7 @@ namespace Assets.Code.Components
             if (equipped != null)
             {
 				inventory.Add(equipped);
-				equipment.SetSlot(whatSlot, null);
+				equipment.ClearSlot(whatSlot);
                 attributeMngr.SubtractAttributes(equipped);
                 actionMgr.RemoveActions(equipped.Actions);
                 DestroyPrefab(equipped);
@@ -85,10 +85,10 @@ namespace Assets.Code.Components
             }
 			if (slotPermissions.CheckSlotPermission(toEquip.Type, whatSlot)) //TODO: THIS WILL BREAK
 			{
-            	Dequip(whatSlot);
+                Dequip(whatSlot);
+                inventory.Remove(toEquip);
                 Item actualItem = InitPrefab(toEquip);
-				equipment.SetSlot(whatSlot, actualItem);
-				inventory.Remove (actualItem);
+                equipment.SetSlot(whatSlot, actualItem);
 				attributeMngr.AddAttributes(actualItem);
                 actionMgr.AddActions(actualItem.Actions);
 				return true;
@@ -122,5 +122,15 @@ namespace Assets.Code.Components
 				}
 			}
 		}
-	}
+
+        IEnumerator<KeyValuePair<Slot, Item>> IEnumerable<KeyValuePair<Slot, Item>>.GetEnumerator()
+        {
+            return equipment.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return equipment.GetEnumerator();
+        }
+    }
 }

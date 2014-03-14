@@ -7,7 +7,8 @@ using UnityEngine;
 namespace Assets.Code.Components
 {
     //TODO: Override Comparison to compare by name?
-    public class Item : MonoBehaviour, IEnumerable<GameAttribute>  //All items support attributes
+    public class Item : MonoBehaviour, 
+        IEnumerable<GameAttribute> //, IComparable<Item>, IEquatable<Item> 
     {
 		public string name;
 
@@ -23,6 +24,7 @@ namespace Assets.Code.Components
 		private ItemType itemtype;
 
         #region Properties
+        public string Name { get { return name; } }
         public ItemType Type 
         { 
             get { return itemtype; } 
@@ -59,6 +61,11 @@ namespace Assets.Code.Components
             itemAttributes.Add(attr);
         }
 
+        public string ToString()
+        {
+            return name; //TODO: Could put in more info here
+        }
+
         public IEnumerator<GameAttribute> GetEnumerator()
         {
             return itemAttributes.GetEnumerator();
@@ -68,5 +75,24 @@ namespace Assets.Code.Components
         {
             return GetEnumerator();
         }
+
+        //public int CompareTo(Item other)
+        //{
+        //    if (other == null)
+        //    {
+        //        return 1;
+        //    }
+        //    return this.name.CompareTo(other.name);
+        //}
+
+        //public bool Equals(Item other)
+        //{
+        //    if (other == null)
+        //    {
+        //        return false;
+        //    }
+            
+        //    return this.CompareTo(other) == 0;
+        //}
     }
 }
