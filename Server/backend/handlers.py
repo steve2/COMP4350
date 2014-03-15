@@ -186,8 +186,8 @@ def handle_use_recipe():
         try:
                 database.db_connect()
                 charid = data['charid']   
-                recipe = data['recipe']
-                success = exec_recipe(recipe, charid, character.SHOP)
+                rid = data['recipe']
+                success = recipe.exec_recipe(rid, charid, character.SHOP)
                 result = { 'result' : success }
         except Exception, e:
                 print e
@@ -201,9 +201,9 @@ def handle_use_recipe():
 @app.route('/recipe/undo', methods = ['POST', 'GET'])
 def handle_undo_recipe():
     data = request.json
-    recipe = data['recipe']
+    rid = data['recipe']
     charid = data['character']
-    success = exec_recipe(recipe, character.SHOP, charid)
+    success = recipe.exec_recipe(rid, character.SHOP, charid)
     result = { 'result' : success }
     return jsonify(result)
 
@@ -253,6 +253,8 @@ def handle_create_character():
         
     response = {"result": result}
     return jsonify(response)
+
+#TODO: Add getQuantity
 
 @app.route('/character/inventory/get', methods = ['POST', 'GET'])
 def handle_get_character_inventory():
