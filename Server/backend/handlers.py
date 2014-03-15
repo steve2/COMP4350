@@ -269,7 +269,7 @@ def handle_get_character_inventory():
             inv = inventory.get_inventory(charid)
             result = { "inventory" : [] }
             for entry in inv:
-                if entry[0] in ['Gold']
+                if entry[0] in ['Gold']:
                     result['inventory'].append( {"name":entry[0], "quantity":entry[1]} )
         except Exception, e:
             print e
