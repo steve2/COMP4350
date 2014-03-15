@@ -17,7 +17,7 @@
       <form class="form-signin" id="shop-form" role="form" method="post">
       <h1 class="text-center">Shop</a></h6>
 
-      <select id = "characters">
+      Character <select id = "characters">
       </select>
 
       <table class="table table-bordered" id = "purchasables" cellpadding="10">
@@ -47,65 +47,58 @@
 
               characters.push(character);
           }
-      }).done(function()
-      {
-        /*var options;
+		var options;
         for (var i = 0; i < characters.length; i++)
         {
             options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
         }
-        $(options).appendTo("#characters");*/
+        $("#characters").append(options);
+
       });
 
       request("/getPurchasables", {}, function(data, _1, _2)
       {
-		  var items = data['purchasables'];
-		var table = $("#purchasables");
-        for (var i = 0; i < items.length; i++)
-        {
-			var item = items[i];
-			var row = insertRow(table);
-			row.attr('id', i);
-			insertCell(row).append(item.name);
-			insertCell(row).append(item.cost);
-			var btnCell = insertCell(row);
-			var btn = insert(btnCell, 'button');
-			btn.attr('id', 'purchasebtn');
-			//TODO: USE RECIPE ID for purchasing
-        }
+			var items = data['purchasables'];
+			var table = $("#purchasables");
+			for (var i = 0; i < items.length; i++)
+			{
+				var item = items[i];
+				var row = insertRow(table);
+				row.attr('id', i);
+				insertCell(row).append(item.name);
+				insertCell(row).append(item.cost);
+				var btnCell = insertCell(row);
+				var btn = insert(btnCell, 'button');
+				btn.attr('id', 'purchasebtn');
+				btn.addClass('btn btn-default btn-xs');
+				btn.append("Buy");
+				btn.on('click', function(event) 
+				{ 
+					event.preventDefault();
+					purchase(item.recipe); 
+				});
+			}
+	  });
 
         //takes the index of the row clicked and sends the appropriate recipe request
 
-        $("#purchasables" ).on('click', '#purchasebtn', function(event) {
-            event.preventDefault();
-            var i = $(this).parent().parent().index();
-            var selectedChar = document.getElementId('characters');
+	function purchase(recipe) 
+	{
+		var selectedChar = $('characters');
 
-            var jsonArg = new Object();
-            jsonArg.recipe = items[i].recipe;
-            jsonArg.charid = selectedChar;
+		var jsonArg = new Object();
+		jsonArg.recipe = recipe;
+		jsonArg.charid = selectedChar;
 
-            //Should be using the util.js function "request".
-
-            $.ajax({
-                type: "POST",
-                url: "/use_recipe",
-                data: JSON.stringify(jsonArg),
-                success: function(data, _1, _2) {
-                    if(data.result) {
-                        window.location.replace("/");
-                    } else {
-                        window.location.replace("/failpurchase");
-                    }
-                },
-                contentType: 'application/json',
-                dataType: "json"
-            });
-        });
-      }).done(function()
-      {
-        
-      });
+		request("/recipe/use", jsonArg, function(data, _1, _2) 
+		{
+				if(data.result) {
+					window.location.replace("/");
+				} else {
+					window.location.replace("/failpurchase");
+				}
+		});
+	}
     </script>
   </body>
 </html>

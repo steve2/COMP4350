@@ -173,7 +173,7 @@ def get_purchasable_item_request():
         name = p[_PUR_NAME_SPOT];
         cost = p[_PUR_COST_SPOT];
         rid = p[_PUR_ID_SPOT];
-        result['purchasables'].append({"name":name, "cost":cost, "id":rid})
+        result['purchasables'].append({"name":name, "cost":cost, "recipe":rid})
     return jsonify(result)
     
 #Buy/Craft
