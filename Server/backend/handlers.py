@@ -16,6 +16,7 @@ import database.inventory as inventory
 import database.recipe as recipe
 import database.achievements as achievements
 import database.mission as mission
+import database.reward as reward
 
 def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
