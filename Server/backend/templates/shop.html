@@ -46,7 +46,7 @@
 
               characters.push(character);
           }
-		var options;
+    var options;
         for (var i = 0; i < characters.length; i++)
         {
             options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
@@ -57,49 +57,63 @@
 
       request("/getPurchasables", {}, function(data, _1, _2)
       {
-			var items = data['purchasables'];
-			var table = $("#purchasables");
-			for (var i = 0; i < items.length; i++)
-			{
-				var item = items[i];
-				var row = insertRow(table);
-				row.attr('id', i);
-				insertCell(row).append(item.name);
-				insertCell(row).append(item.cost);
-				var btnCell = insertCell(row);
-				var btn = insert(btnCell, 'button');
-				btn.attr('id', 'purchasebtn');
-				btn.addClass('btn btn-default btn-xs');
-				btn.append("Buy");
-				btn.on('click', function(event) 
-				{ 
-					event.preventDefault();
-					purchase(item.recipe); 
-				});
-			}
-	  });
+      var items = data['purchasables'];
+      var table = $("#purchasables");
+      for (var i = 0; i < items.length; i++)
+      {
+        var item = items[i];
+        var row = insertRow(table);
+        row.attr('id', i);
+        insertCell(row).append(item.name);
+        insertCell(row).append(item.cost);
+        var btnCell = insertCell(row);
+        var btn = insert(btnCell, 'button');
+        btn.attr('id', 'purchasebtn');
+        btn.addClass('btn btn-default btn-xs');
+        btn.append("Buy");
+        btn.on('click', function(event)
+        {
+          event.preventDefault();
+          purchase(item.recipe);
+        });
+      }
+    });
 
         //takes the index of the row clicked and sends the appropriate recipe request
 
-	function purchase(recipe) 
-	{
-		var selectedChar = $('#characters').val();
+  function purchase(recipe)
+  {
+    var selectedChar = $('#characters').val();
 
-		var jsonArg = new Object();
-		jsonArg.recipe = recipe;
-		jsonArg.charid = selectedChar;
+    var jsonArg = new Object();
+    jsonArg.recipe = recipe;
+    jsonArg.charid = selectedChar;
 
-		request("/recipe/use", jsonArg, function(data, _1, _2) 
-		{
-				if(data.result) {
-					alert("Purchase Successful");
-					//showAlert("Purchase Successful", true, 1000);
-				} else {
-					alert("You cannot purchase this item");
-					//showAlert("You cannot purchase this item", false, 1000);
-				}
-		});
-	}
+    request("/recipe/use", jsonArg, function(data, _1, _2)
+    {
+        if(data.result) {
+          alert("Purchase Successful");
+          //showAlert("Purchase Successful", true, 1000);
+        } else {
+          alert("You cannot purchase this item");
+          //showAlert("You cannot purchase this item", false, 1000);
+        }
+    });
+  }
+
+  //gets the Gold inventory from the character depending on the selected character
+
+  $(function(){
+    $('#characters').change(function(){
+      request("/character/inventory/getgold", {}, function(data, _1, _2)
+      {
+        var inv = data['inventory'];
+        var lbl = $("#gold");
+        var gold = inv[0].quantity;
+        lbl.text(gold);
+      }
+    });
+  });
     </script>
   </body>
 </html>

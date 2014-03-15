@@ -30,12 +30,15 @@ public class MissionMenu : GameComponent {
 			}
 		}	
 
+		if (GUILayout.Button ("Shop")) 
+		{
+			Application.LoadLevel ("ShopMenu"); 
+		}
 		// Hardcoding a mission for now
 		if (GUILayout.Button ("Mission 1")) 
 		{
 			Application.LoadLevel ("Demo"); 
 		}
-
 		GUILayout.EndArea();
 	}
 }
