@@ -482,7 +482,7 @@ def handle_get_reward():
             result = {"rewardexp": rewardExp, "rewarditems": rewardItems}
         except Exception, e:
             print e
-            result = {"rewards": None}
+            result = {"rewardexp": None, "rewarditems": None, "BadRequest": True}
         finally:
             database.db_close()
         

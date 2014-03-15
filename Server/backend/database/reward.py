@@ -29,7 +29,6 @@ def get_reward_exp(rewardID)
 				FROM Reward 
 					WHERE ID ='''+database.INSERT_SYM;
     c.execute(qry, (rewardID,))
-    c.execute("SELECT * FROM Reward WHERE ID =")
     result = []
     for row in c:
         result.append(row)
