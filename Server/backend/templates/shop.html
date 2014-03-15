@@ -15,7 +15,6 @@
 
     <div class="container">
       <form class="form-signin" id="shop-form" role="form" method="post">
-      <h1 class="text-center">Shop</a></h6>
 
       Character <select id = "characters">
       </select>
@@ -93,9 +92,11 @@
 		request("/recipe/use", jsonArg, function(data, _1, _2) 
 		{
 				if(data.result) {
-					window.location.replace("/");
+					alert("Purchase Successful");
+					//showAlert("Purchase Successful", true, 1000);
 				} else {
-					window.location.replace("/failpurchase");
+					alert("You cannot purchase this item");
+					//showAlert("You cannot purchase this item", false, 1000);
 				}
 		});
 	}
