@@ -257,7 +257,8 @@ def handle_create_character():
 #TODO: Add getQuantity
 
 @app.route('/character/inventory/getgold', methods = ['POST', 'GET'])
-def handle_get_character_inventory():
+def handle_get_character_gold():
+    #TODO: Fix DRY violation (Why was this copied and pasted then 1 line changed...)
     data = request.json
 
     if 'charid' not in data:
