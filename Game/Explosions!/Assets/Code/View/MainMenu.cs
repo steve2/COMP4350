@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Code.Model;
 using Assets.Code.Components;
 using Assets.Code.Controller;
 
@@ -26,6 +27,13 @@ public class MainMenu : GameComponent {
 			foreach (KeyValuePair<string, int> entry in inventory)
 			{
 				Debug.Log ("Obtained Item " + entry.Key + " with quantity " + entry.Value);
+			}
+		});
+		Game.Instance.TestGetEquipment ((equipment) =>
+		{
+			foreach (KeyValuePair<string, Slot> entry in equipment)
+			{
+				Debug.Log ("Obtained Item " + entry.Key + " in Slot " + entry.Value);
 			}
 		});
 	} 

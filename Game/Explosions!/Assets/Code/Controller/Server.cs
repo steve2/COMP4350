@@ -26,9 +26,11 @@ namespace Assets.Code.Controller
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
 		private const string CHARACTERS_PATH = "character/getAll";
 		private const string MISSIONS_PATH = "mission/getAll";
-		private const string INVENTORY_PATH = "/character/inventory/get";
         private const string ADD_COOKIE_PATH = "addCookie";
         private const string HAS_COOKIE_PATH = "hasCookie";
+
+		private const string INVENTORY_PATH = "/character/inventory/get";
+		private const string EQUIPMENT_PATH = "/character/equipped";
 
 	    public const int DEFAULT_TIMEOUT = 10000;
 
@@ -213,10 +215,36 @@ namespace Assets.Code.Controller
 			});
         }
 
-        public virtual void GetEquipment(Character character, Action<IEnumerable<Item>> asyncReturn)
+        public virtual void GetEquipment(Character character, Action<IEnumerable<KeyValuePair<string, Slot>>> asyncReturn)
         {
-            //TODO: Order by slot id? (Otherwise we need to return Item/Slot pairs)
-            throw new NotImplementedException();
+			if (character == null) return;
+
+			List<KeyValuePair<string, Slot>> resultList = null;
+			JSONClass parameters = new JSONClass();
+			parameters.Add ("charid", "" + character.Id);
+
+			AsyncSend (EQUIPMENT_PATH, parameters, (json) =>
+		    {
+				if (json["equipment"] != null)
+				{
+					resultList = new List<KeyValuePair<string, Slot>>();
+					int size = json["equipment"].Count;
+
+					for (int i = 0; i < size; i++)
+					{
+						string name = json["equipment"].AsArray[i]["name"];
+						string slotName = json["equipment"].AsArray[i]["slot"];
+						Slot slot = (Slot) Enum.Parse (typeof(Slot), slotName);
+
+						resultList.Add (new KeyValuePair<string, Slot>(name, slot));
+					}
+				}
+				else
+				{
+					Debug.Log ("Problem loading Character equipment (character ID="+character.Id+").");
+				}
+				asyncReturn(resultList);
+			});
         }
 
         //TODO: Get Characters

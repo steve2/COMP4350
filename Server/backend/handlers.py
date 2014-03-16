@@ -265,6 +265,28 @@ def handle_get_character_inventory():
      
     return jsonify(result)
 
+@app.route('/character/equipped', methods = ['POST', 'GET'])
+def handle_get_equipped_character_equipment():
+    data = request.json
+
+    if 'charid' not in data:
+        result = {"equipment": None, "BadRequest": True}
+    else:
+        charid = data['charid']
+        try:
+            database.db_connect()
+            eq = equipment.get_equipment(charid)
+            result = { "equipment" : [] }
+            for entry in eq:
+                result['equipment'].append( {"name":entry[0], "slot":entry[1]} );                
+        except Exception, e:
+            print "Error in /character/equipped:", e
+            result = {"equipment": None}
+        finally:
+            database.db_close()
+            
+    return jsonify(result)
+
 @app.route('/character/inventory/add', methods = ['POST', 'GET'])
 def handle_add_character_inventory():
     data = request.json
@@ -285,26 +307,6 @@ def handle_add_character_inventory():
         finally:
             database.db_close()
     
-    return jsonify(result)
-
-@app.route('/character/equipped', methods = ['POST', 'GET'])
-def handle_get_equipped_character_equipment():
-    data = request.json
-
-    if 'charid' not in data:
-        result = {"equipment": None, "BadRequest": True}
-    else:
-        charid = data['charid']
-        try:
-            database.db_connect()
-            eq = equipment.get_equipment(charid)
-            result = {"equipment": eq}
-        except Exception, e:
-            print "Error in /character/equipped:", e
-            result = {"equipment": None}
-        finally:
-            database.db_close()
-            
     return jsonify(result)
 
 #===========================================================================================

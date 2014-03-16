@@ -11,7 +11,7 @@ namespace Assets.Code.Components
         [SerializeField]
         List<KeyValuePair<string, int>> inventory;
         [SerializeField]
-        List<Item> equipment; //The index maps to the slot
+        List<KeyValuePair<string, Slot>> equipment; //The index maps to the slot
 
         // Called before any component calls Start
         void Awake()

@@ -118,6 +118,11 @@ namespace Assets.Code.Controller
 			server.GetInventory(new Character(4, "TEST", 7, -8), (inventory) => asyncReturn(inventory));
 		}
 
+		public void TestGetEquipment(Action<IEnumerable<KeyValuePair<string, Slot>>> asyncReturn)
+		{
+			server.GetEquipment(new Character(4, "TEST", 7, -8), (equipment) => asyncReturn(equipment));
+		}
+
         /// <summary>
         /// Returns whether or not the recipe was successful
         /// </summary>
