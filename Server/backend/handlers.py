@@ -316,13 +316,14 @@ def handle_get_equipped_character_equipment():
             eq = equipment.get_equipment(charid)
             result = { "equipment" : [] }
             for entry in eq:
-                result['equipment'].append( {"name":entry[0], "slot":entry[1]} );                
+                result['equipment'].append( {"name":entry[0], "slot":entry[1]} );                 
         except Exception, e:
             print "Error in /character/equipped:", e
             result = {"equipment": None}
         finally:
             database.db_close()
             
+    print result
     return jsonify(result)
 
 @app.route('/character/inventory/add', methods = ['POST', 'GET'])

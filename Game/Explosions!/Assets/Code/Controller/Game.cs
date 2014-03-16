@@ -107,15 +107,26 @@ namespace Assets.Code.Controller
             server.IsAlive((alive) => asyncReturn(alive));
         }
 
-		public void TestGetInventory(Action<IEnumerable<KeyValuePair<string, int>>> asyncReturn)
+		public void TestGetInventory()
 		{
-			/** "inventory" is the async-returned List of item names/quantities; Game needs to initialize them. **/
-			server.GetInventory(new Character(4, "TEST", 7, -8), (inventory) => asyncReturn(inventory));
+			server.GetInventory(new Character(4, "TEST", 7, -8), (inventory) =>
+			{
+				foreach (KeyValuePair<string, int> entry in inventory)
+				{
+					Debug.Log ("Obtained Item " + entry.Key + " with quantity " + entry.Value);
+				}
+			});
 		}
 
-		public void TestGetEquipment(Action<IEnumerable<KeyValuePair<string, Slot>>> asyncReturn)
+		public void TestGetEquipment()
 		{
-			server.GetEquipment(new Character(4, "TEST", 7, -8), (equipment) => asyncReturn(equipment));
+			server.GetEquipment(new Character(4, "TEST", 7, 0), (equipment) =>
+			{
+				foreach (KeyValuePair<string, Slot> entry in equipment)
+				{
+					Debug.Log ("Equipped Item " + entry.Key + " in Slot " + entry.Value);
+				}
+			});
 		}
 
         /// <summary>
@@ -161,6 +172,19 @@ namespace Assets.Code.Controller
         {
             queue.InvokeOnMainThread(task);
         }
+
+		/*
+		public void LoadResource(string path)
+		{
+			if (!OnMainThread)
+			{
+				InvokeOnMainThread(() => LoadResource (path));
+			}
+			else
+			{
+				return Resources.Load(path);
+			}
+		}*/
 
         public void LoadLevel(string name)
         {

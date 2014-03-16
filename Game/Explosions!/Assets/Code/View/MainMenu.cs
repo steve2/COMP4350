@@ -21,20 +21,8 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-		Game.Instance.TestGetInventory ((inventory) => 
-		{		                          
-			foreach (KeyValuePair<string, int> entry in inventory)
-			{
-				Debug.Log ("Obtained Item " + entry.Key + " with quantity " + entry.Value);
-			}
-		});
-		Game.Instance.TestGetEquipment ((equipment) =>
-		{
-			foreach (KeyValuePair<string, Slot> entry in equipment)
-			{
-				Debug.Log ("Obtained Item " + entry.Key + " in Slot " + entry.Value);
-			}
-		});
+		Game.Instance.TestGetInventory ();
+		Game.Instance.TestGetEquipment ();
 	} 
 
 	// Called when the GUI is rendered

@@ -266,6 +266,7 @@ namespace Assets.Code.Controller
 				{
 					Debug.Log ("Problem loading Character equipment (character ID="+character.Id+").");
 				}
+				Debug.Log (resultList);
 				asyncReturn(resultList);
 			});
         }
