@@ -22,20 +22,23 @@ public class MissionMenu : GameComponent {
 		GUILayout.Label ("---- Select a mission ----");
 
 		// TODO: This currently does not work
-		foreach (Mission mission in Game.Missions) 
+		foreach (Mission mission in GameInst.Missions) 
 		{
 			if (GUILayout.Button ("Mission" + mission.ID)) 
 			{
-				Application.LoadLevel ("Demo"); 
+				GameInst.LoadLevel ("Demo"); 
 			}
 		}	
 
+		if (GUILayout.Button ("Shop")) 
+		{
+			GameInst.LoadLevel ("ShopMenu"); 
+		}
 		// Hardcoding a mission for now
 		if (GUILayout.Button ("Mission 1")) 
 		{
-			Application.LoadLevel ("Demo"); 
+			GameInst.LoadLevel ("Demo"); 
 		}
-
 		GUILayout.EndArea();
 	}
 }

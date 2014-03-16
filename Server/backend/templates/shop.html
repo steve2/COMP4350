@@ -11,14 +11,16 @@
 
   </head>
 
-  <body onload="populatTable()">
+  <body>
 
     <div class="container">
-      <form class="form-signin" id="shop-form" role="form" method="post">
-      <h1 class="text-center">Shop</a></h6>
-
-      <select id = "characters">
-      </select>
+    	<div id="characterInfo" class="table table-bordered" style="padding:10px;">
+            <form class="form-signin" id="shop-form" role="form" method="post">
+            
+            Character <select id = "characters">
+            </select>
+            <span style="float:right;">Gold <span id="gold"></span></span>
+		</div>
 
       <table class="table table-bordered" id = "purchasables" cellpadding="10">
       <tr name="data" >
@@ -34,82 +36,99 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-      //populates the character datalist
+	//populates the character datalist
+	var characters = new Array();
+	request("/character/getAll", {}, function(data, _1, _2)
+	{
+		for (var i=0; i < data['characters'].length; i++)
+		{
+		  var character = new Object();
+		  character.id   = data['characters'][i][0];
+		  character.name = data['characters'][i][2];
+		
+		  characters.push(character);
+		}
+	var options;
+	for (var i = 0; i < characters.length; i++)
+	{
+		options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
+	}
+	$("#characters").append(options);
+	
+	});
+	
+	displayMoney();
 
-      var characters = new Array();
-      request("/character/getAll", {}, function(data, _1, _2)
-      {
-          for (var i=0; i < data['characters'].length; i++)
-          {
-              var character = new Object();
-              character.id   = data['characters'][i][0];
-              character.name = data['characters'][i][2];
-
-              characters.push(character);
-          }
-      }).done(function()
-      {
-        var options;
-        for (var i = 0; i < characters.length; i++)
-        {
-            options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
-        }
-        $(options).appendTo("#characters");
-      });
-
-      request("/getPurchasables", {}, function(data, _1, _2)
-      {
-          var items = new Array();
-          for (var i in data.rows) {
-              var item = new Object();
-              item.quantity =  data['purchasables'][i][0];
-              item.recipe = data['purchasables'][i][1];
-              item.name = data['purchasables'][i][2];
-
-              items.push(item);
-          }
-      }).done(function()
-      {
-        var row;
-        for (var i = 0; i < items.length; i++)
-        {
-            row += '<tr id="' + i + '">';
-            row += '<td><button id = purchasebtn>' + items[i].quantity + '</button></td>';
-            row += '<td>' + items[i].recipe + '</td>';
-            row += '<td>' + items[i].name + '</td>';
-            row += '</tr>';
-        }
-        $(row).appendTo("#purchasables");
+	request("/getPurchasables", {}, function(data, _1, _2)
+	{
+		var items = data['purchasables'];
+		var table = $("#purchasables");
+		for (var i = 0; i < items.length; i++)
+		{
+			var item = items[i];
+			var row = insertRow(table);
+			row.attr('id', i);
+			insertCell(row).append(item.name);
+			insertCell(row).append(item.cost);
+			var btnCell = insertCell(row);
+			var btn = insert(btnCell, 'button');
+			btn.attr('id', 'purchasebtn');
+			btn.addClass('btn btn-default btn-xs');
+			btn.append("Buy");
+			btn.on('click', function(event)
+			{
+				event.preventDefault();
+				purchase(item.recipe);
+			});
+		}
+	});
 
         //takes the index of the row clicked and sends the appropriate recipe request
 
-        $("#purchasables" ).on('click', '#purchasebtn', function(event) {
-            event.preventDefault();
-            var i = $(this).parent().parent().index();
-            var selectedChar = document.getElementId('characters');
+	function purchase(recipe)
+	{
+		var selectedChar = $('#characters').val();
+		
+		var jsonArg = new Object();
+		jsonArg.recipe = recipe;
+		jsonArg.charid = selectedChar;
+		
+		request("/recipe/use", jsonArg, function(data, _1, _2)
+		{
+			if(data.result) {
+			  alert("Purchase Successful");
+			  //showAlert("Purchase Successful", true, 1000);
+			} else {
+			  alert("You cannot purchase this item");
+			  //showAlert("You cannot purchase this item", false, 1000);
+			}
+		});
+	}
 
-            var jsonArg = new Object();
-            jsonArg.recipe = items[i].recipe;
-            jsonArg.charid = selectedChar;
+  //gets the Gold inventory from the character depending on the selected character
 
-            //Should be using the util.js function "request".
-
-            $.ajax({
-                type: "POST",
-                url: "/use_recipe",
-                data: JSON.stringify(jsonArg),
-                success: function(data, _1, _2) {
-                    if(data.result) {
-                        window.location.replace("/");
-                    } else {
-                        window.location.replace("/failpurchase");
-                    }
-                },
-                contentType: 'application/json',
-                dataType: "json"
-            });
-        });
+  $(function(){
+    $('#characters').change(function(){ displayMoney()});
+  });
+  
+  var MONEY_ID = "#gold"
+  function displayMoney()
+  {
+	  var jsonArg = new Object();
+	  jsonArg.charid = $('#characters').val();
+	  
+	  request("/character/inventory/getgold", jsonArg, function(data, _1, _2)
+      {
+        var inv = data['inventory'];
+        var lbl = $(MONEY_ID);
+		var gold;
+		if(inv.length > 0)
+        	gold = inv[0].quantity;
+		else
+			gold = 0;
+        lbl.text(gold);
       });
+  }
     </script>
   </body>
 </html>

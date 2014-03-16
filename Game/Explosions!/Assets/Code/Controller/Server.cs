@@ -26,6 +26,7 @@ namespace Assets.Code.Controller
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
 		private const string CHARACTERS_PATH = "character/getAll";
 		private const string MISSIONS_PATH = "mission/getAll";
+		private const string PURCHASABLES_PATH = "getPurchasables";
         private const string ADD_COOKIE_PATH = "addCookie";
         private const string HAS_COOKIE_PATH = "hasCookie";
 
@@ -78,7 +79,6 @@ namespace Assets.Code.Controller
         {
             var location = this.url + SERVER_PORT + "/" + path;
             var uri = new Uri(location); // No need to build this every time
-
             var client = new CookieAwareWebClient(this.Cookies);
             client.Headers["Content-Type"] = "application/json";
             string response = client.UploadString(uri, json.ToString());
@@ -111,7 +111,7 @@ namespace Assets.Code.Controller
 				{
 				//TODO: verify response contains all characters, parse into Character Objects, return list
 				List<Character> ownedCharacters = new List<Character>();
-
+				Debug.Log(j["characters"].Count);
 				for (int currCharacter = 0; currCharacter < j["characters"].Count; currCharacter++) {
 					ownedCharacters.Add (new Character(
 						j["characters"].AsArray[currCharacter][1].AsInt,
@@ -153,9 +153,32 @@ namespace Assets.Code.Controller
 
         public virtual void GetPurchasableItems(Action<IEnumerable<Recipe>> asyncReturn)
         {
+			JSONClass purchasables = new JSONClass ();
+			
+			Debug.Log ("---------> ASYNC SEND -- get purchasables --------------");
+			new Thread(() =>
+			           {
+				Send (PURCHASABLES_PATH, purchasables /*(j) =>
+			           {				
+				List<Recipe> itemPurchasables = new List<Recipe>();
+				Debug.Log("Something is here");
+				Debug.Log(j["purchasables"].Count);
+				for (int currRecipe = 0; currRecipe < j["purchasables"].Count; currRecipe++) {
+					itemPurchasables.Add (new Recipe(
+						j["purchasables"].AsArray[currRecipe][0].AsInt,
+						j["purchasables"].AsArray[currRecipe][1].AsInt,
+						j["purchasables"].AsArray[currRecipe][2].ToString()));
+				}
+
+				asyncReturn (itemPurchasables);
+
+			}*/
+				      );
+			}).Start();
+
             //TODO: Query server for this data
             //TODO: Store these recipes in the recipeIDs dictionary
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public virtual void GetCraftableItems(Action<IEnumerable<Recipe>> asyncReturn)

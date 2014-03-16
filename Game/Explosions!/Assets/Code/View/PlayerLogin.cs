@@ -28,7 +28,7 @@ public class PlayerLogin : GameComponent {
 			this.attemptLogin();	
 		}
 		if (GUILayout.Button ("Back")) {
-			InvokeOnMainThread(() => Application.LoadLevel("MainMenu"));
+			GameInst.LoadLevel("MainMenu");
 		}
 		
 		GUILayout.Label (output);
@@ -36,7 +36,7 @@ public class PlayerLogin : GameComponent {
 	}
 	
 	private void attemptLogin(){
-		base.Game.Authenticate(
+		base.GameInst.Authenticate(
 			this.username, 
 			this.password, 
 			((x) =>
@@ -44,8 +44,8 @@ public class PlayerLogin : GameComponent {
 			if (x){
 				output = "Login successful";
 
-				Game.username = username;
-				InvokeOnMainThread(() => Application.LoadLevel("CharacterSelection")); //CharacterSelection loads "Demo"
+				GameInst.username = username;
+				GameInst.LoadLevel("CharacterSelection"); //CharacterSelection loads "Demo"
 			} else {
 				output = "Login failed";				
 			}

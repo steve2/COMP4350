@@ -12,7 +12,7 @@ from character import get_characters
 from character import create_character
 from character import SHOP
 from item import get_items
-from item import get_item
+#from item import get_item
 #TODO: Why are we importing 1 at a time?
 from inventory import get_inventory
 from inventory import contains_items
@@ -170,14 +170,14 @@ class DatabaseTestCase (unittest.TestCase):
         assert get_items() != None
         assert len(get_items()) >= 0
         
-    def test_get_item (self):
+    #def test_get_item (self):
         #Valid Items:
-        assert get_item("Axe") != None
-        assert len(get_item("Axe")[0]) == 6
+        #assert get_item("Axe") != None
+        #assert len(get_item("Axe")[0]) == 6
         #Invalid Items:
-        assert not get_item(None)
-        assert not get_item("")
-        assert not get_item("Fake Item")
+        #assert not get_item(None)
+        #assert not get_item("")
+        #assert not get_item("Fake Item")
         
     def test_get_inventory (self):
         #Valid characters (remember they take an ID to identify):

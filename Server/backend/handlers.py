@@ -16,6 +16,7 @@ import database.inventory as inventory
 import database.recipe as recipe
 import database.achievements as achievements
 import database.mission as mission
+import database.reward as reward
 
 def hash_password(user, password):
     salt = "3644eec10beb8c22" # super secret, you guys
@@ -159,10 +160,21 @@ def handle_get_all_player_achievements():
 #
 #===========================================================================================
 
+_PUR_COST_SPOT = 0
+_PUR_ID_SPOT = 1
+_PUR_NAME_SPOT = 2
+
 @app.route('/getPurchasables', methods = ['POST', 'GET'])
 def get_purchasable_item_request():
     purchasables = recipe.get_purchasable_items();
-    result = { 'purchasables' : purchasables }
+    
+    result = { 'purchasables' : [] }
+
+    for p in purchasables:
+        name = p[_PUR_NAME_SPOT];
+        cost = p[_PUR_COST_SPOT];
+        rid = p[_PUR_ID_SPOT];
+        result['purchasables'].append({"name":name, "cost":cost, "recipe":rid})
     return jsonify(result)
     
 #Buy/Craft
@@ -175,8 +187,8 @@ def handle_use_recipe():
         try:
                 database.db_connect()
                 charid = data['charid']   
-                recipe = data['recipe']
-                success = exec_recipe(recipe, charid, character.SHOP)
+                rid = data['recipe']
+                success = recipe.exec_recipe(rid, charid, character.SHOP)
                 result = { 'result' : success }
         except Exception, e:
                 print e
@@ -190,9 +202,9 @@ def handle_use_recipe():
 @app.route('/recipe/undo', methods = ['POST', 'GET'])
 def handle_undo_recipe():
     data = request.json
-    recipe = data['recipe']
+    rid = data['recipe']
     charid = data['character']
-    success = exec_recipe(recipe, character.SHOP, charid)
+    success = recipe.exec_recipe(rid, character.SHOP, charid)
     result = { 'result' : success }
     return jsonify(result)
 
@@ -243,6 +255,32 @@ def handle_create_character():
     response = {"result": result}
     return jsonify(response)
 
+#TODO: Add getQuantity
+
+@app.route('/character/inventory/getgold', methods = ['POST', 'GET'])
+def handle_get_character_gold():
+    #TODO: Fix DRY violation (Why was this copied and pasted then 1 line changed...)
+    data = request.json
+
+    if 'charid' not in data:
+        result = {"inventory": None, "BadRequest": True }
+    else:
+        charid = data['charid'] # TODO: Make this character name?
+        try:
+            database.db_connect()
+            inv = inventory.get_inventory(charid)
+            result = { "inventory" : [] }
+            for entry in inv:
+                if entry[0] in ['Gold']:
+                    result['inventory'].append( {"name":entry[0], "quantity":entry[1]} )
+        except Exception, e:
+            print e
+            result = {"inventory": None}
+        finally:
+            database.db_close()
+     
+    return jsonify(result)
+    
 @app.route('/character/inventory/get', methods = ['POST', 'GET'])
 def handle_get_character_inventory():
     data = request.json
@@ -354,11 +392,10 @@ def handle_get_items():
             result['items'].append({"name":iname, "type":itype, "desc":idesc, "attributes":attrs, "slots":slots})
             
     except Exception, e:
-        print "Error in /item/getAll:", e
+        #print "Error in /item/getAll:", e
         result = { "items": None }
     finally:
         database.db_close()
-
     return jsonify(result)
 
 #===========================================================================================
@@ -443,7 +480,7 @@ def handle_get_reward():
             result = {"rewardexp": rewardExp, "rewarditems": rewardItems}
         except Exception, e:
             print e
-            result = {"rewards": None}
+            result = {"rewardexp": None, "rewarditems": None, "BadRequest": True}
         finally:
             database.db_close()
         
