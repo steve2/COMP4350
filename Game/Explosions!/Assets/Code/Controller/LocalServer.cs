@@ -10,7 +10,7 @@ namespace Assets.Code.Controller
 {
     public class LocalServer : Server
     {
-        private IEnumerable<Item> inventory;
+        private IEnumerable<KeyValuePair<string, int>> inventory;
         private IEnumerable<Item> equipment;
 
         public LocalServer() : base("localhost") { }
@@ -36,7 +36,7 @@ namespace Assets.Code.Controller
             asyncReturn(true);
         }
 
-        public override void GetInventory(Character character, Action<IEnumerable<Item>> asyncReturn)
+        public override void GetInventory(Character character, Action<IEnumerable<KeyValuePair<string, int>>> asyncReturn)
         {
             asyncReturn(inventory);
         }
@@ -46,7 +46,7 @@ namespace Assets.Code.Controller
             asyncReturn(equipment);
         }
 
-        internal void SetInventory(List<Item> inventory)
+        internal void SetInventory(List<KeyValuePair<string, int>> inventory)
         {
             this.inventory = inventory;
         }

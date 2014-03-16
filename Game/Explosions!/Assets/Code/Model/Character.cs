@@ -8,14 +8,16 @@ namespace Assets.Code.Model
     [Serializable]
     public class Character
     {
+		public int Id { get; private set; }
         public string Name { get; private set; }
 		public int Exp { get; private set; }
 		public int PlayTime { get; private set; }
 
-        public static readonly Character SHOP = new Character("Shop", 0, 0);
+        public static readonly Character SHOP = new Character(0, "Shop", 0, 0);
 
-        public Character(string name, int exp, int playTime)
+        public Character(int id, string name, int exp, int playTime)
         {
+			this.Id = id;
             this.Name = name;
 			this.Exp = exp;
 			this.PlayTime = playTime;

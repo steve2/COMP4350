@@ -27,6 +27,7 @@ namespace Assets.Code.Controller
 		private IEnumerable<Mission> missions;
         private IEnumerable<Recipe> purchaseItems;
         private IEnumerable<Recipe> craftItems;
+		private IEnumerable<Item> inventory;
 
         public static Game Instance { get; private set; }
 
@@ -86,6 +87,14 @@ namespace Assets.Code.Controller
             }
         } 
 
+		public IEnumerable<Inventory> Inventory
+		{
+			get 
+			{
+				return null;
+			}
+		}
+
         #endregion
 
         public Game(Server server)
@@ -102,6 +111,12 @@ namespace Assets.Code.Controller
         {
             server.IsAlive((alive) => asyncReturn(alive));
         }
+
+		public void TestGetInventory(Action<IEnumerable<KeyValuePair<string, int>>> asyncReturn)
+		{
+			/** "inventory" is the async-returned List of item names/quantities; Game needs to initialize them. **/
+			server.GetInventory(new Character(4, "TEST", 7, -8), (inventory) => asyncReturn(inventory));
+		}
 
         /// <summary>
         /// Returns whether or not the recipe was successful

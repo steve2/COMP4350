@@ -9,7 +9,7 @@ namespace Assets.Code.Components
     public class LocalServerDesigner : MonoBehaviour
     {
         [SerializeField]
-        List<Item> inventory;
+        List<KeyValuePair<string, int>> inventory;
         [SerializeField]
         List<Item> equipment; //The index maps to the slot
 

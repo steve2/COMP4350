@@ -26,6 +26,7 @@ namespace Assets.Code.Controller
 	    private const string LOGIN_REQUEST_PATH = "loginRequest";
 		private const string CHARACTERS_PATH = "character/getAll";
 		private const string MISSIONS_PATH = "mission/getAll";
+		private const string INVENTORY_PATH = "/character/inventory/get";
         private const string ADD_COOKIE_PATH = "addCookie";
         private const string HAS_COOKIE_PATH = "hasCookie";
 
@@ -38,6 +39,7 @@ namespace Assets.Code.Controller
         private Dictionary<Character, int> characterIDs;
         private Dictionary<Recipe, int> recipeIDs;
 
+		private List<GameObject> itemPrefabs;
 
         public Server(String url) 
         {
@@ -110,6 +112,7 @@ namespace Assets.Code.Controller
 
 				for (int currCharacter = 0; currCharacter < j["characters"].Count; currCharacter++) {
 					ownedCharacters.Add (new Character(
+						j["characters"].AsArray[currCharacter][1].AsInt,
 						j["characters"].AsArray[currCharacter][2].ToString(),
 						j["characters"].AsArray[currCharacter][3].AsInt,
 						j["characters"].AsArray[currCharacter][4].AsInt));
@@ -175,9 +178,39 @@ namespace Assets.Code.Controller
 				});
 	    }
 
-        public virtual void GetInventory(Character character, Action<IEnumerable<Item>> asyncReturn)
+        public virtual void GetInventory(Character character, Action<IEnumerable<KeyValuePair<string, int>>> asyncReturn)
         {
-            throw new NotImplementedException();
+			/** Doesn't really make sense to query a NULL character? **/
+			if (character == null) return;
+			
+			List<KeyValuePair<string, int>> resultList = null;
+			JSONClass parameters = new JSONClass();
+			parameters.Add ("charid", "" + character.Id);
+
+
+			AsyncSend (INVENTORY_PATH, parameters, (json) =>
+			{
+				if (json["inventory"] != null)
+				{
+					resultList = new List<KeyValuePair<string, int>>();
+					int size = json["inventory"].Count;
+
+					for (int i = 0; i < size; i++)
+					{
+						string name = json["inventory"].AsArray[i]["name"];
+						int quantity = json["inventory"].AsArray[i]["quantity"].AsInt;
+
+						resultList.Add (new KeyValuePair<string, int>(name, quantity));
+					}
+				}
+				else /** There was a problem loading **/
+				{
+					Debug.Log ("Problem loading Character inventory (character ID="+character.Id+").");
+				}
+
+				/** Return generated List asynchronously. **/
+				asyncReturn(resultList);
+			});
         }
 
         public virtual void GetEquipment(Character character, Action<IEnumerable<Item>> asyncReturn)

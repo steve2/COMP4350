@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Assets.Code.Components;
 using Assets.Code.Controller;
 
@@ -20,7 +21,14 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-	}
+		Game.Instance.TestGetInventory ((inventory) => 
+		{		                          
+			foreach (KeyValuePair<string, int> entry in inventory)
+			{
+				Debug.Log ("Obtained Item " + entry.Key + " with quantity " + entry.Value);
+			}
+		});
+	} 
 
 	// Called when the GUI is rendered
 	void OnGUI() {
