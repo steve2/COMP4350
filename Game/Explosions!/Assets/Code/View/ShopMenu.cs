@@ -18,7 +18,7 @@ public class ShopMenu : GameComponent{
 		GUILayout.BeginArea (new Rect ((Screen.width * 0.5f) - 100, (Screen.height * 0.5f) - 200, 200, 300));
 		GUILayout.Label ("---- Welcome to the Shop ----");
 
-		foreach (Recipe recipe in Game.PurchasableItems) 
+		foreach (Recipe recipe in GameInst.PurchasableItems) 
 		{
 			if (GUILayout.Button (recipe.Name)) 
 			{
@@ -28,7 +28,7 @@ public class ShopMenu : GameComponent{
 
 		// Load character list for selection
 		if (GUILayout.Button ("Back")) {
-				InvokeOnMainThread (() => Application.LoadLevel ("MissionMenu"));
+				GameInst.LoadLevel ("MissionMenu");
 		}
 
 		GUILayout.EndArea ();

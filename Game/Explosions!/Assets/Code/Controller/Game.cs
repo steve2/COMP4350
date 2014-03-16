@@ -1,7 +1,9 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Assets.Code.Components;
 using Assets.Code.Model;
 
@@ -10,7 +12,7 @@ namespace Assets.Code.Controller
     /// <summary>
     /// Game Service
     /// </summary>
-    public class Game
+    public class Game : MonoBehaviour
     {
         /// <summary>
         /// This is a service that provides communication with a "server" (Whether it's a real server or not)
@@ -18,6 +20,7 @@ namespace Assets.Code.Controller
         /// Options: ProductionServer, TestServer, DemoServer, ServerStub
         /// </summary>
         private Server server;
+        private ThreadSafeActionQueue queue;
 
         private EquipmentManager equipManager; //
 
@@ -27,6 +30,7 @@ namespace Assets.Code.Controller
 		private IEnumerable<Mission> missions;
         private IEnumerable<Recipe> purchaseItems;
         private IEnumerable<Recipe> craftItems;
+        private int mainThread;
 
         public static Game Instance { get; private set; }
 
@@ -40,11 +44,6 @@ namespace Assets.Code.Controller
          *  But eventually they will return data
          *  If empty enumerable is returned, assume data is loading
         ****************************************************************************/
-
-	    public void Authenticate(string username, string password, Action<bool> asyncReturn)
-	    {
-		    server.Login(username, password, (validPlayer) => asyncReturn(validPlayer) );
-	    }
 
 		public IEnumerable<Character> Characters
 		{
@@ -87,14 +86,11 @@ namespace Assets.Code.Controller
         } 
 
         #endregion
-
-        public Game(Server server)
+        
+        #region Server Interface
+        public void Authenticate(string username, string password, Action<bool> asyncReturn)
         {
-            this.server = server;
-			this.username = null;
-            this.character = null;
-            this.purchaseItems = null;
-            this.craftItems = null;
+            server.Login(username, password, (validPlayer) => asyncReturn(validPlayer));
         }
 
         //Only game should speak to server directly
@@ -126,17 +122,94 @@ namespace Assets.Code.Controller
                     //{
                     //    //TODO: Undo recipe and notify user of error?
                     //}
-                }); 
+                });
             return success;
+        } 
+        #endregion
+
+        #region Main Thread Invoking
+        public bool OnMainThread { 
+            get 
+            {
+				return 	Thread.CurrentThread.ManagedThreadId == mainThread &&
+						Thread.CurrentThread.GetApartmentState() == ApartmentState.Unknown && //Unity main thread = 'Unknown'
+						!Thread.CurrentThread.IsBackground &&
+						!Thread.CurrentThread.IsThreadPoolThread;
+            } 
         }
 
+        public void InvokeOnMainThread(Action task)
+        {
+            queue.InvokeOnMainThread(task);
+        }
+
+        public void LoadLevel(string name)
+        {
+            if (!OnMainThread)
+            {
+                InvokeOnMainThread(() => LoadLevel(name));
+            }
+			else
+			{
+            	Application.LoadLevel(name);
+			}
+        }
+        #endregion
+
         #region Initialization
+        public void Awake()
+        {
+            //TODO: Perform dependency injection through inspector editing
+            //TODO: Support unit test depency injection
+
+            this.server = new Server(Server.PRODUCTION_URL);
+            this.username = null;
+            this.character = null;
+            this.purchaseItems = null;
+            this.craftItems = null;
+            this.mainThread = Thread.CurrentThread.ManagedThreadId;
+            this.queue = new ThreadSafeActionQueue();
+            DontDestroyOnLoad(this);
+
+            Init(this); //Assign this instance to singleton
+        }
+
+        public void Update()
+        {
+            queue.Update();
+        }
+
+        //Should only initialize Game on main thread
+        //public Game(Server server)
+        //{
+        //    this.server = server;
+        //    this.username = null;
+        //    this.character = null;
+        //    this.purchaseItems = null;
+        //    this.craftItems = null;
+        //    this.mainThread = Thread.CurrentThread.ManagedThreadId;
+        //    CreateQueue();
+        //}
+
+        public void OnApplicationQuit()
+        {
+            //TODO: Clean up
+            //TODO: Would we need this?
+            //DestroyImmediate(this);
+        }
+
         /// <summary>
         /// One of the first things to be called on startup
         /// </summary>
         public static void Init()
         {
-			Instance = new Game(new Server(Server.PRODUCTION_URL));
+            if (Instance == null)
+            {
+                GameObject gameGo = new GameObject();
+                gameGo.name = "Game";
+                gameGo.AddComponent<Game>();
+            }
+            //Instance = new Game(new Server(Server.PRODUCTION_URL));
         }
 
         /// <summary>
@@ -154,10 +227,15 @@ namespace Assets.Code.Controller
         /// <param name="customServer"></param>
         public static void Init(Server customServer)
         {
-            Instance = new Game(customServer);
+            Init();
+            Instance.ChangeServer(customServer);
+        }
+
+        private void ChangeServer(Server customServer)
+        {
+            this.server = customServer;
         } 
         #endregion
-
     }
 
 }

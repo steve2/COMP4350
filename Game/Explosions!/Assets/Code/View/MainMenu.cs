@@ -9,14 +9,13 @@ public class MainMenu : GameComponent {
     //Called before Start
     void Awake()
     {
-        Game.Init();
     }
 
 	// Use this for initialization
-	public override void Start () 
+	public override void Start ()
     {
         base.Start();
-        Game.Instance.IsServerOnline((x) =>
+        GameInst.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
@@ -28,11 +27,11 @@ public class MainMenu : GameComponent {
 
 		// Load the Mission Menu
 		if (GUILayout.Button ("Single Player", GUILayout.Height(40))) {
-			Application.LoadLevel("PlayerLogin"); // Load the Mission List
+			GameInst.LoadLevel("PlayerLogin"); // Load the Mission List
 		}
 
 		if (GUILayout.Button ("Play Demo", GUILayout.Height(40))) {
-			Application.LoadLevel("Demo"); // Play the Demo 
+            GameInst.LoadLevel("Demo"); // Play the Demo 
 		}
 
 		// Load the Website
@@ -45,7 +44,7 @@ public class MainMenu : GameComponent {
 		// Load the Settings 
 		if (GUILayout.Button ("Settings", GUILayout.Height(40))) 
 		{
-			Application.LoadLevel("Settings"); 
+            GameInst.LoadLevel("Settings"); 
 		}
 		GUILayout.EndArea();
 	}

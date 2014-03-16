@@ -18,16 +18,16 @@ public class CharacterSelection : GameComponent {
 		GUILayout.Label ("---- Select a character ----");
 
 		// Load character list for selection
-		foreach (Character character in Game.Characters) 
+		foreach (Character character in GameInst.Characters) 
 		{
 			if (GUILayout.Button (character.Name)) 
 			{
-				base.Game.character = character;
-				InvokeOnMainThread(() => Application.LoadLevel("MissionMenu"));
+				base.GameInst.character = character;
+				GameInst.LoadLevel("MissionMenu");
 			}
 		}
 		if (GUILayout.Button ("Back")) {
-			InvokeOnMainThread(() => Application.LoadLevel("PlayerLogin"));
+			GameInst.LoadLevel("PlayerLogin");
 		}
 
 		GUILayout.EndArea();
