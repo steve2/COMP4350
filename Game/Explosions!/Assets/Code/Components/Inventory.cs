@@ -74,7 +74,7 @@ namespace Assets.Code.Components
                 }
                 else
                 {
-                    items.Add(item, 1);
+                    items.Add(item, quantity);
                 }
 			}
         }
