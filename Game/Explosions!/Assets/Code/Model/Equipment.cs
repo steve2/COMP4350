@@ -20,6 +20,17 @@ namespace Assets.Code.Components
             equippedItems = new Dictionary<Slot, Item>(EQUIP_SLOTS);
         }
 
+		public void Print()
+		{
+			string toPrint = "";
+			foreach (KeyValuePair<Slot, Item> entry in equippedItems)
+			{
+				toPrint += entry.Value.Name + " equipped in Slot " + entry.Key;
+				toPrint += "\n";
+			}
+			Debug.Log (toPrint);
+		}
+
         /** Get/Set Slot Item **/
         public Item GetSlot(Slot whichSlot)
         {

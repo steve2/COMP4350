@@ -98,13 +98,14 @@ namespace Assets.Code.Controller
         
 		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad, Inventory inventory)
 		{
+			if (inventory == null || toLoad == null) return;
+
 			foreach (KeyValuePair<string, int> entry in toLoad)
 			{
 				string itemName = entry.Key;
 				int itemQuantity = entry.Value;
 				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
 
-				Debug.Log ("Inventory loading of "+itemName+" with quantity "+itemQuantity);
 				if (itemComp != null)
 				{
 					inventory.Add (itemComp, entry.Value);
@@ -121,16 +122,20 @@ namespace Assets.Code.Controller
 
 		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad, EquipmentManager equipManager)
 		{
+			if (equipManager == null || toLoad == null) return;
+			Inventory equipInventory = equipManager.GetInventory ();
+
 			foreach (KeyValuePair<string, Slot> entry in toLoad)
 			{
 				string itemName = entry.Key;
 				Slot itemSlot = entry.Value;
 				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
 
-				Debug.Log ("Equipment loading of "+itemName+" into Slot " + itemSlot);
 				if (itemComp != null)
 				{
-					//Add the Item to the Inventory, and from there Equip it.
+					equipInventory.Add (itemComp);
+					//equipManager.Equip (itemComp, itemSlot);
+
 					Debug.Log (itemComp.Name +" ("+itemSlot+") has been added to Equipment.");
 				}
 				else
@@ -138,7 +143,8 @@ namespace Assets.Code.Controller
 					Debug.Log ("Item Component ["+itemName+"] could not be found.");
 				}
 			}
-			Debug.Log ("Equipment Loaded:");
+			Debug.Log ("Equipment Loaded: (printing Inventory)");
+			equipInventory.Print ();
 		}
 
 		public void LoadInventory(Inventory inventory)

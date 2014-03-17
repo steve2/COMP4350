@@ -28,13 +28,18 @@ namespace Assets.Code.Components
             inventory = GetComponent<Inventory>();
             attributeMngr = GetComponent<AttributeManager>();
             actionMgr = GetComponent<GameActionManager>();
+
 			slotPermissions = new ItemTypeSlotChecker();
-			
 			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.RightHand);
 			slotPermissions.AddSlotToType(ItemType.Weapon, Slot.LeftHand);
 			slotPermissions.AddSlotToType(ItemType.Chest, Slot.Chest);
 			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
         }
+
+		public void Print()
+		{
+			equipment.Print ();
+		}
 
         public List<Slot> GetSlots(ItemType type)
         {
@@ -44,6 +49,11 @@ namespace Assets.Code.Components
 		public void SetInventory(Inventory setComponent)
 		{
 			inventory = setComponent;
+		}
+
+		public Inventory GetInventory()
+		{
+			return inventory;
 		}
 
         /**

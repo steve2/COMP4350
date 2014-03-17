@@ -50,7 +50,7 @@ public class MainMenu : GameComponent {
 			return;
 		}
 		equipment.Start ();
-		equipment.SetInventory (inventory);
+		//equipment.SetInventory (inventory);
 
 		Game.Instance.LoadEquipment (equipment);
 	} 
