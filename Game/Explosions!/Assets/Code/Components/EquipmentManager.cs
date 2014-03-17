@@ -41,6 +41,11 @@ namespace Assets.Code.Components
             return slotPermissions.GetSlots(type);
         }
 
+		public void SetInventory(Inventory setComponent)
+		{
+			inventory = setComponent;
+		}
+
         /**
          * bool Dequip ()
          *  @ whatSlot: What slot to unequip from?

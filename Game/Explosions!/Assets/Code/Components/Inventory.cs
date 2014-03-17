@@ -82,9 +82,9 @@ namespace Assets.Code.Components
 		public void Print()
 		{
 			string toPrint = "";
-			foreach (Item item in items.Keys)
+			foreach (KeyValuePair<Item, int> entry in items)
 			{
-				toPrint += item.name + " | ";
+				toPrint += entry.Key.Name + " ("+ entry.Value +"), ";
 			}
 			Debug.Log (toPrint);
 		}

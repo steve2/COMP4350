@@ -21,10 +21,6 @@ namespace Assets.Code.Controller
         /// </summary>
         private Server server;
         private ThreadSafeActionQueue queue;
-
-        private EquipmentManager equipManager; //
-		private Inventory theInventory;
-
         //Cache
         //TODO: We are using threading, we should probably include locks
 		private IEnumerable<Character> characters;
@@ -94,43 +90,77 @@ namespace Assets.Code.Controller
 		{
 			get 
 			{
-				if (theInventory == null)
-				{
-					theInventory = GetComponent<Inventory>();
-					server.GetInventory(new Character(4, "TEST", 7, -8), (inventory) =>
-					{
-						foreach (KeyValuePair<string, int> entry in inventory)
-						{
-							Item theItem = FindItemComponent (entry.Key);
-							//Lock inventory to avoid conflicting with the modifications
-							//being made by the below delegate.
-							lock(theInventory)
-							{
-								theInventory.Add (theItem);
-							}
-						}
-					});
-					equipManager = GetComponent<EquipmentManager>();
-					server.GetEquipment(new Character(4, "TEST", 7, -8), (equipment) =>
-					{
-						foreach (KeyValuePair<string, Slot> entry in equipment)
-						{
-							Item theItem = FindItemComponent(entry.Key);
-							//Lock the inventory to avoid conflicting with the modifications
-							//being made by the above delegate.
-							lock(theInventory)
-							{
-								theInventory.Add (theItem); 
-								equipManager.Equip (theItem, entry.Value);
-							}
-						}
-					});
-				}
-				return theInventory;
+				//TODO: Load Inventory ?
+				return null;
 			}
 		}
         #endregion
         
+		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad, Inventory inventory)
+		{
+			foreach (KeyValuePair<string, int> entry in toLoad)
+			{
+				string itemName = entry.Key;
+				int itemQuantity = entry.Value;
+				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
+
+				Debug.Log ("Inventory loading of "+itemName+" with quantity "+itemQuantity);
+				if (itemComp != null)
+				{
+					inventory.Add (itemComp, entry.Value);
+					Debug.Log (itemComp.Name + " (" + entry.Value + ") has been added to Inventory.");
+				}
+				else
+				{
+					Debug.Log ("Item Component [" + itemName +"] could not be found.");
+				}
+			}
+			Debug.Log ("Inventory Loaded: ");
+			inventory.Print ();
+		}
+
+		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad, EquipmentManager equipManager)
+		{
+			foreach (KeyValuePair<string, Slot> entry in toLoad)
+			{
+				string itemName = entry.Key;
+				Slot itemSlot = entry.Value;
+				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
+
+				Debug.Log ("Equipment loading of "+itemName+" into Slot " + itemSlot);
+				if (itemComp != null)
+				{
+					//Add the Item to the Inventory, and from there Equip it.
+					Debug.Log (itemComp.Name +" ("+itemSlot+") has been added to Equipment.");
+				}
+				else
+				{
+					Debug.Log ("Item Component ["+itemName+"] could not be found.");
+				}
+			}
+			Debug.Log ("Equipment Loaded:");
+		}
+
+		public void LoadInventory(Inventory inventory)
+		{
+			if (inventory == null) return;
+
+			Character testChar = new Character(4, "TEST", 0, 0);
+			server.GetInventory (testChar, 
+			   		(inventoryLoaded) => InvokeOnMainThread 
+			        (() => LoadItemsIntoInventory(inventoryLoaded, inventory)));
+		}
+
+		public void LoadEquipment(EquipmentManager equipManager)
+		{
+			if (equipManager == null) return;
+
+			Character testChar = new Character(4, "TEST", 0, 0);
+			server.GetEquipment (testChar,
+			       (equipment) => InvokeOnMainThread
+			       (() => LoadItemsIntoEquipment(equipment, equipManager)));
+		}
+
         #region Server Interface
         public void Authenticate(string username, string password, Action<bool> asyncReturn)
         {
@@ -142,21 +172,6 @@ namespace Assets.Code.Controller
         {
             server.IsAlive((alive) => asyncReturn(alive));
         }
-
-		private Item FindItemComponent(string name)
-		{
-			lock(itemComponentList)
-			{
-				foreach (Item entry in itemComponentList)
-				{
-					if (entry.name.Equals (name))
-					{
-						return entry;
-					}
-				}
-			}
-			return null;
-		}
 
         /// <summary>
         /// Returns whether or not the recipe was successful
@@ -202,19 +217,6 @@ namespace Assets.Code.Controller
             queue.InvokeOnMainThread(task);
         }
 
-		/*
-		public void LoadResource(string path, Action<GameObject> asyncReturn)
-		{
-			if (!OnMainThread)
-			{
-				InvokeOnMainThread(() => LoadResource (path, (resource) => asyncReturn(resource)));
-			}
-			else
-			{
-				asyncReturn(Resources.Load<GameObject>(path));
-			}
-		}*/
-
         public void LoadLevel(string name)
         {
             if (!OnMainThread)
@@ -228,8 +230,26 @@ namespace Assets.Code.Controller
         }
         #endregion
 
+		private static GameObject characterPrefab;
+		private static CharacterComponent characterComponent;
 
         #region Initialization
+		public void LoadGameResources()
+		{
+			characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
+			characterComponent = characterPrefab.GetComponent<CharacterComponent>();
+			
+			itemPrefabList = new List<KeyValuePair<string, GameObject>>();
+			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon")));
+			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Health Booster", Resources.Load<GameObject>("Prefabs/Items/Health Booster")));
+			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold")));
+			
+			itemComponentList = new List<Item>();
+			itemComponentList.Add (itemPrefabList[0].Value.GetComponent<Item>());
+			itemComponentList.Add (itemPrefabList[1].Value.GetComponent<Item>());
+			itemComponentList.Add (itemPrefabList[2].Value.GetComponent<Item>());
+		}
+
         public void Awake()
         {
             //TODO: Perform dependency injection through inspector editing
@@ -244,16 +264,7 @@ namespace Assets.Code.Controller
             this.queue = new ThreadSafeActionQueue();
             DontDestroyOnLoad(this);
 
-			itemPrefabList = new List<KeyValuePair<string, GameObject>>();
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("LaserWeapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon")));
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("HealthBooster", Resources.Load<GameObject>("Prefabs/Items/Health Booster")));
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold")));
-		
-			itemComponentList = new List<Item>();
-			itemComponentList.Add (itemPrefabList[0].Value.GetComponent<Item>());
-			itemComponentList.Add (itemPrefabList[1].Value.GetComponent<Item>());
-			itemComponentList.Add (itemPrefabList[2].Value.GetComponent<Item>());
-
+			LoadGameResources ();
             Init(this); //Assign this instance to singleton
         }
 
