@@ -51,7 +51,7 @@ namespace Assets.Code.Components
 			{
                 if (items.TryGetValue(item, out current) && current > 0)
                 {
-                    items[item] =  current - 1;
+                    items[item] =  current - quantity;
                     success = true;
                 }
 			}
