@@ -17,12 +17,16 @@ public class MainMenu : GameComponent {
 	public override void Start ()
     {
         base.Start();
-        GameInst.IsServerOnline((x) =>
+        Game.Instance.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-		Game.Instance.TestGetInventory ();
-		Game.Instance.TestGetEquipment ();
+		Inventory test = Game.Instance.Inventory;
+		if (test == null)
+		{
+			Debug.Log ("Inventory has not loaded yet.");
+		}
+
 	} 
 
 	// Called when the GUI is rendered
