@@ -323,7 +323,6 @@ def handle_get_equipped_character_equipment():
         finally:
             database.db_close()
             
-    print result
     return jsonify(result)
 
 @app.route('/character/inventory/add', methods = ['POST', 'GET'])
