@@ -257,16 +257,28 @@ namespace Assets.Code.Controller
 					{
 						string name = json["equipment"].AsArray[i]["name"];
 						string slotName = json["equipment"].AsArray[i]["slot"];
-						Slot slot = (Slot) Enum.Parse (typeof(Slot), slotName);
+						string[] slotNameSplit = slotName.Split (new Char[] {' '});
 
-						resultList.Add (new KeyValuePair<string, Slot>(name, slot));
+						slotName = "";
+						for (int j = 0; j < slotNameSplit.Length; j++)
+						{
+							slotName += slotNameSplit[j];
+						}
+						try 
+						{
+							Slot slot = (Slot) Enum.Parse (typeof(Slot), slotName);
+							resultList.Add (new KeyValuePair<string, Slot>(name, slot));
+						}
+						catch (Exception exception)
+						{
+							Debug.Log ("Slot ["+slotName+"] could not be parsed as an Enum Type.");
+						}
 					}
 				}
 				else
 				{
 					Debug.Log ("Problem loading Character equipment (character ID="+character.Id+").");
 				}
-				Debug.Log (resultList);
 				asyncReturn(resultList);
 			});
         }
