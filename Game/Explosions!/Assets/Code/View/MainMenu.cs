@@ -25,7 +25,7 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-		CharacterLoader character = fromPrefab;
+		CharacterLoader character = Instantiate(fromPrefab) as CharacterLoader;
 		if (character == null)
 		{
 			Debug.Log ("Character Component cannot be loaded through Game.Instance.");
