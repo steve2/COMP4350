@@ -25,8 +25,7 @@ namespace Assets.Code.Components
 			string toPrint = "";
 			foreach (KeyValuePair<Slot, Item> entry in equippedItems)
 			{
-				toPrint += entry.Value.Name + " equipped in Slot " + entry.Key;
-				toPrint += "\n";
+				toPrint += entry.Value.Name + " (" + entry.Key + "), ";
 			}
 			Debug.Log (toPrint);
 		}

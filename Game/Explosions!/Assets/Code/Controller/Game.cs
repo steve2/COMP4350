@@ -30,12 +30,20 @@ namespace Assets.Code.Controller
         private IEnumerable<Recipe> craftItems;
         private int mainThread;
 
+        //Game class is a singleton.
         public static Game Instance { get; private set; }
 
 		public string username;
 		public Character character; //TODO: Keep track of selected character 
 		public bool CharacterSelected { get { return this.character != null; } }
-		
+
+
+        //Character prefab is initialized on Awake().
+        //>"CharacterLoader" instantiated in "LoadCharacter()".
+        private static GameObject characterPrefab;
+        private static CharacterLoader characterComponent;
+
+        //Item prefab loading and initialization?
 		private static Dictionary<string, GameObject> itemPrefabs;
 		private static Dictionary<string, Item> itemComponents;
 
@@ -105,81 +113,120 @@ namespace Assets.Code.Controller
         {
         }
 
-		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad, Inventory inventory)
+		#region Game Loading
+		public void LoadCharacter()
 		{
-			if (inventory == null || toLoad == null) return;
+			InvokeOnMainThread (() => 
+			{
+				characterComponent = Instantiate(characterPrefab.GetComponent<CharacterLoader>()) as CharacterLoader;
+				
+                LoadInventory ();
+			});
+		}
 
+		public void LoadInventory()
+		{
+			Character testChar = new Character(4, "TEST", 0, 0);
+			server.GetInventory (testChar, (inventoryLoaded) => 
+			{
+				if (!OnMainThread)
+					InvokeOnMainThread (() => LoadItemsIntoInventory(inventoryLoaded));
+				else
+					LoadItemsIntoInventory (inventoryLoaded);
+			});
+		}
+
+		public void LoadEquipment()
+		{
+			Character testChar = new Character(4, "TEST", 0, 0);
+			server.GetEquipment (testChar, (equipment) => 
+			{
+				if (!OnMainThread)
+					InvokeOnMainThread (() => LoadItemsIntoEquipment(equipment));
+				else
+					LoadItemsIntoEquipment (equipment);
+			});
+		}
+	
+		
+		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad)
+		{
+			if (toLoad == null)
+			{
+				Debug.Log ("LoadItemsIntoInventory: Bad input.");
+				return;
+			}
+			
+			Inventory inventory = characterComponent.GetComponent<Inventory>();
+			
+			if (inventory == null)
+			{
+				Debug.Log ("LoadItemsIntoInventory: Cannot load Inventory.");
+				return;
+			}
+			
 			foreach (KeyValuePair<string, int> entry in toLoad)
 			{
 				string itemName = entry.Key;
 				int itemQuantity = entry.Value;
-                Item itemComp;
-
+				Item itemComp;
 				if (itemComponents.TryGetValue(itemName, out itemComp))
 				{
 					inventory.Add (itemComp, entry.Value);
-					Debug.Log (itemComp.Name + " (" + entry.Value + ") has been added to Inventory.");
 				}
 				else
 				{
 					Debug.Log ("Item Component [" + itemName +"] could not be found.");
 				}
 			}
+			
 			Debug.Log ("Inventory Loaded: ");
 			inventory.Print ();
+			
+			LoadEquipment ();
 		}
-
-		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad, EquipmentManager equipManager)
+		
+		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad)
 		{
-			if (equipManager == null || toLoad == null) return;
-			Inventory equipInventory = equipManager.GetInventory();
-
+			if (toLoad == null) 
+			{
+				Debug.Log ("LoadItemsIntoEquipment: Bad input.");
+				return;
+			}
+			
+			EquipmentManager equipManager = characterComponent.GetComponent<EquipmentManager>();
+			Inventory equipInventory = characterComponent.GetComponent<Inventory>();
+			
+			if (equipManager == null || equipInventory == null)
+			{
+				Debug.Log ("LoadItemsIntoEquipment: Cannot load Equipment/Inventory.");
+				return;
+			}
+			
 			foreach (KeyValuePair<string, Slot> entry in toLoad)
 			{
 				string itemName = entry.Key;
 				Slot itemSlot = entry.Value;
-                Item itemComp;
-
-                if (itemComponents.TryGetValue(itemName, out itemComp))
+				Item itemComp;
+				if (itemComponents.TryGetValue(itemName, out itemComp))
 				{
 					equipInventory.Add (itemComp);
-					//equipManager.Equip (itemComp, itemSlot);
-
-					Debug.Log (itemComp.Name +" ("+itemSlot+") has been added to Equipment.");
+					equipManager.Equip (itemComp, itemSlot);
 				}
 				else
 				{
 					Debug.Log ("Item Component ["+itemName+"] could not be found.");
 				}
 			}
-			Debug.Log ("Equipment Loaded: (printing Inventory)");
+			
+			Debug.Log ("Equipment Loaded -- Printing Inventory & Equipment");
 			equipInventory.Print ();
+			equipManager.Print ();
 		}
-
-		public void LoadInventory()
-		{
-			Inventory inventory = characterComponent.GetComponent<Inventory>();
-			if (inventory == null) return;
-
-			Character testChar = new Character(4, "TEST", 0, 0);
-			server.GetInventory (testChar, 
-			   		(inventoryLoaded) => InvokeOnMainThread 
-			        (() => LoadItemsIntoInventory(inventoryLoaded, inventory)));
-		}
-
-		public void LoadEquipment()
-		{
-			EquipmentManager equipManager = characterComponent.GetComponent<EquipmentManager>();
-			if (equipManager == null) return;
-
-			Character testChar = new Character(4, "TEST", 0, 0);
-			server.GetEquipment (testChar,
-			       (equipment) => InvokeOnMainThread
-			       (() => LoadItemsIntoEquipment(equipment, equipManager)));
-		}
-
-        #region Server Interface
-        public void Authenticate(string username, string password, Action<bool> asyncReturn)
+		#endregion
+		
+		#region Server Interface
+		public void Authenticate(string username, string password, Action<bool> asyncReturn)
         {
             server.Login(username, password, (validPlayer) => asyncReturn(validPlayer));
         }
@@ -256,31 +303,7 @@ namespace Assets.Code.Controller
         }
         #endregion
 
-		private static GameObject characterPrefab;
-		private static CharacterLoader characterComponent;
-
         #region Initialization
-		public void LoadGameResources()
-		{
-			characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
-			characterComponent = Instantiate(characterPrefab.GetComponent<CharacterLoader>()) as CharacterLoader;
-
-            itemPrefabs = new Dictionary<string, GameObject>();
-			itemPrefabs.Add ("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon"));
-			itemPrefabs.Add ("Health Booster", Resources.Load<GameObject>("Prefabs/Items/Health Booster"));
-			itemPrefabs.Add ("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold"));
-
-            itemComponents = new Dictionary<string, Item>();
-            foreach (GameObject go in itemPrefabs.Values)
-            {
-                Item item = go.GetComponent<Item>();
-                if (item != null)
-                {
-                    itemComponents.Add(item.Name, item);
-                }
-            }
-		}
-
         public void Awake()
         {
             //TODO: Perform dependency injection through inspector editing
@@ -297,6 +320,27 @@ namespace Assets.Code.Controller
 
 			LoadGameResources ();
             Init(this); //Assign this instance to singleton
+        }
+
+        public void LoadGameResources()
+        {
+            characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
+
+            itemPrefabs = new Dictionary<string, GameObject>();
+            itemPrefabs.Add("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon"));
+            itemPrefabs.Add("Health Booster", Resources.Load<GameObject>("Prefabs/Items/Health Booster"));
+            itemPrefabs.Add("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold"));
+
+            itemComponents = new Dictionary<string, Item>();
+            foreach (GameObject go in itemPrefabs.Values)
+            {
+                Item item = go.GetComponent<Item>();
+                if (item != null)
+                {
+                    itemComponents.Add(item.Name, item);
+                }
+            }
+
         }
 
         public void Update()
