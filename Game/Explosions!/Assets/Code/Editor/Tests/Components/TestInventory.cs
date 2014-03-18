@@ -22,7 +22,7 @@ namespace Assets.Code.Editor.Tests.Components
 			testItems = new Item[4];
 			testInventory = testGameObj.AddComponent<Inventory>();
 
-			testInventory.Start ();
+			testInventory.Awake ();
 
 			testItems[0] = testGameObj.AddComponent<Item>();
 			testItems[0].Awake ();

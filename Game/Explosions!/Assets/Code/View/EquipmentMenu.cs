@@ -7,7 +7,8 @@ using Assets.Code.Model;
 
 [RequireComponent(typeof(EquipmentManager))]
 [RequireComponent(typeof(Inventory))]
-public class EquipmentMenu : MonoBehaviour {
+public class EquipmentMenu : MonoBehaviour 
+{
     private bool showMenu;
     private EquipmentManager equipment;
     private Inventory inventory;
