@@ -152,13 +152,13 @@ GameObject:
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400018}
   - 114: {fileID: 11400024}
-  - 114: {fileID: 11400004}
   - 114: {fileID: 11400016}
   - 114: {fileID: 11400014}
   - 114: {fileID: 11400022}
   - 114: {fileID: 11400030}
   - 114: {fileID: 11400028}
   - 114: {fileID: 11400026}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -1762,7 +1762,7 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 1
---- !u!114 &11400004
+--- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}

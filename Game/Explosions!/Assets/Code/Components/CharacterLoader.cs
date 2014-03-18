@@ -11,7 +11,7 @@ namespace Assets.Code.Components
     [RequireComponent(typeof(Inventory))]
     [RequireComponent(typeof(AttributeManager))]
     [RequireComponent(typeof(EquipmentManager))]
-    public class CharacterComponent : GameComponent
+    public class CharacterLoader : GameComponent
     {
         public Inventory Inventory { get; private set; }
         public AttributeManager AttributeManager { get; private set; }

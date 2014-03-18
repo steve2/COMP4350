@@ -237,13 +237,13 @@ namespace Assets.Code.Controller
         #endregion
 
 		private static GameObject characterPrefab;
-		private static CharacterComponent characterComponent;
+		private static CharacterLoader characterComponent;
 
         #region Initialization
 		public void LoadGameResources()
 		{
 			characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
-			characterComponent = characterPrefab.GetComponent<CharacterComponent>();
+			characterComponent = characterPrefab.GetComponent<CharacterLoader>();
 			
 			itemPrefabList = new List<KeyValuePair<string, GameObject>>();
 			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon")));

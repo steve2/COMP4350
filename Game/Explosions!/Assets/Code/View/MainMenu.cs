@@ -8,7 +8,7 @@ using Assets.Code.Controller;
 
 public class MainMenu : GameComponent {
 
-	private static CharacterComponent fromPrefab = Resources.Load<GameObject> ("Prefabs/Character").GetComponent<CharacterComponent>();
+	private static CharacterLoader fromPrefab = Resources.Load<GameObject> ("Prefabs/Character").GetComponent<CharacterLoader>();
 	private static Inventory inventory;
 	private static EquipmentManager equipment;
 
@@ -25,7 +25,7 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-		CharacterComponent character = fromPrefab;
+		CharacterLoader character = fromPrefab;
 		if (character == null)
 		{
 			Debug.Log ("Character Component cannot be loaded through Game.Instance.");
