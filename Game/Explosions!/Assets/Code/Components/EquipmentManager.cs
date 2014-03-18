@@ -16,9 +16,6 @@ namespace Assets.Code.Components
         private GameActionManager actionMgr;
         private Equipment equipment;
 		private ItemTypeSlotChecker slotPermissions;
-
-        [SerializeField]
-        private List<Item> defaultEquipment; //Loaded from the editor
         private Inventory inventory;
 
         /** Initialization **/

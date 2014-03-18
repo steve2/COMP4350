@@ -6,20 +6,11 @@ namespace Assets.Code.Components
 {
     public class Inventory : MonoBehaviour, IEnumerable<Item>
     {
-        [SerializeField]
-        private List<Item> editorItems;
         private Dictionary<Item, int> items;
       
         public void Start()
         {
             items = new Dictionary<Item, int>();
-            if (editorItems != null)
-            {
-                foreach (Item item in editorItems)
-                {
-                    items.Add(item, 1);
-                }
-            }
         }
 
         public int GetQuantity(Item item)
