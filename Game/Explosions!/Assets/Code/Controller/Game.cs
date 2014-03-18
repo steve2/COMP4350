@@ -263,7 +263,7 @@ namespace Assets.Code.Controller
 		public void LoadGameResources()
 		{
 			characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
-			characterComponent = characterPrefab.GetComponent<CharacterLoader>();
+			characterComponent = Instantiate(characterPrefab.GetComponent<CharacterLoader>()) as CharacterLoader;
 
             itemPrefabs = new Dictionary<string, GameObject>();
 			itemPrefabs.Add ("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon"));
