@@ -19,7 +19,7 @@ namespace Assets.Code.Components
         private Inventory inventory;
 
         /** Initialization **/
-        public void Start()
+        public void Awake()
         {
             equipment = new Equipment();
             inventory = GetComponent<Inventory>();

@@ -32,7 +32,7 @@ namespace Assets.Code.Editor.Tests.Components
             actionMgr.Start();
 			testGameObject.AddComponent<AttributeManager>().Awake ();
 			testGameObject.AddComponent<Inventory>().Awake ();
-            testGameObject.AddComponent<EquipmentManagerStub>().Start();
+            testGameObject.AddComponent<EquipmentManagerStub>().Awake();
 
 			//Setup Items that can be used to Equip/Unequip.
 			testItems[0] = testGameObject.AddComponent<Item>();
