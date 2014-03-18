@@ -21,7 +21,6 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-
 		Game.Instance.LoadInventory();
 
 		//equipment.Start ();

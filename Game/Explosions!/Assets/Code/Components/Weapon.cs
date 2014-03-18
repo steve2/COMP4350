@@ -7,12 +7,15 @@ using System.Collections.Generic;
 
 namespace Assets.Code.Components
 {
+    /// <summary>
+    /// This component is used to create Weapons at design time
+    /// </summary>
     [AddComponentMenu("Items/Weapon")]
-    public class Weapon : Item
+    public class WeaponEditor : Item
     {
         #region Editor Fields
         [SerializeField]
-        private Weapon.EditorAttributes attributes; //The Editor attributes
+        private WeaponEditor.EditorAttributes attributes; //The Editor attributes
         [Serializable]
         public class EditorAttributes
         {
@@ -34,13 +37,6 @@ namespace Assets.Code.Components
         private AttributeManager attrManager; //Requires a link to owners attribute manager 
         #endregion
         
-        //For testing (TODO: Shouldn't expose a public constructor)
-        //This is used to simulate Unity initializing the data from inspector input
-        public Weapon(Weapon.EditorAttributes editorAttributes) 
-        {
-            this.attributes = editorAttributes;
-        }
-
         #region Overrides
         protected override void InitAttributes()
         {
