@@ -8,10 +8,6 @@ using Assets.Code.Controller;
 
 public class MainMenu : GameComponent {
 
-	private static CharacterComponent fromPrefab = Resources.Load<GameObject> ("Prefabs/Character").GetComponent<CharacterComponent>();
-	private static Inventory inventory;
-	private static EquipmentManager equipment;
-
     //Called before Start
     void Awake()
     {
@@ -25,34 +21,13 @@ public class MainMenu : GameComponent {
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
         });
-		CharacterComponent character = fromPrefab;
-		if (character == null)
-		{
-			Debug.Log ("Character Component cannot be loaded through Game.Instance.");
-			return;
-		}
 
-		inventory = character.GetComponent<Inventory>();
-		if (inventory == null)
-		{
-			Debug.Log ("Inventory cannot be loaded through Character Component.");
-			return;
-		}
-		inventory.Start ();
-		Debug.Log ("Inventory Default:");
-		inventory.Print ();
-		Game.Instance.LoadInventory(inventory);
+		Game.Instance.LoadInventory();
 
-		equipment = character.GetComponent<EquipmentManager>();
-		if (equipment == null)
-		{
-			Debug.Log ("Equipment cannot be loaded through Character Component.");
-			return;
-		}
-		equipment.Start ();
+		//equipment.Start ();
 		//equipment.SetInventory (inventory);
 
-		Game.Instance.LoadEquipment (equipment);
+		Game.Instance.LoadEquipment ();
 	} 
 
 	// Called when the GUI is rendered

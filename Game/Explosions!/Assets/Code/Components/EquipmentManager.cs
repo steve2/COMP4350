@@ -36,6 +36,16 @@ namespace Assets.Code.Components
 			slotPermissions.AddSlotToType(ItemType.Legs, Slot.Legs);
         }
 
+		public Inventory GetInventory()
+		{
+			return inventory;
+		}
+
+		public void SetInventory(Inventory set)
+		{
+			inventory = set;
+		}
+
 		public void Print()
 		{
 			equipment.Print ();
@@ -45,16 +55,6 @@ namespace Assets.Code.Components
         {
             return slotPermissions.GetSlots(type);
         }
-
-		public void SetInventory(Inventory setComponent)
-		{
-			inventory = setComponent;
-		}
-
-		public Inventory GetInventory()
-		{
-			return inventory;
-		}
 
         /**
          * bool Dequip ()

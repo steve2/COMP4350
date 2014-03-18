@@ -123,7 +123,7 @@ namespace Assets.Code.Controller
 		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad, EquipmentManager equipManager)
 		{
 			if (equipManager == null || toLoad == null) return;
-			Inventory equipInventory = equipManager.GetInventory ();
+			Inventory equipInventory = equipManager.GetInventory();
 
 			foreach (KeyValuePair<string, Slot> entry in toLoad)
 			{
@@ -147,8 +147,9 @@ namespace Assets.Code.Controller
 			equipInventory.Print ();
 		}
 
-		public void LoadInventory(Inventory inventory)
+		public void LoadInventory()
 		{
+			Inventory inventory = characterComponent.GetComponent<Inventory>();
 			if (inventory == null) return;
 
 			Character testChar = new Character(4, "TEST", 0, 0);
@@ -157,8 +158,9 @@ namespace Assets.Code.Controller
 			        (() => LoadItemsIntoInventory(inventoryLoaded, inventory)));
 		}
 
-		public void LoadEquipment(EquipmentManager equipManager)
+		public void LoadEquipment()
 		{
+			EquipmentManager equipManager = characterComponent.GetComponent<EquipmentManager>();
 			if (equipManager == null) return;
 
 			Character testChar = new Character(4, "TEST", 0, 0);
