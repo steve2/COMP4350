@@ -36,8 +36,8 @@ namespace Assets.Code.Controller
 		public Character character; //TODO: Keep track of selected character 
 		public bool CharacterSelected { get { return this.character != null; } }
 		
-		private static List<KeyValuePair<string, GameObject>> itemPrefabList;
-		private static List<Item> itemComponentList;
+		private static Dictionary<string, GameObject> itemPrefabs;
+		private static Dictionary<string, Item> itemComponents;
 
         #region Asynchronous Properties
         /****************************************************************************
@@ -96,6 +96,15 @@ namespace Assets.Code.Controller
 		}
         #endregion
         
+        public void ShowCharacter()
+        {
+
+        }
+
+        public void HideCharacter()
+        {
+        }
+
 		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad, Inventory inventory)
 		{
 			if (inventory == null || toLoad == null) return;
@@ -104,9 +113,9 @@ namespace Assets.Code.Controller
 			{
 				string itemName = entry.Key;
 				int itemQuantity = entry.Value;
-				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
+                Item itemComp;
 
-				if (itemComp != null)
+				if (itemComponents.TryGetValue(itemName, out itemComp))
 				{
 					inventory.Add (itemComp, entry.Value);
 					Debug.Log (itemComp.Name + " (" + entry.Value + ") has been added to Inventory.");
@@ -129,9 +138,9 @@ namespace Assets.Code.Controller
 			{
 				string itemName = entry.Key;
 				Slot itemSlot = entry.Value;
-				Item itemComp = itemComponentList.Find (x => (x.Name == itemName));
+                Item itemComp;
 
-				if (itemComp != null)
+                if (itemComponents.TryGetValue(itemName, out itemComp))
 				{
 					equipInventory.Add (itemComp);
 					//equipManager.Equip (itemComp, itemSlot);
@@ -231,7 +240,16 @@ namespace Assets.Code.Controller
             }
 			else
 			{
-            	Application.LoadLevel(name);
+                Application.LoadLevel(name);
+                //TODO: Do this a better way...
+                if (name == "Demo")
+                {
+                    ShowCharacter();
+                }
+                else
+                {
+                    HideCharacter();
+                }
 			}
         }
         #endregion
@@ -244,16 +262,21 @@ namespace Assets.Code.Controller
 		{
 			characterPrefab = Resources.Load<GameObject>("Prefabs/Character");
 			characterComponent = characterPrefab.GetComponent<CharacterLoader>();
-			
-			itemPrefabList = new List<KeyValuePair<string, GameObject>>();
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon")));
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Health Booster", Resources.Load<GameObject>("Prefabs/Items/Health Booster")));
-			itemPrefabList.Add (new KeyValuePair<string, GameObject>("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold")));
-			
-			itemComponentList = new List<Item>();
-			itemComponentList.Add (itemPrefabList[0].Value.GetComponent<Item>());
-			itemComponentList.Add (itemPrefabList[1].Value.GetComponent<Item>());
-			itemComponentList.Add (itemPrefabList[2].Value.GetComponent<Item>());
+
+            itemPrefabs = new Dictionary<string, GameObject>();
+			itemPrefabs.Add ("Laser Weapon", Resources.Load<GameObject>("Prefabs/Items/Laser Weapon"));
+			itemPrefabs.Add ("Health Booster", Resources.Load<GameObject>("Prefabs/Items/Health Booster"));
+			itemPrefabs.Add ("Gold", Resources.Load<GameObject>("Prefabs/Items/Gold"));
+
+            itemComponents = new Dictionary<string, Item>();
+            foreach (GameObject go in itemPrefabs.Values)
+            {
+                Item item = go.GetComponent<Item>();
+                if (item != null)
+                {
+                    itemComponents.Add(item.Name, item);
+                }
+            }
 		}
 
         public void Awake()
