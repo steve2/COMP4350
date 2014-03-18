@@ -257,22 +257,22 @@ def handle_create_character():
 
 #TODO: Add getQuantity
 
-@app.route('/character/inventory/getQuantity', methods = ['POST', 'GET'])
-def handle_get_character_quantity():
-
+@app.route('/character/inventory/getgold', methods = ['POST', 'GET'])
+def handle_get_character_gold():
+    #TODO: Fix DRY violation (Why was this copied and pasted then 1 line changed...)
     data = request.json
 
     if 'charid' not in data:
         result = {"inventory": None, "BadRequest": True }
     else:
-        charid = data['charid'] 
-        itemid = data['itemid'] 
+        charid = data['charid'] # TODO: Make this character name?
         try:
             database.db_connect()
-            inv = inventory.get_quantity(charid, itemid)
+            inv = inventory.get_inventory(charid)
             result = { "inventory" : [] }
             for entry in inv:
-                result['inventory'].append( {"quantity":entry[0]} )
+                if entry[0] in ['Gold']:
+                    result['inventory'].append( {"name":entry[0], "quantity":entry[1]} )
         except Exception, e:
             print e
             result = {"inventory": None}

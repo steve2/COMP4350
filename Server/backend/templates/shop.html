@@ -11,16 +11,16 @@
 
   </head>
 
-  <body onload = "displayMoney()">
+  <body>
 
     <div class="container">
-      <div id="characterInfo" class="table table-bordered" style="padding:10px;">
+    	<div id="characterInfo" class="table table-bordered" style="padding:10px;">
             <form class="form-signin" id="shop-form" role="form" method="post">
-
+            
             Character <select id = "characters">
             </select>
             <span style="float:right;">Gold <span id="gold"></span></span>
-    </div>
+		</div>
 
       <table class="table table-bordered" id = "purchasables" cellpadding="10">
       <tr name="data" >
@@ -36,99 +36,96 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
 
     <script>
-  //populates the character datalist
-  var characters = new Array();
-  request("/character/getAll", {}, function(data, _1, _2)
-  {
-    for (var i=0; i < data['characters'].length; i++)
-    {
-      var character = new Object();
-      character.id   = data['characters'][i][0];
-      character.name = data['characters'][i][2];
+	//populates the character datalist
+	var characters = new Array();
+	request("/character/getAll", {}, function(data, _1, _2)
+	{
+		for (var i=0; i < data['characters'].length; i++)
+		{
+		  var character = new Object();
+		  character.id   = data['characters'][i][0];
+		  character.name = data['characters'][i][2];
+		
+		  characters.push(character);
+		}
+	var options;
+	for (var i = 0; i < characters.length; i++)
+	{
+		options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
+	}
+	$("#characters").append(options);
+	
+	});
+	
+	displayMoney();
 
-      characters.push(character);
-    }
-  var options;
-  for (var i = 0; i < characters.length; i++)
-  {
-    options += '<option value = ' + characters[i].id + '>' + characters[i].name + '</option>';
-  }
-  $("#characters").append(options);
-
-  });
-
-  displayMoney();
-
-  request("/getPurchasables", {}, function(data, _1, _2)
-  {
-    var items = data['purchasables'];
-    var table = $("#purchasables");
-    for (var i = 0; i < items.length; i++)
-    {
-      var item = items[i];
-      var row = insertRow(table);
-      row.attr('id', i);
-      insertCell(row).append(item.name);
-      insertCell(row).append(item.cost);
-      var btnCell = insertCell(row);
-      var btn = insert(btnCell, 'button');
-      btn.attr('id', 'purchasebtn');
-      btn.addClass('btn btn-default btn-xs');
-      btn.append("Buy");
-      btn.on('click', function(event)
-      {
-        event.preventDefault();
-        purchase(item.recipe);
-      });
-    }
-  });
+	request("/getPurchasables", {}, function(data, _1, _2)
+	{
+		var items = data['purchasables'];
+		var table = $("#purchasables");
+		for (var i = 0; i < items.length; i++)
+		{
+			var item = items[i];
+			var row = insertRow(table);
+			row.attr('id', i);
+			insertCell(row).append(item.name);
+			insertCell(row).append(item.cost);
+			var btnCell = insertCell(row);
+			var btn = insert(btnCell, 'button');
+			btn.attr('id', 'purchasebtn');
+			btn.addClass('btn btn-default btn-xs');
+			btn.append("Buy");
+			btn.on('click', function(event)
+			{
+				event.preventDefault();
+				purchase(item.recipe);
+			});
+		}
+	});
 
         //takes the index of the row clicked and sends the appropriate recipe request
 
-  function purchase(recipe)
-  {
-    var selectedChar = $('#characters').val();
-
-    var jsonArg = new Object();
-    jsonArg.recipe = recipe;
-    jsonArg.charid = selectedChar;
-
-    request("/recipe/use", jsonArg, function(data, _1, _2)
-    {
-      if(data.result) {
-        alert("Purchase Successful");
-        displayMoney();
-        //showAlert("Purchase Successful", true, 1000);
-      } else {
-        alert("You cannot purchase this item");
-        //showAlert("You cannot purchase this item", false, 1000);
-      }
-    });
-  }
+	function purchase(recipe)
+	{
+		var selectedChar = $('#characters').val();
+		
+		var jsonArg = new Object();
+		jsonArg.recipe = recipe;
+		jsonArg.charid = selectedChar;
+		
+		request("/recipe/use", jsonArg, function(data, _1, _2)
+		{
+			if(data.result) {
+			  alert("Purchase Successful");
+			  //showAlert("Purchase Successful", true, 1000);
+			} else {
+			  alert("You cannot purchase this item");
+			  //showAlert("You cannot purchase this item", false, 1000);
+			}
+		});
+	}
 
   //gets the Gold inventory from the character depending on the selected character
 
   $(function(){
     $('#characters').change(function(){ displayMoney()});
   });
-
+  
   var MONEY_ID = "#gold"
-
-  //3 is our current Currency ID
   function displayMoney()
   {
-    var jsonArg = new Object();
-    jsonArg.charid = $('#characters').val();
-    jsonArg.itemid = 3;
-    request("/character/inventory/getQuantity", jsonArg, function(data, _1, _2)
+	  var jsonArg = new Object();
+	  jsonArg.charid = $('#characters').val();
+	  
+	  request("/character/inventory/getgold", jsonArg, function(data, _1, _2)
       {
         var inv = data['inventory'];
         var lbl = $(MONEY_ID);
-    var gold;
-    if(inv.length > 0)
-          gold = inv[0].quantity;
-    else
-      gold = 0;
+		var gold;
+		if(inv.length > 0)
+        	gold = inv[0].quantity;
+		else
+			gold = 0;
         lbl.text(gold);
       });
   }

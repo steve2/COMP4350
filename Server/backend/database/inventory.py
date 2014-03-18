@@ -33,7 +33,7 @@ def get_inventory(charid):
     db = database.db_connect()
     c = db.cursor()
     qry = "SELECT Item.Name, Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+database.INSERT_SYM
-    c.execute(qry, (charid)) #result should contain Name of items and their quantity.
+    c.execute(qry, (charid,)) #result should contain Name of items and their quantity.
     result = []
     for row in c:
         result.append(row)
@@ -51,7 +51,7 @@ def get_quantity(charid, itemid):
     db = database.db_connect()
     c = db.cursor()
     qry = "SELECT Quantity FROM Inventory_Item JOIN Item ON Item_ID=Item.ID WHERE Character_ID="+database.INSERT_SYM+" AND Item_ID="+database.INSERT_SYM
-    c.execute(qry, (charid,itemid))
+    c.execute(qry, (charid,itemid,))
     result = c.fetchone()
     if result != None:
         result = result[0]
