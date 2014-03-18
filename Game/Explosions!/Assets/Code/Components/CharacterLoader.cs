@@ -18,13 +18,24 @@ namespace Assets.Code.Components
         public EquipmentManager EquipmentManager { get; private set; }
 
         //TODO: It would be nice to store what is already disabled and NOT enable it afterward
-        private void EnableAll(bool enable)
+        private void EnableAll()
         {
-            var components = GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour c in components)
+            gameObject.SetActive(true);
+            foreach (Transform child in transform)
             {
-                c.enabled = false;
+                child.gameObject.SetActive(true);
             }
+        }
+
+        private void Hide()
+        {
+            gameObject.SetActive(false); //Auto recurses down
+
+            //Only activate a minimal subset
+            //gameObject.SetActive(true);
+            Inventory.enabled = true;
+            AttributeManager.enabled = true;
+            EquipmentManager.enabled = true;
         }
 
         public void Awake()
@@ -32,18 +43,15 @@ namespace Assets.Code.Components
             Inventory = GetComponent<Inventory>();
             AttributeManager = GetComponent<AttributeManager>();
             EquipmentManager = GetComponent<EquipmentManager>();
-            EnableAll(false);
-            Inventory.enabled = true;
-            AttributeManager.enabled = true;
-            EquipmentManager.enabled = true;
+            Hide();
         }
 
         /// <summary>
         /// Call this when the scene is loaded and we want to put the character in it
         /// </summary>
-        public void Enable()
+        public void Show()
         {
-            EnableAll(true);
+            EnableAll();
         }
     }
 }
