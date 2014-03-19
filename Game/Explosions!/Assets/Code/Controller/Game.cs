@@ -41,7 +41,7 @@ namespace Assets.Code.Controller
         //Character prefab is initialized on Awake().
         //>"CharacterLoader" instantiated in "LoadCharacter()".
         private static GameObject characterPrefab;
-        private static CharacterLoader characterComponent;
+        private static CharacterLoader characterInst;
 
         //Item prefab loading and initialization?
 		private static Dictionary<string, GameObject> itemPrefabs;
@@ -114,50 +114,57 @@ namespace Assets.Code.Controller
         }
 
 		#region Game Loading
+        /// <summary>
+        /// Safely loads character regardless of current thread
+        /// </summary>
 		public void LoadCharacter()
 		{
-			InvokeOnMainThread (() => 
-			{
-				characterComponent = Instantiate(characterPrefab.GetComponent<CharacterLoader>()) as CharacterLoader;
-				
-                LoadInventory ();
-			});
+            if (!OnMainThread)
+            {
+                InvokeOnMainThread(() => LoadCharacter());
+                return;
+            }
+            if (character == null)
+            {
+                Debug.LogError("Cannot Load a Character before one is selected");
+                return;
+            }
+			
+			characterInst = Instantiate(characterPrefab.GetComponent<CharacterLoader>()) as CharacterLoader;
+            DontDestroyOnLoad(characterInst);
+            LoadInventory ();
 		}
 
 		private void LoadInventory()
 		{
-			Character testChar = new Character(4, "TEST", 0, 0);
-			server.GetInventory (testChar, (inventoryLoaded) => 
+			server.GetInventory (character, (inventoryLoaded) => 
 			{
-				if (!OnMainThread)
-					InvokeOnMainThread (() => LoadItemsIntoInventory(inventoryLoaded));
-				else
-					LoadItemsIntoInventory (inventoryLoaded);
+				LoadItemsIntoInventory (inventoryLoaded);
 			});
 		}
 
 		private void LoadEquipment()
 		{
-			Character testChar = new Character(4, "TEST", 0, 0);
-			server.GetEquipment (testChar, (equipment) => 
+			server.GetEquipment (character, (equipment) => 
 			{
-				if (!OnMainThread)
-					InvokeOnMainThread (() => LoadItemsIntoEquipment(equipment));
-				else
-					LoadItemsIntoEquipment (equipment);
+				LoadItemsIntoEquipment (equipment);
 			});
 		}
 	
-		
 		private void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad)
 		{
+            if (!OnMainThread)
+            {
+				InvokeOnMainThread (() => LoadItemsIntoInventory(toLoad));
+                return;
+            }
 			if (toLoad == null)
 			{
 				Debug.Log ("LoadItemsIntoInventory: Bad input.");
 				return;
 			}
 			
-			Inventory inventory = characterComponent.GetComponent<Inventory>();
+			Inventory inventory = characterInst.GetComponent<Inventory>();
 			
 			if (inventory == null)
 			{
@@ -188,14 +195,19 @@ namespace Assets.Code.Controller
 		
 		private void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad)
 		{
+            if (!OnMainThread)
+            {
+                InvokeOnMainThread(() => LoadItemsIntoEquipment(toLoad));
+                return;
+            }
 			if (toLoad == null) 
 			{
 				Debug.Log ("LoadItemsIntoEquipment: Bad input.");
 				return;
 			}
 			
-			EquipmentManager equipManager = characterComponent.GetComponent<EquipmentManager>();
-			Inventory equipInventory = characterComponent.GetComponent<Inventory>();
+			EquipmentManager equipManager = characterInst.GetComponent<EquipmentManager>();
+			Inventory equipInventory = characterInst.GetComponent<Inventory>();
 			
 			if (equipManager == null || equipInventory == null)
 			{
