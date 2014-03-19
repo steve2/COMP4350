@@ -119,10 +119,6 @@ namespace Assets.Code.Controller
 						j["characters"].AsArray[currCharacter][3].AsInt,
 						j["characters"].AsArray[currCharacter][4].AsInt));
 				}
-
-//				foreach (Character character in ownedCharacters){
-//					Debug.Log(character.ToString());
-//				}
 					asyncReturn (ownedCharacters);
 				});
 		}
