@@ -26,7 +26,7 @@ public class MissionMenu : GameComponent {
 		{
 			if (GUILayout.Button ("Mission" + mission.ID)) 
 			{
-				GameInst.LoadLevel ("Demo"); 
+				GameInst.LoadLevel ("Mission1"); 
 			}
 		}	
 
@@ -37,7 +37,7 @@ public class MissionMenu : GameComponent {
 		// Hardcoding a mission for now
 		if (GUILayout.Button ("Mission 1")) 
 		{
-			GameInst.LoadLevel ("Demo"); 
+            GameInst.LoadLevel("Mission1"); 
 		}
 		GUILayout.EndArea();
 	}
