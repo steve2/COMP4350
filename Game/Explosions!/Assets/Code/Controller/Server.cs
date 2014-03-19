@@ -114,7 +114,7 @@ namespace Assets.Code.Controller
 				Debug.Log(j["characters"].Count);
 				for (int currCharacter = 0; currCharacter < j["characters"].Count; currCharacter++) {
 					ownedCharacters.Add (new Character(
-						j["characters"].AsArray[currCharacter][1].AsInt,
+						j["characters"].AsArray[currCharacter][0].AsInt,
 						j["characters"].AsArray[currCharacter][2].ToString(),
 						j["characters"].AsArray[currCharacter][3].AsInt,
 						j["characters"].AsArray[currCharacter][4].AsInt));

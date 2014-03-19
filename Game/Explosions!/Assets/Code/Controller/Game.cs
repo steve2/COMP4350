@@ -93,15 +93,6 @@ namespace Assets.Code.Controller
                 return missions;
             }
         } 
-
-		public Inventory Inventory
-		{
-			get 
-			{
-				//TODO: Load Inventory ?
-				return null;
-			}
-		}
         #endregion
         
         public void ShowCharacter()
