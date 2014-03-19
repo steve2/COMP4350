@@ -4,6 +4,7 @@ using Assets.Plugins;
 using Assets.Code.Components;
 using System.Collections.Generic;
 using Assets.Code.Model;
+using System.Linq;
 
 [RequireComponent(typeof(EquipmentManager))]
 [RequireComponent(typeof(Inventory))]
@@ -56,15 +57,19 @@ public class EquipmentMenu : MonoBehaviour
             int quantity = inventory.GetQuantity(item);
             if (quantity > 0)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("\t" + item.Name + "\t(x" + quantity +")");
-				ShowSlots (item);
-                if (GUILayout.Button("Equip", EQUIP))
+                IEnumerable<Slot> slots = GetSlots(item);
+                if (slots.Any())
                 {
-                    equipment.Equip(item, GetSlot (item)); //TODO: Assign slot properly...
-                    break;
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("\t" + item.Name + "\t(x" + quantity +")");
+                    ShowSlots(item, slots);
+                    if (GUILayout.Button("Equip", EQUIP))
+                    {
+                        equipment.Equip(item, GetSlot(item)); //TODO: Assign slot properly...
+                        break;
+                    }
+                    GUILayout.EndHorizontal();
                 }
-                GUILayout.EndHorizontal();
             }
         }
     }
@@ -75,12 +80,16 @@ public class EquipmentMenu : MonoBehaviour
 		return equipment.GetSlots(item.Type)[slotIdx[item.Name]];
 	}
 
+    private IEnumerable<Slot> GetSlots(Item item)
+    {
+        return equipment.GetSlots(item.Type); ;
+    }
+
     private static readonly GUILayoutOption[] SLOT = { GUILayout.Height(30), GUILayout.Width(180) };
     private Dictionary<string, int> slotIdx = new Dictionary<string, int>();
-    private void ShowSlots(Item item)
+    private void ShowSlots(Item item, IEnumerable<Slot> slots)
     {
         //TODO: Try to reduce the number of array copies
-        IEnumerable<Slot> slots = equipment.GetSlots(item.Type);
         List<string> slotStrs = new List<string>();
         foreach (Slot s in slots)
         {
