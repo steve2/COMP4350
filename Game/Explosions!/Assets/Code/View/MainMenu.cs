@@ -20,9 +20,6 @@ public class MainMenu : GameComponent {
         Game.Instance.IsServerOnline((x) =>
         {
             Debug.Log("Server is " + (x ? "Online" : "Offline"));
-
-            Debug.Log("Loading Character.");
-			Game.Instance.LoadCharacter ();
         });
 	} 
 

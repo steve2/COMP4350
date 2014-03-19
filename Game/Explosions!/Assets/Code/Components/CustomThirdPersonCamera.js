@@ -31,7 +31,7 @@ private var snap = false;
 private var controller : CustomThirdPersonController;
 private var targetHeight = 100000.0; 
 
-function Awake ()
+function SetupCamera()
 {
 	if(!cameraTransform && Camera.main)
 		cameraTransform = Camera.main.transform;
@@ -39,6 +39,16 @@ function Awake ()
 		Debug.Log("Please assign a camera to the ThirdPersonCamera script.");
 		enabled = false;	
 	}
+}
+
+function OnEnable()
+{
+	SetupCamera();
+}
+
+function Awake ()
+{
+	SetupCamera();
 			
 		
 	_target = transform;
