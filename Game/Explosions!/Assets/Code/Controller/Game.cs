@@ -104,13 +104,26 @@ namespace Assets.Code.Controller
 		}
         #endregion
         
+        //TODO: Maybe combine these into 1 with a param?
         public void ShowCharacter()
         {
-
+            if (characterInst != null)
+            {
+                characterInst.Show();
+            }
         }
 
         public void HideCharacter()
         {
+            if (characterInst != null)
+            {
+                characterInst.Hide();
+            }
+        }
+
+        public void SetCharacter(Character character)
+        {
+            this.character = character;
         }
 
 		#region Game Loading
@@ -302,15 +315,6 @@ namespace Assets.Code.Controller
 			else
 			{
                 Application.LoadLevel(name);
-                //TODO: Do this a better way...
-                if (name == "Demo")
-                {
-                    ShowCharacter();
-                }
-                else
-                {
-                    HideCharacter();
-                }
 			}
         }
         #endregion

@@ -22,7 +22,7 @@ public class CharacterSelection : GameComponent {
 		{
 			if (GUILayout.Button (character.Name)) 
 			{
-                GameInst.character = character;
+                GameInst.SetCharacter(character);
                 Debug.Log("Loading Character");
                 GameInst.LoadCharacter();
 				GameInst.LoadLevel("MissionMenu");

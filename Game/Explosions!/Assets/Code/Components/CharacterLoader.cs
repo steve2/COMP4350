@@ -27,9 +27,9 @@ namespace Assets.Code.Components
             }
         }
 
-        private void Hide()
+        public void Hide()
         {
-            gameObject.SetActive(false); //Auto recurses down
+            gameObject.SetActive(false); //Auto recurses down?
 
             //Only activate a minimal subset
             //gameObject.SetActive(true);
