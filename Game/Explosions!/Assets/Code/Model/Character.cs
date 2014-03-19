@@ -23,6 +23,18 @@ namespace Assets.Code.Model
 			this.PlayTime = playTime;
         }
 
+        /// <summary>
+        /// Factory for creating a new character
+        /// Starts with no exp or play time
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Character CreateNew(string name)
+        {
+            //TODO: Somehow increment id?
+            return new Character(0, name, 0, 0);
+        }
+
 		public string ToString(){
 			return this.Name + " " + this.Exp + " " + this.PlayTime;
 		}

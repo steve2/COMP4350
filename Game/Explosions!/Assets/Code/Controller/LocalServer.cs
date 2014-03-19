@@ -46,12 +46,12 @@ namespace Assets.Code.Controller
             asyncReturn(equipment);
         }
 
-        internal void SetInventory(List<KeyValuePair<string, int>> inventory)
+        internal void SetInventory(IEnumerable<KeyValuePair<string, int>> inventory)
         {
             this.inventory = inventory;
         }
 
-        internal void SetEquipment(List<KeyValuePair<string, Slot>> equipment)
+        internal void SetEquipment(IEnumerable<KeyValuePair<string, Slot>> equipment)
         {
             this.equipment = equipment;
         }
