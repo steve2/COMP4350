@@ -124,7 +124,7 @@ namespace Assets.Code.Controller
 			});
 		}
 
-		public void LoadInventory()
+		private void LoadInventory()
 		{
 			Character testChar = new Character(4, "TEST", 0, 0);
 			server.GetInventory (testChar, (inventoryLoaded) => 
@@ -136,7 +136,7 @@ namespace Assets.Code.Controller
 			});
 		}
 
-		public void LoadEquipment()
+		private void LoadEquipment()
 		{
 			Character testChar = new Character(4, "TEST", 0, 0);
 			server.GetEquipment (testChar, (equipment) => 
@@ -149,7 +149,7 @@ namespace Assets.Code.Controller
 		}
 	
 		
-		public void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad)
+		private void LoadItemsIntoInventory(IEnumerable<KeyValuePair<string, int>> toLoad)
 		{
 			if (toLoad == null)
 			{
@@ -186,7 +186,7 @@ namespace Assets.Code.Controller
 			LoadEquipment ();
 		}
 		
-		public void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad)
+		private void LoadItemsIntoEquipment(IEnumerable<KeyValuePair<string, Slot>> toLoad)
 		{
 			if (toLoad == null) 
 			{
